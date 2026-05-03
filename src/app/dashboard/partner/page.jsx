@@ -20,6 +20,7 @@ import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import { getWalletData } from "@/lib/PartnerService";
 import { MdRefresh, MdErrorOutline } from "react-icons/md";
 import { useCurrency } from "@/context/CurrencyContext";
+import { formatDate } from "@/utitlis/formatters";
 
 // // const mockCommissions = [
 // //     {
@@ -79,6 +80,8 @@ export default function PartnerProgramPage() {
     const [error, setError] = useState(null);
     const [copied, setCopied] = useState(false);
     const { formatPrice } = useCurrency();
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
     const fetchData = async () => {
         setIsLoading(true);
@@ -111,9 +114,17 @@ export default function PartnerProgramPage() {
 
     const columns = [
         {
-            header: "Date",
-            accessor: "date",
-            cellClassName: "text-text/80 dark:text-white/80 font-medium"
+            header: "Date & Time",
+            cellClassName: "whitespace-nowrap",
+            cell: (row) => {
+                const parts = row.date.split(', ');
+                return (
+                    <div className="flex flex-col">
+                        <span className="text-text/80 dark:text-white/80 font-medium">{parts[0]}</span>
+                        {parts[1] && <span className="text-xs text-text/50">{parts[1]}</span>}
+                    </div>
+                );
+            }
         },
         {
             header: "Invoice No",
@@ -165,15 +176,20 @@ export default function PartnerProgramPage() {
         }
     ];
 
+    const allEntries = walletData?.walletEntries || [];
+    const totalItems = allEntries.length;
+    const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
+    const paginatedEntries = allEntries.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
     const pagination = {
-        currentPage: 1,
-        totalPages: 1,
-        from: 1,
-        to: walletData?.walletEntries?.length || 0,
-        total: walletData?.walletEntries?.length || 0,
-        onPageChange: () => { },
-        onPrev: () => { },
-        onNext: () => { }
+        currentPage,
+        totalPages,
+        from: totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1,
+        to: Math.min(currentPage * itemsPerPage, totalItems),
+        total: totalItems,
+        onPageChange: (page) => setCurrentPage(page),
+        onPrev: () => setCurrentPage(p => Math.max(1, p - 1)),
+        onNext: () => setCurrentPage(p => Math.min(totalPages, p + 1))
     };
 
     if (isLoading) {
@@ -281,16 +297,16 @@ export default function PartnerProgramPage() {
                     <div className="flex items-center justify-between px-2">
                         <h3 className="text-xl font-bold text-primary font-accent">Transaction History</h3>
                     </div>
-                    {walletData?.walletEntries?.length > 0 ? (
+                    {allEntries.length > 0 ? (
                         <DataTable
                             columns={columns}
-                            data={walletData.walletEntries.map(entry => {
+                            data={paginatedEntries.map(entry => {
                                 const isEarnings = entry.transactionType === 1 || (entry.affiliatePercentageAmount > 0 || entry.affiliateAbsoluteAmount > 0);
                                 const totalAmount = (entry.totalAffiliateAmount ?? (entry.affiliatePercentageAmount + (entry.affiliateAbsoluteAmount || 0))) || 0;
 
                                 return {
                                     id: entry.orderInvoiceNumber ? `#${entry.orderInvoiceNumber}` : (entry.invoiceNumber ? `#${entry.invoiceNumber}` : (entry.orderId ? `#ORD-${entry.orderId}` : (entry.id ? `#TRX-${entry.id}` : "N/A"))),
-                                    date: new Date(entry.createdDateTime || entry.transactionDate).toLocaleDateString(),
+                                    date: formatDate(entry.createdDateTime || entry.transactionDate, 'datetime'),
                                     customer: entry.customerName || "-",
                                     rate: entry.affiliatePercentage > 0 ? `${entry.affiliatePercentage}%` : (entry.affiliateAbsoluteAmount > 0 ? formatPrice(entry.affiliateAbsoluteAmount) : "-"),
                                     orderStatus: entry.orderStatus || "-",

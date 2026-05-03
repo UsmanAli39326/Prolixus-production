@@ -230,6 +230,7 @@
 
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
+import Image from "next/image";
 
 export default function OurKeyPoints() {
   return (
@@ -286,9 +287,11 @@ export default function OurKeyPoints() {
                     </p>
                   </div>
                   <div className="icon-box flex h-14 w-14 sm:h-20 sm:w-20 shrink-0 items-center justify-center rounded-full bg-(--accent-color) mr-4 lg:mr-0 lg:ml-5">
-                    <img
+                    <Image
                       src="/images/icon-key-points-1.svg"
                       alt="Energie"
+                      width={64}
+                      height={64}
                       className="max-w-[30px] sm:max-w-[45px]"
                     />
                   </div>
@@ -306,9 +309,11 @@ export default function OurKeyPoints() {
                     </p>
                   </div>
                   <div className="icon-box flex h-14 w-14 sm:h-20 sm:w-20 shrink-0 items-center justify-center rounded-full bg-(--accent-color) mr-4 lg:mr-0 lg:ml-5">
-                    <img
+                    <Image
                       src="/images/icon-key-points-2.svg"
                       alt="Bioverfügbarkeit"
+                      width={64}
+                      height={64}
                       className="max-w-[30px] sm:max-w-[45px]"
                     />
                   </div>
@@ -326,9 +331,11 @@ export default function OurKeyPoints() {
                     </p>
                   </div>
                   <div className="icon-box flex h-14 w-14 sm:h-20 sm:w-20 shrink-0 items-center justify-center rounded-full bg-(--accent-color) mr-4 lg:mr-0 lg:ml-5">
-                    <img
+                    <Image
                       src="/images/icon-key-points-3.svg"
                       alt="Qualität"
+                      width={64}
+                      height={64}
                       className="max-w-[30px] sm:max-w-[45px]"
                     />
                   </div>
@@ -342,9 +349,11 @@ export default function OurKeyPoints() {
           <div className="w-full lg:w-[40%] order-1 lg:order-2 mb-8 lg:mb-0">
             <div className="key-points-image text-center">
               <figure>
-                <img
+                <Image
                   src="/images/new/Our-Key-Point-copy.webp"
                   alt="Prolixus Produkt"
+                  width={800}
+                  height={800}
                   className="mx-auto w-full max-w-[250px] sm:max-w-[280px] lg:max-w-[420px]"
                 />
               </figure>
@@ -359,9 +368,11 @@ export default function OurKeyPoints() {
                 {/* Item 4 */}
                 <div className="key-points-item flex items-center mb-6 sm:mb-14 w-full">
                   <div className="icon-box flex h-14 w-14 sm:h-20 sm:w-20 shrink-0 items-center justify-center rounded-full bg-(--accent-color) mr-4 sm:mr-5">
-                    <img
+                    <Image
                       src="/images/icon-key-points-4.svg"
                       alt="Vegan"
+                      width={64}
+                      height={64}
                       className="max-w-[30px] sm:max-w-[45px]"
                     />
                   </div>
@@ -378,9 +389,11 @@ export default function OurKeyPoints() {
                 {/* Item 5 */}
                 <div className="key-points-item flex items-center mb-6 sm:mb-14 w-full">
                   <div className="icon-box flex h-14 w-14 sm:h-20 sm:w-20 shrink-0 items-center justify-center rounded-full bg-(--accent-color) mr-4 sm:mr-5">
-                    <img
+                    <Image
                       src="/images/icon-key-points-5.svg"
                       alt="Für jedes Alter"
+                      width={64}
+                      height={64}
                       className="max-w-[30px] sm:max-w-[45px]"
                     />
                   </div>
@@ -397,9 +410,11 @@ export default function OurKeyPoints() {
                 {/* Item 6 */}
                 <div className="key-points-item flex items-center mb-0 w-full">
                   <div className="icon-box flex h-14 w-14 sm:h-20 sm:w-20 shrink-0 items-center justify-center rounded-full bg-(--accent-color) mr-4 sm:mr-5">
-                    <img
+                    <Image
                       src="/images/icon-key-points-6.svg"
                       alt="Transparenz"
+                      width={64}
+                      height={64}
                       className="max-w-[30px] sm:max-w-[45px]"
                     />
                   </div>

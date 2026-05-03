@@ -24,3 +24,11 @@ export async function getOrderDetails(orderId) {
 export async function getOrderStatuses() {
     return apiService.get("/Configuration/order-status");
 }
+
+/**
+ * Fetch the invoice HTML (base64-encoded) for a given invoice number.
+ * GET /api/Configuration/order-invoice-html-base64?invoiceNumber={invoiceNumber}
+ */
+export async function getOrderInvoiceHtml(invoiceNumber) {
+    return apiService.get(`/Configuration/order-invoice-html-base64?invoiceNumber=${encodeURIComponent(invoiceNumber)}`);
+}

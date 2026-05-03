@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 
 /**
  * ProductImageGallery Component
@@ -19,9 +20,12 @@ export default function ProductImageGallery({ images = [], productTitle = "" }) 
         <div className="flex flex-col gap-4 max-w-[550px]">
             {/* Main Image */}
             <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-(--secondary-color) max-h-[550px]">
-                <img
+                <Image
                     src={mainImage}
                     alt={productTitle}
+                    width={800}
+                    height={800}
+                    unoptimized={true}
                     className="h-full w-full object-contain transition-transform duration-500 hover:scale-105"
                 />
             </div>
@@ -44,9 +48,12 @@ export default function ProductImageGallery({ images = [], productTitle = "" }) 
                             aria-label={`View image ${index + 1}`}
                             aria-current={selectedIndex === index ? "true" : "false"}
                         >
-                            <img
+                            <Image
                                 src={img}
                                 alt={`${productTitle} - view ${index + 1}`}
+                                width={150}
+                                height={150}
+                                unoptimized={true}
                                 className="h-full w-full object-cover"
                             />
                         </button>

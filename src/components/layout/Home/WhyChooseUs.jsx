@@ -159,6 +159,7 @@
 
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
+import Image from "next/image";
 
 export default function WhyChooseUs() {
   return (
@@ -206,9 +207,11 @@ export default function WhyChooseUs() {
                   {/* Item 1 */}
                   <div className="why-choose-item w-full sm:w-[calc(50%-12px)]">
                     <div className="icon-box mb-6 flex h-15 w-15 items-center justify-center rounded-full bg-(--accent-color)">
-                      <img
+                      <Image
                         src="/images/icon-why-choose-1.svg"
                         alt="Qualität"
+                        width={64}
+                        height={64}
                         className="max-w-[35px]"
                       />
                     </div>
@@ -223,9 +226,11 @@ export default function WhyChooseUs() {
                   {/* Item 2 */}
                   <div className="why-choose-item w-full sm:w-[calc(50%-12px)]">
                     <div className="icon-box mb-6 flex h-15 w-15 items-center justify-center rounded-full bg-(--accent-color)">
-                      <img
+                      <Image
                         src="/images/icon-why-choose-2.svg"
                         alt="Verträglichkeit"
+                        width={64}
+                        height={64}
                         className="max-w-[35px]"
                       />
                     </div>
@@ -259,18 +264,22 @@ export default function WhyChooseUs() {
 
             {/* Main Image */}
             <div className="why-choose-img h-full">
-              <img
+              <Image
                 src="/images/new/prolixus-absorb.jpeg"
                 alt="Prolixus Produkt"
+                width={800}
+                height={800}
                 className="w-full h-full object-cover aspect-[1/1.12]"
               />
             </div>
 
             {/* SMALL FLOATING IMAGE (Restored) */}
             <div className="why-choose-product-image absolute bottom-0 left-0 -translate-x-1/2 w-full max-w-[220px]">
-              <img
+              <Image
                 src="/images/new/prolixus-hero-banner.jpeg"
                 alt="Prolixus Produkt"
+                width={800}
+                height={800}
                 className="w-full h-auto object-contain drop-shadow-xl"
               />
             </div>

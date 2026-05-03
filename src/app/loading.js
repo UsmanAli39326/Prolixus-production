@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 
 export default function Loading() {
 
@@ -11,7 +12,7 @@ export default function Loading() {
 
         {/* Center Icon */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <img
+          <Image
             src="/images/new/logo-2.gif"
             alt="Loading..."
             width={500}

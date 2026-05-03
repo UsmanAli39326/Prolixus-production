@@ -82,19 +82,41 @@ const DataTable = ({
                             <FaChevronLeft className="text-xs" />
                         </button>
 
-                        {/* Pagination Numbers - Simplified for now */}
-                        {Array.from({ length: Math.min(pagination.totalPages, 5) }, (_, i) => i + 1).map((page) => (
-                            <button
-                                key={page}
-                                onClick={() => pagination.onPageChange(page)}
-                                className={`flex size-9 items-center justify-center rounded-lg text-sm font-bold transition-colors ${pagination.currentPage === page
-                                        ? "bg-primary text-white shadow-sm shadow-primary/30"
-                                        : "border border-transparent text-text/60 dark:text-white/60 hover:bg-secondary/30"
-                                    }`}
-                            >
-                                {page}
-                            </button>
-                        ))}
+                        {/* Pagination Numbers */}
+                        {(() => {
+                            const pages = [];
+                            const maxPagesToShow = 5;
+                            
+                            if (pagination.totalPages <= maxPagesToShow) {
+                                for (let i = 1; i <= pagination.totalPages; i++) {
+                                    pages.push(i);
+                                }
+                            } else {
+                                let startPage = Math.max(1, pagination.currentPage - 2);
+                                let endPage = Math.min(pagination.totalPages, startPage + maxPagesToShow - 1);
+                        
+                                if (endPage - startPage + 1 < maxPagesToShow) {
+                                    startPage = Math.max(1, endPage - maxPagesToShow + 1);
+                                }
+                        
+                                for (let i = startPage; i <= endPage; i++) {
+                                    pages.push(i);
+                                }
+                            }
+                            
+                            return pages.map((page) => (
+                                <button
+                                    key={page}
+                                    onClick={() => pagination.onPageChange(page)}
+                                    className={`flex size-9 items-center justify-center rounded-lg text-sm font-bold transition-colors ${pagination.currentPage === page
+                                            ? "bg-primary text-white shadow-sm shadow-primary/30"
+                                            : "border border-transparent text-text/60 dark:text-white/60 hover:bg-secondary/30"
+                                        }`}
+                                >
+                                    {page}
+                                </button>
+                            ));
+                        })()}
 
                         <button
                             onClick={pagination.onNext}

@@ -8,7 +8,7 @@ export default function PayPalProvider({ children }) {
   return (
     <PayPalScriptProvider
       options={{
-        clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
+        clientId: "AVqCM8TYJ9Llax_gZrGRQ1VtBCaIemk7n0wXJFWfPIHlz4Fl_PqZgEgnHqK6S8oeOIBtcaNOVKbGXC0G",
         currency: currency || "EUR",
         intent: "capture",
       }}

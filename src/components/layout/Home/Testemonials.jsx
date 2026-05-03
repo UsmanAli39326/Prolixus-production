@@ -223,6 +223,7 @@
 
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
+import Image from "next/image";
 import { useMemo, useRef, useState } from "react";
 
 const testimonials = [
@@ -307,7 +308,7 @@ function TestimonialCard({ t }) {
       <div className="mt-5 flex items-center justify-between gap-6">
         <div className="flex items-center gap-3">
           <div className="h-11 w-11 overflow-hidden rounded-lg bg-(--white-color)/10">
-            <img src={t.avatar} alt={t.name} className="h-full w-full object-cover" />
+            <Image src={t.avatar} alt={t.name} width={44} height={44} className="h-full w-full object-cover" />
           </div>
           <div>
             <h3 className="text-[16px] font-semibold text-(--white-color) leading-tight font-default">{t.name}</h3>
@@ -369,7 +370,7 @@ export default function OurTestimonials() {
           </div>
 
           <div className="flex items-center gap-6 lg:justify-end">
-            <img src="/images/google-img.svg" alt="Google" className="h-10 w-auto" />
+            <Image src="/images/google-img.svg" alt="Google" width={100} height={40} className="h-10 w-auto" />
             <span className="h-10 w-px bg-(--white-color)/15" />
             <div>
               <StarRow />
@@ -384,10 +385,12 @@ export default function OurTestimonials() {
           <div className="w-full lg:w-[32%]">
             <FaderInAnimation direction="left" duration={0.6}>
               <div className="overflow-hidden rounded-[28px] bg-white/10">
-                <img
+                <Image
                   src="/images/new/Testimonials-copy.webp"
                   alt="Happy customers"
-                  className="w-full "
+                  width={800}
+                  height={800}
+                  className="w-full h-auto"
                 />
               </div>
             </FaderInAnimation>

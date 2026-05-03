@@ -16,7 +16,7 @@ import WhyChooseUs from '@/components/layout/Home/WhyChooseUs';
 export default function AboutPage() {
   return (
     <>
-      <AboutPageHeader title="About" subtitle="us" />
+      <AboutPageHeader title="About" subtitle="us" mobileBgImage="/images/new/about us mobile view banner.webp" />
       <About />
       {/* <WhyChooseUs /> */}
       {/* <OurApproach /> */}

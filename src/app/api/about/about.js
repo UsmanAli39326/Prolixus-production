@@ -25,6 +25,7 @@ export async function getAboutPayload() {
       googleMap: about.googleMapPinLocation,
       logoId: about.fileId,
       taxNumber: about.taxNumber,
+      ustNumber: about.ustIdNr || about.ustNumber || about.vatNumber,
     };
 
   } catch (error) {

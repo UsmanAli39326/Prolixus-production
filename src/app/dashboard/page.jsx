@@ -103,22 +103,22 @@ export default function DashboardOverviewPage() {
             {/* Stats Grid */}
             <FaderInAnimation direction="up" delay={0.1}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <StatCard 
-                        title="Total Orders" 
-                        value={loading ? "..." : stats.totalOrders} 
-                        icon={FaShoppingBag} 
+                    <StatCard
+                        title="Total Orders"
+                        value={loading ? "..." : stats.totalOrders}
+                        icon={FaShoppingBag}
                         color="primary"
                     />
-                    <StatCard 
-                        title="Wallet Balance" 
-                        value={loading ? "..." : formatPrice(stats.walletBalance)} 
-                        icon={FaWallet} 
+                    <StatCard
+                        title="Wallet Balance"
+                        value={loading ? "..." : formatPrice(stats.walletBalance)}
+                        icon={FaWallet}
                         color="accent"
                     />
-                    <StatCard 
-                        title="Total Earnings" 
-                        value={loading ? "..." : formatPrice(stats.totalEarnings)} 
-                        icon={FaChartBar} 
+                    <StatCard
+                        title="Total Earnings"
+                        value={loading ? "..." : formatPrice(stats.totalEarnings)}
+                        icon={FaChartBar}
                         color="primary"
                     />
                 </div>
@@ -153,7 +153,7 @@ export default function DashboardOverviewPage() {
                                         type="text"
                                         value={loading ? "..." : (walletData?.affiliateCode || "No code")}
                                     />
-                                    <button 
+                                    <button
                                         onClick={handleCopy}
                                         className="absolute right-3 top-1/2 -translate-y-1/2 text-text/40 hover:text-accent transition-colors"
                                     >
@@ -163,8 +163,8 @@ export default function DashboardOverviewPage() {
                             </div>
 
                             <div className="flex gap-3">
-                                <Button 
-                                    variant="primary" 
+                                <Button
+                                    variant="primary"
                                     size="sm"
                                     className="px-8 rounded-xl"
                                     href="/dashboard/partner"

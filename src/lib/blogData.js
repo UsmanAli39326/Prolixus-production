@@ -1,14 +1,8 @@
 import { apiService } from "@/lib/api";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+import { formatDate } from "@/utitlis/formatters";
 
-function formatDate(dateString) {
-  return new Date(dateString).toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
-}
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 function mapBlogPost(blog) {
   return {
@@ -23,7 +17,7 @@ function mapBlogPost(blog) {
     href: `/blog/${blog.id}`,
     title: blog.title ?? "",
     excerpt: blog.shortDescription ?? "",
-    date: formatDate(blog.createdDateTime) ?? "",
+    date: formatDate(blog.createdDateTime, 'date') ?? "",
     category: blog.category ?? "",
     author: blog.author ?? "",
     readTime: blog.readTime ?? "",

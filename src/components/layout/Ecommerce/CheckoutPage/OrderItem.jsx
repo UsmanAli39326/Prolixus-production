@@ -3,6 +3,7 @@
 import Badge from "@/components/ui/Badge";
 import { stripHtmlTags } from "@/utitlis/formatters";
 import { useCurrency } from "@/context/CurrencyContext";
+import Image from "next/image";
 
 export default function OrderItem({ item }) {
     const { formatPrice } = useCurrency();
@@ -11,9 +12,12 @@ export default function OrderItem({ item }) {
             {/* Thumbnail */}
             <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-50 shrink-0 border border-gray-100 dark:border-white/5 relative">
                 {item.image ? (
-                    <img
+                    <Image
                         src={item.image}
-                        alt={item.name}
+                        alt={item.name || "Product image"}
+                        width={48}
+                        height={48}
+                        unoptimized={true}
                         className="w-full h-full object-cover"
                     />
                 ) : (

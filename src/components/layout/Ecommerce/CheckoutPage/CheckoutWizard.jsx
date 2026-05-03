@@ -86,7 +86,7 @@ export function buildGuestOrderPayload(formData, cartItems, currency = "EURO", t
 // ---------------------------------------------------------------------------
 export default function CheckoutWizard() {
     const router = useRouter();
-    const { cartItems, isInitialized } = useCart();
+    const { cartItems, isInitialized, clearCart } = useCart();
     const { currency, formatPrice } = useCurrency();
     const { formData, updateFormData, totals, user, isAuthenticated, setOrderCompleted, orderCompleted } = useCheckout();
     const [currentStep, setCurrentStep] = useState(0);
@@ -143,7 +143,7 @@ export default function CheckoutWizard() {
         setIsSubmitting(true);
         try {
             const payload = buildGuestOrderPayload(
-                { ...formData, paymentMethod: "credit" },
+                { ...formData, paymentMethod: "Cash" },
                 cartItems,
                 currency,
                 totals,
@@ -155,6 +155,7 @@ export default function CheckoutWizard() {
             if (response.success) {
                 setOrderData(response.data);
                 setOrderCompleted(true);
+                clearCart();
                 setCurrentStep(2); // Go to confirmation step
             } else {
                 alert(response.message || "Failed to create order");

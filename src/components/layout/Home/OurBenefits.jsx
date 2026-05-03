@@ -229,6 +229,7 @@
 // ====================
 
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
+import Image from "next/image";
 
 export default function OurBenefits() {
   return (
@@ -242,16 +243,20 @@ export default function OurBenefits() {
           <div className="w-full lg:w-5/12">
             <div className="benefit-image relative lg:mr-4 h-full">
               <figure className="h-full">
-                <img
+                <Image
                   src="/images/new/Benefits copy 2.jpg"
                   alt="Prolixus Inhaltsstoffe"
+                  width={800}
+                  height={1000}
                   className="w-full h-full object-cover rounded-2xl"
                 />
               </figure>
               <div className="benefit-quality-circle absolute -right-2 -top-2 sm:-right-6 sm:-top-6 z-1 bg-(--accent-color) p-0 rounded-full shadow-lg border-4 border-white justify-center items-center flex overflow-hidden">
-                <img
+                <Image
                   src="/images/new/logo-2.gif"
                   alt="Prolixus Logo"
+                  width={110}
+                  height={110}
                   className="w-[80px] h-[80px] sm:w-[110px] sm:h-[110px] rounded-full object-cover"
                 />
               </div>
@@ -283,9 +288,11 @@ export default function OurBenefits() {
                     {/* MSM */}
                     <div className="benefit-item sm:col-span-2 p-5 bg-(--white-color) rounded-2xl shadow-sm border border-(--divider-color) transition-all duration-300 hover:shadow-md">
                       <div className="icon-box mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-(--accent-color)">
-                        <img
+                        <Image
                           src="/images/icon-about-organic.svg"
                           alt="MSM"
+                          width={64}
+                          height={64}
                           className="w-full max-w-[32px]"
                         />
                       </div>
@@ -301,9 +308,11 @@ export default function OurBenefits() {
                     {/* Calcium */}
                     <div className="benefit-item p-5 bg-(--white-color) rounded-2xl shadow-sm border border-(--divider-color) transition-all duration-300 hover:shadow-md">
                       <div className="icon-box mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-(--accent-color)">
-                        <img
+                        <Image
                           src="/images/icon-benefit-1.svg"
                           alt="Calcium"
+                          width={64}
+                          height={64}
                           className="w-full max-w-[32px]"
                         />
                       </div>
@@ -319,9 +328,11 @@ export default function OurBenefits() {
                     {/* Magnesium */}
                     <div className="benefit-item p-5 bg-(--white-color) rounded-2xl shadow-sm border border-(--divider-color) transition-all duration-300 hover:shadow-md">
                       <div className="icon-box mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-(--accent-color)">
-                        <img
+                        <Image
                           src="/images/icon-benefit-2.svg"
                           alt="Magnesium"
+                          width={64}
+                          height={64}
                           className="w-full max-w-[32px]"
                         />
                       </div>
@@ -337,9 +348,11 @@ export default function OurBenefits() {
                     {/* Eisen */}
                     <div className="benefit-item p-5 bg-(--white-color) rounded-2xl shadow-sm border border-(--divider-color) transition-all duration-300 hover:shadow-md">
                       <div className="icon-box mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-(--accent-color)">
-                        <img
+                        <Image
                           src="/images/icon-benefit-3.svg"
                           alt="Eisen"
+                          width={64}
+                          height={64}
                           className="w-full max-w-[32px]"
                         />
                       </div>
@@ -355,9 +368,11 @@ export default function OurBenefits() {
                     {/* Vitamin C */}
                     <div className="benefit-item p-5 bg-(--white-color) rounded-2xl shadow-sm border border-(--divider-color) transition-all duration-300 hover:shadow-md">
                       <div className="icon-box mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-(--accent-color)">
-                        <img
+                        <Image
                           src="/images/icon-benefit-4.svg"
                           alt="Vitamin C"
+                          width={64}
+                          height={64}
                           className="w-full max-w-[32px]"
                         />
                       </div>

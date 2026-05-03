@@ -12,7 +12,7 @@
 //   },
 //   {
 //     question: "Are your dropper bottles leak-proof?",
-//     answer:
+//     answer:  
 //       "Yes, our dropper bottles are designed with secure, leak-proof seals to prevent spills and maintain product integrity.",
 //   },
 //   {
@@ -186,6 +186,7 @@
 
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
+import Image from "next/image";
 import { useState } from "react";
 
 const faqs = [
@@ -247,9 +248,11 @@ export default function OurFaqs() {
           <div className="w-full lg:w-1/2">
             <div className="relative overflow-hidden rounded-[28px] bg-(--primary-color) shadow-sm">
               {/* Use your actual image here (or keep a solid block like the screenshot) */}
-              <img
+              <Image
                 src="/images/new/prolixus-hero-banner.jpeg"
                 alt="FAQ"
+                width={800}
+                height={800}
                 className="h-full w-full object-cover"
               />
 

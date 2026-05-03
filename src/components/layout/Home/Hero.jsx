@@ -139,12 +139,21 @@ export default function Hero() {
     <section
       className="relative min-h-screen lg:h-screen flex items-center overflow-hidden bg-cover bg-center pt-28 pb-8 sm:pt-20 sm:pb-0 lg:pt-20 bg--secondary-color  lg:pb-10"
     >
-      {/* Background Image */}
+      {/* Background Image Desktop */}
       <Image
         src="/images/new/mainSlider.webp"
-        alt="Hero Background"
+        alt="Hero Background Desktop"
         fill
-        className="absolute inset-0 w-full h-full bg-fixed object-cover z-0"
+        className="hidden md:block absolute inset-0 w-full h-full bg-fixed object-cover z-0"
+        priority
+      />
+      
+      {/* Background Image Mobile */}
+      <Image
+        src="/images/new/main hero banner mobile view copy.webp"
+        alt="Hero Background Mobile"
+        fill
+        className="block md:hidden absolute inset-0 w-full h-full bg-fixed object-cover z-0"
         priority
       />
       <div className="absolute inset-0 bg-linear-to-r from-(--primary-color)/85 via-(--primary-color)/60 to-transparent z-1" />

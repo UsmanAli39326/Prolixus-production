@@ -11,7 +11,7 @@ import React from 'react'
 async function page() {
     return (
         <>
-            <PageHeader title="Contact" subtitle="us" />
+            <PageHeader title="Contact" subtitle="us" mobileBgImage="/images/new/contact us mobile view copy.webp" />
             <ContactForm />
 
             {/* <ContactSection /> */}

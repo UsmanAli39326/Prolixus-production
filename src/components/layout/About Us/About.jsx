@@ -1,6 +1,7 @@
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import { getAboutPayload } from "@/app/api/about/about";
+import Image from "next/image";
 
 export default async function AboutSection({ variant = "full" }) {
   const about = await getAboutPayload();
@@ -22,11 +23,11 @@ export default async function AboutSection({ variant = "full" }) {
               <div className="relative">
                 {/* Main Image */}
                 <div className="relative z-10 overflow-hidden rounded-2xl sm:rounded-4xl shadow-2xl transition-transform duration-500 hover:scale-[1.02]">
-                  <img
+                  <Image
                     src="/images/new/about-us.webp"
                     alt="Prolixus Vitalität"
-                    width="560"
-                    height="602"
+                    width={560}
+                    height={602}
                     className="w-full object-cover"
                   />
                   {/* Subtle overlay gradient */}

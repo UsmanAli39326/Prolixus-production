@@ -29,6 +29,7 @@ export default async function BlogDetailPage({ params }) {
                 title={post.category || "Blog"}
                 subtitle="Artikel"
                 bgImage={"/images/new/blog detail page banner.webp"}
+                mobileBgImage={"/images/new/Blog details mobile view.webp"}
                 breadcrumbs={[
                     { label: "Home", href: "/" },
                     { label: "Blog", href: "/blog" },

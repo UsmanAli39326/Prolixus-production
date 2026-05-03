@@ -123,9 +123,12 @@ export default async function BlogDetail({ post }) {
                             {/* Hero image */}
                             <FaderInAnimation direction="up" delay={0.2} duration={0.8}>
                                 <figure className="relative mb-10 overflow-hidden rounded-2xl shadow-lg max-w-5xl mx-auto">
-                                    <img
+                                    <Image
                                         src={post.img}
                                         alt={post.title}
+                                        width={1200}
+                                        height={800}
+                                        unoptimized={true}
                                         className="w-full h-auto block object-contain"
                                     />
                                 </figure>

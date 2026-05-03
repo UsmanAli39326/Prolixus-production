@@ -2,6 +2,7 @@ import Link from "next/link";
 import { FaTruck, FaCalendarAlt, FaArrowRight } from "react-icons/fa";
 import Badge from "@/components/ui/Badge";
 import { useCurrency } from "@/context/CurrencyContext";
+import { formatDate } from "@/utitlis/formatters";
 
 export default function RecentOrderCard({ order }) {
     const { formatPrice } = useCurrency();
@@ -30,11 +31,7 @@ export default function RecentOrderCard({ order }) {
                     <div className="min-w-0 flex-1">
                         <p className="text-[10px] sm:text-xs uppercase tracking-wider text-text/50 font-bold mb-1 sm:mb-1.5">Order Date</p>
                         <p className="text-sm sm:text-[15px] font-extrabold text-primary leading-tight">
-                            {new Date(order.transactionDate).toLocaleDateString('en-US', {
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric'
-                            })}
+                            {formatDate(order.transactionDate, 'date')}
                         </p>
                     </div>
                 </div>

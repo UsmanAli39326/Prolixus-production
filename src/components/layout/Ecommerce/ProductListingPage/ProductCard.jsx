@@ -6,6 +6,7 @@ import Badge from "@/components/ui/Badge";
 import { stripHtmlTags } from "@/utitlis/formatters";
 import AddToCartButton from "@/components/ui/AddToCartButton";
 import { useCurrency } from "@/context/CurrencyContext";
+import Image from "next/image";
 
 export default function ProductCard({ product }) {
   const { formatPrice } = useCurrency();
@@ -24,9 +25,12 @@ export default function ProductCard({ product }) {
       prefetch={true}
     >
       <div className="relative aspect-square bg-(--secondary-color)">
-        <img
+        <Image
           src={product.image}
           alt={product.title}
+          width={400}
+          height={400}
+          unoptimized={true}
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
 

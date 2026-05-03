@@ -13,6 +13,7 @@ import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import { getCustomerOrders, getOrderStatuses } from "@/lib/OrderService";
 import { useCurrency } from "@/context/CurrencyContext";
+import { formatDate } from "@/utitlis/formatters";
 
 const statusConfig = {
     "Shipped": { variant: "success" },
@@ -31,6 +32,8 @@ export default function OrderHistoryPage() {
     const { formatPrice } = useCurrency();
     const [filterStatus, setFilterStatus] = useState("All");
     const [statuses, setStatuses] = useState(["All"]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
     useEffect(() => {
         let isMounted = true;
@@ -53,15 +56,12 @@ export default function OrderHistoryPage() {
                         return {
                             id: order.id,
                             invoiceNumber: order.invoiceNumber,
-                            date: new Date(order.transactionDate).toLocaleDateString('en-US', {
-                                month: 'short',
-                                day: '2-digit',
-                                year: 'numeric'
-                            }),
+                            date: formatDate(order.transactionDate, 'datetime'),
                             status: summary?.orderStatus || order.orderStatus || "Processing",
                             isPaid: order.isPaid,
                             total: formatPrice(summary?.paidAmount ?? order.totalNetAmount ?? 0),
                             paymentType: summary?.paymentType || order.paymentType,
+                            customerAffiliatedAmount: order.customerAffiliatedAmount || 0,
                             ...config
                         };
                     });
@@ -89,14 +89,23 @@ export default function OrderHistoryPage() {
         } else {
             setFilteredOrders(orders.filter(order => order.status === filterStatus));
         }
+        setCurrentPage(1);
     }, [filterStatus, orders]);
 
     const columns = [
         // ... columns remain same ...
         {
-            header: "Date",
-            accessor: "date",
-            cellClassName: "text-text/80 dark:text-white/80 font-medium"
+            header: "Date & Time",
+            cellClassName: "whitespace-nowrap",
+            cell: (row) => {
+                const parts = row.date.split(', ');
+                return (
+                    <div className="flex flex-col">
+                        <span className="text-text/80 dark:text-white/80 font-medium">{parts[0]}</span>
+                        {parts[1] && <span className="text-xs text-text/50">{parts[1]}</span>}
+                    </div>
+                );
+            }
         },
         {
             header: "Invoice #",
@@ -128,6 +137,11 @@ export default function OrderHistoryPage() {
             )
         },
         {
+            header: "Wallet Applied",
+            cellClassName: "text-text dark:text-white font-medium",
+            cell: (row) => formatPrice(row.customerAffiliatedAmount)
+        },
+        {
             header: "Total",
             accessor: "total",
             cellClassName: "text-text dark:text-white font-medium"
@@ -148,15 +162,19 @@ export default function OrderHistoryPage() {
         }
     ];
 
+    const totalItems = filteredOrders.length;
+    const totalPages = Math.max(1, Math.ceil(totalItems / itemsPerPage));
+    const paginatedOrders = filteredOrders.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
     const pagination = {
-        currentPage: 1,
-        totalPages: 1,
-        from: 1,
-        to: filteredOrders.length,
-        total: filteredOrders.length,
-        onPageChange: (page) => { },
-        onPrev: () => { },
-        onNext: () => { }
+        currentPage,
+        totalPages,
+        from: totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1,
+        to: Math.min(currentPage * itemsPerPage, totalItems),
+        total: totalItems,
+        onPageChange: (page) => setCurrentPage(page),
+        onPrev: () => setCurrentPage(p => Math.max(1, p - 1)),
+        onNext: () => setCurrentPage(p => Math.min(totalPages, p + 1))
     };
 
     return (
@@ -193,7 +211,7 @@ export default function OrderHistoryPage() {
                     ) : (
                         <DataTable
                             columns={columns}
-                            data={filteredOrders}
+                            data={paginatedOrders}
                             pagination={pagination}
                             isLoading={isLoading}
                         />

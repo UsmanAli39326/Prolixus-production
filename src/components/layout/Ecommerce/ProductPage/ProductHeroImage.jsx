@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 
 /**
  * ProductHeroImage Component
@@ -23,9 +24,12 @@ export default function ProductHeroImage({
                 className="relative overflow-hidden rounded-2xl bg-(--secondary-color) w-full max-w-[1200px] max-h-[500px]"
                 style={{ aspectRatio }}
             >
-                <img
+                <Image
                     src={src}
                     alt={alt}
+                    width={1200}
+                    height={500}
+                    unoptimized={true}
                     className="h-full w-full object-cover"
                 />
             </div>

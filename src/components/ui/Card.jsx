@@ -1,4 +1,5 @@
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
+import Image from "next/image";
 
 export default function Card({ img, title, price, delay }) {
   return (
@@ -9,9 +10,11 @@ export default function Card({ img, title, price, delay }) {
         {/* Image */}
         <div className="product-image relative mb-5 overflow-hidden rounded-2xl p-10 text-center before:absolute before:inset-0 before:h-full before:w-full before:bg-(--accent-color) before:opacity-10">
           <figure className="relative z-1">
-            <img
+            <Image
               src={img}
               alt={title}
+              width={220}
+              height={500}
               className="mx-auto aspect-[1/2.273] max-w-[110px] object-contain"
             />
           </figure>

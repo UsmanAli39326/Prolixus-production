@@ -82,6 +82,7 @@ import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
+import Image from "next/image";
 
 export default function CtaBox() {
   return (
@@ -135,9 +136,11 @@ export default function CtaBox() {
           {/* Right: Image */}
           <div className="w-full lg:w-1/2">
             <div className="cta-image h-full text-center">
-              <img
+              <Image
                 src="/images/new/Purchase-Now.webp"
                 alt="Prolixus Produkt"
+                width={800}
+                height={800}
                 className="mx-auto w-full object-cover aspect-[1/0.955]  rounded-2xl"
               />
             </div>

@@ -4,6 +4,7 @@ import { FaCamera } from "react-icons/fa";
 import { FaUser } from "react-icons/fa6";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
+import Image from "next/image";
 
 export default function ProfileAvatar({ image, onChange, onRemove }) {
     const fileInputRef = useRef(null);
@@ -25,9 +26,12 @@ export default function ProfileAvatar({ image, onChange, onRemove }) {
                 <div className="relative group">
                     <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-secondary shadow-md flex items-center justify-center bg-gray-100">
                         {image ? (
-                            <img
+                            <Image
                                 src={image}
                                 alt="Profile"
+                                width={112}
+                                height={112}
+                                unoptimized={true}
                                 className="w-full h-full object-cover"
                             />
                         ) : (

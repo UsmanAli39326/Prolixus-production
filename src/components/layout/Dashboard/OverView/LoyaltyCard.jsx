@@ -1,5 +1,6 @@
 import { FaStar } from "react-icons/fa";
 import Button from "@/components/ui/Button";
+import Image from "next/image";
 
 export default function LoyaltySection() {
     return (
@@ -40,9 +41,12 @@ export default function LoyaltySection() {
                 </div>
 
                 <div className="absolute right-0 top-0 h-full w-1/2 overflow-hidden hidden md:block">
-                    <img
+                    <Image
                         src="https://plus.unsplash.com/premium_photo-1678122394593-9c8651030e46?q=80&w=2070&auto=format&fit=crop"
                         alt="Promo"
+                        width={800}
+                        height={800}
+                        unoptimized={true}
                         className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700"
                     />
                 </div>

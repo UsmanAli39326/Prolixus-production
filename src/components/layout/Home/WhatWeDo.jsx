@@ -115,6 +115,7 @@
 // =====================
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
+import Image from "next/image";
 
 export default function WhatWeDo() {
   return (
@@ -130,9 +131,11 @@ export default function WhatWeDo() {
                 {/* Image 1 */}
                 <div className="what-we-image-1 w-full pr-0 lg:pr-12">
                   <figure className="block rounded-2xl overflow-hidden">
-                    <img
+                    <Image
                       src="/images/new/big-product.webp"
                       alt="Prolixus Anwendung"
+                      width={800}
+                      height={800}
                       className="w-full object-cover rounded-2xl aspect-[1/0.73]"
                     />
                   </figure>
@@ -141,9 +144,11 @@ export default function WhatWeDo() {
                 {/* Image 2 */}
                 <div className="what-we-image-2 relative w-full max-w-[280px] sm:max-w-[410px] ml-auto -mt-10 sm:-mt-20 z-1">
                   <figure className="block rounded-2xl overflow-hidden">
-                    <img
+                    <Image
                       src="/images/new/small-product-copy.jpg.jpeg"
                       alt="Prolixus Einnahme"
+                      width={800}
+                      height={800}
                       className="w-full object-cover rounded-2xl aspect-[1/0.62]"
                     />
                   </figure>
@@ -151,9 +156,11 @@ export default function WhatWeDo() {
 
                 {/* Circle */}
                 <div className="what-we-circle absolute left-4 sm:left-[50px] bottom-4 sm:bottom-10 border-4 sm:border-8 border-(--primary-color) rounded-full z-1 bg-accent p-0 justify-center items-center flex overflow-hidden">
-                  <img
+                  <Image
                     src="/images/new/logo-2.gif"
                     alt="Premium Qualität"
+                    width={150}
+                    height={150}
                     className="w-[100px] h-[100px] sm:w-[150px] sm:h-[150px] rounded-full object-cover"
                   />
                 </div>

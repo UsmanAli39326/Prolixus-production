@@ -1,5 +1,6 @@
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import Link from "next/link";
+import Image from "next/image";
 
 
 export default function BlogCard({ post, index }) {
@@ -14,10 +15,12 @@ export default function BlogCard({ post, index }) {
                         className="block overflow-hidden"
                     >
                         <figure className="relative aspect-[4/3] overflow-hidden bg-gray-100">
-                            <img
+                            <Image
                                 src={post.thumbnailImg}
                                 alt={post.title}
-                                // fill
+                                width={800}
+                                height={600}
+                                unoptimized={true}
                                 className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                                 sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                             />

@@ -13,7 +13,7 @@ export default function BlogPage() {
             <PageHeader
                 title="Unser"
                 subtitle="Blog"
-                mobileBgImage="/images/new/blog mobile view.webp"
+                mobileBgImage="/images/new/Blog listing mobile view.webp"
                 breadcrumbs={[
                     { label: "Home", href: "/" },
                     { label: "Blog", href: null }

@@ -5,15 +5,15 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 // Read the auth token at request-time so the token stored during login is used.
 // Falls back to the build-time env var if localStorage is not available (e.g. SSR).
-function getLanguage() {
+async function getLanguage() {
   if (typeof window !== "undefined") {
     return localStorage.getItem("appLanguage") || "en";
   }
-    
+
   // Server-side: Try to read from cookies
   try {
     const { cookies } = require("next/headers");
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     return cookieStore.get("appLanguage")?.value || "en";
   } catch (error) {
     return "en"; // Fallback
@@ -25,6 +25,17 @@ function getToken() {
     return localStorage.getItem("authToken") || process.env.NEXT_PUBLIC_API_TOKEN;
   }
   return process.env.NEXT_PUBLIC_API_TOKEN;
+}
+
+function getBrowserTimeZone() {
+  if (typeof window !== "undefined") {
+    try {
+      return Intl.DateTimeFormat().resolvedOptions().timeZone;
+    } catch (e) {
+      return null;
+    }
+  }
+  return null;
 }
 
 async function request(endpoint, method = 'GET', body = null, headers = {}, isGuest = false, options = {}) {
@@ -41,7 +52,8 @@ async function request(endpoint, method = 'GET', body = null, headers = {}, isGu
     method,
     headers: {
       'Content-Type': 'application/json',
-      'Accept-Language': getLanguage(),
+      'Accept-Language': await getLanguage(),
+      'Local-TimeZone': getBrowserTimeZone(),
       Authorization: `Bearer ${token}`,
       ...headers,
     },

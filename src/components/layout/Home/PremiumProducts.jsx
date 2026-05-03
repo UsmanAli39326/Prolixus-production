@@ -196,6 +196,7 @@
 
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
+import Image from "next/image";
 
 export default function PremiumProducts() {
   return (
@@ -274,9 +275,11 @@ export default function PremiumProducts() {
                   <div className="premium-products-item relative w-full md:w-[calc(33.33%-20px)]">
                     <div className="premium-products-image relative">
                       <figure className="block overflow-hidden rounded-2xl relative">
-                        <img
+                        <Image
                           src="/images/new/Purchase-Now-copy.webp"
                           alt="Essenzielle Nährstoffe"
+                          width={800}
+                          height={800}
                           className="w-full aspect-[1/1.01]"
                         />
                         <span className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-[rgba(10,44,15,0.9)]" />
@@ -293,9 +296,11 @@ export default function PremiumProducts() {
                   <div className="premium-products-item relative w-full md:w-[calc(33.33%-20px)]">
                     <div className="premium-products-image relative">
                       <figure className="block overflow-hidden rounded-2xl relative">
-                        <img
+                        <Image
                           src="/images/new/prolixus-absorb.jpeg"
                           alt="Optimale Aufnahme"
+                          width={800}
+                          height={800}
                           className="w-full aspect-[1/1.01] object-cover"
                         />
                         <span className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-[rgba(10,44,15,0.9)]" />
@@ -312,9 +317,11 @@ export default function PremiumProducts() {
                   <div className="premium-products-item relative w-full md:w-[calc(33.33%-20px)]">
                     <div className="premium-products-image relative">
                       <figure className="block overflow-hidden rounded-2xl relative">
-                        <img
+                        <Image
                           src="/images/new/prolixus-uv.jpeg"
                           alt="Geprüfte Qualität"
+                          width={800}
+                          height={800}
                           className="w-full aspect-[1/1.01] object-cover"
                         />
                         <span className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-[rgba(10,44,15,0.9)]" />
@@ -339,9 +346,11 @@ export default function PremiumProducts() {
               <div className="products-intro-video relative h-full">
                 <div className="products-intro-image relative overflow-hidden h-full">
                   <figure className="block relative h-full">
-                    <img
+                    <Image
                       src="/images/new/prolixus-steps.jpeg"
                       alt="Prolixus Anwendung"
+                      width={800}
+                      height={800}
                       className="w-full h-full object-cover"
                     />
                     <span className="absolute inset-0 bg-(--primary-color)/30" />

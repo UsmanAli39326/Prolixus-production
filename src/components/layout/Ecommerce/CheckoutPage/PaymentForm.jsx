@@ -27,6 +27,8 @@ export default function PaymentForm({
     selectedMethod,
     onMethodSelect,
     gateway,
+    onDirectComplete,
+    isSubmitting,
 }) {
     const { clearCart } = useCart();
     const { isLoggedIn } = useAuth();
@@ -62,8 +64,6 @@ export default function PaymentForm({
             updateFormData({
                 useWallet: true,
                 walletAmount: walletBalance,
-                couponCode: "",
-                discountAmount: 0,
             });
         } else {
             updateFormData({ useWallet: false, walletAmount: 0 });
@@ -73,14 +73,21 @@ export default function PaymentForm({
     // Submit handler — delegates to the active gateway's payment handler
     const handleSubmit = async (e) => {
         if (e) e.preventDefault();
-        
+
         // Final sanity check before processing payment
         if (!cartItems || cartItems.length === 0) {
             setError("Your cart is empty. Please add items to your cart before proceeding.");
             return;
         }
 
-        if (!selectedMethod.publishableKey) {
+        if (totals.total <= 0) {
+            if (onDirectComplete) {
+                onDirectComplete();
+            }
+            return;
+        }
+
+        if (!selectedMethod || !selectedMethod.publishableKey) {
             setError("This payment method is not properly configured.");
             return;
         }
@@ -186,42 +193,56 @@ export default function PaymentForm({
                 )}
 
                 {/* Dynamic Payment Method Selector */}
-                <FaderInAnimation direction="up" delay={0.2}>
-                    <PaymentMethodSelector
-                        paymentMethods={paymentMethods}
-                        selectedMethod={selectedMethod?.name}
-                        onSelect={onMethodSelect}
-                        loading={methodsLoading}
-                        error={methodsError}
-                    />
+                {totals.total > 0 ? (
+                    <FaderInAnimation direction="up" delay={0.2}>
+                        <PaymentMethodSelector
+                            paymentMethods={paymentMethods}
+                            selectedMethod={selectedMethod?.name}
+                            onSelect={onMethodSelect}
+                            loading={methodsLoading}
+                            error={methodsError}
+                        />
 
-                    {/* Gateway-specific checkout UI */}
-                    {selectedMethod && gateway && (
-                        <gateway.ProviderComponent
-                            publishableKey={selectedMethod.publishableKey}
-                            amount={totals.total}
-                            currency={currency}
-                        >
-                            <RevealInAnimation direction="down">
-                                {GatewayCheckout && (
-                                    <GatewayCheckout
-                                        formData={formData}
-                                        updateFormData={updateFormData}
-                                        buildGuestOrderPayload={buildGuestOrderPayload}
-                                        cartItems={cartItems}
-                                        currency={currency}
-                                        onSuccess={handleSuccess}
-                                        onError={handleError}
-                                        loading={loading}
-                                        setLoading={setLoading}
-                                        onReady={handleGatewayReady}
-                                        methodName={selectedMethod.displayName || selectedMethod.name}
-                                    />
-                                )}
-                            </RevealInAnimation>
-                        </gateway.ProviderComponent>
-                    )}
-                </FaderInAnimation>
+                        {/* Gateway-specific checkout UI */}
+                        {selectedMethod && gateway && (
+                            <gateway.ProviderComponent
+                                publishableKey={selectedMethod.publishableKey}
+                                amount={totals.total}
+                                currency={currency}
+                            >
+                                <RevealInAnimation direction="down">
+                                    {GatewayCheckout && (
+                                        <GatewayCheckout
+                                            formData={formData}
+                                            updateFormData={updateFormData}
+                                            buildGuestOrderPayload={buildGuestOrderPayload}
+                                            cartItems={cartItems}
+                                            currency={currency}
+                                            onSuccess={handleSuccess}
+                                            onError={handleError}
+                                            loading={loading}
+                                            setLoading={setLoading}
+                                            onReady={handleGatewayReady}
+                                            methodName={selectedMethod.displayName || selectedMethod.name}
+                                        />
+                                    )}
+                                </RevealInAnimation>
+                            </gateway.ProviderComponent>
+                        )}
+                    </FaderInAnimation>
+                ) : (
+                    <FaderInAnimation direction="up" delay={0.2}>
+                        <div className="bg-green-50/50 dark:bg-green-500/5 border border-green-200 dark:border-green-500/20 rounded-2xl p-6 text-center">
+                            <div className="size-12 bg-green-100 dark:bg-green-500/20 text-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <HiCheckCircle className="text-2xl" />
+                            </div>
+                            <h3 className="text-lg font-bold text-green-700 dark:text-green-400 mb-1">No Additional Payment Required</h3>
+                            <p className="text-sm text-green-600 dark:text-green-500/80 font-accent">
+                                Your wallet balance covers the entire order amount. You can proceed to complete your order.
+                            </p>
+                        </div>
+                    </FaderInAnimation>
+                )}
 
                 {/* Additional Information */}
                 <FaderInAnimation direction="up" delay={0.3}>
@@ -262,8 +283,8 @@ export default function PaymentForm({
 
                         <Button
                             onClick={handleSubmit}
-                            loading={loading}
-                            disabled={loading}
+                            loading={loading || isSubmitting}
+                            disabled={loading || isSubmitting}
                             className="w-full sm:w-auto h-14 bg-accent! hover:bg-accent! text-white! font-bold text-lg rounded-full! shadow-lg shadow-accent/10 px-10"
                         >
                             Complete Order

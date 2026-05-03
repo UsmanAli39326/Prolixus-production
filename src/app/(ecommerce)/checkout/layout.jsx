@@ -39,13 +39,13 @@ function CheckoutLayoutInner({ children }) {
 
             <main className="grow flex justify-center w-full px-4 py-8 lg:px-8">
                 <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">
-                    <div className={`lg:col-span-12 ${(orderCompleted || isStatusPage) ? '' : 'xl:col-span-7'} flex flex-col gap-8`}>
+                    <div className={`order-2 xl:order-1 lg:col-span-12 ${(orderCompleted || isStatusPage) ? '' : 'xl:col-span-7'} flex flex-col gap-8`}>
                         <FaderInAnimation direction="up" distance={20}>
                             {children}
                         </FaderInAnimation>
                     </div>
                     {!(orderCompleted || isStatusPage) && (
-                        <div className="lg:col-span-12 xl:col-span-5">
+                        <div className="order-1 xl:order-2 lg:col-span-12 xl:col-span-5">
                             <FaderInAnimation direction="left" delay={0.2}>
                                 <OrderSummary />
                             </FaderInAnimation>

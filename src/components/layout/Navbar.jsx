@@ -38,13 +38,13 @@ export default function Header({ menus = [] }) {
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-divider bg-primary font-sans">
       <nav className="container mx-auto flex items-center justify-between px-4 py-4 lg:py-6">
         {/* Logo */}
-        <Link href="/" className="flex-shrink-0">
+        <Link href="/" className="flex-shrink-0 w-[180px] lg:w-[270px]">
           <Image
-            src="/images/new/logo-full.gif"
+            src="/images/new/logo-font-size-big.gif"
             alt="Prolixus Logo"
             width={180}
             height={50}
-            className="h-12 w-auto object-contain"
+            className="h-12 w-auto object-contain scale-110 lg:scale-[1.5] origin-left"
             priority
           />
         </Link>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import Image from "next/image";
+import Loading from "@/app/loading";
 
 import { useAuth } from "@/context/AuthContext";
 
@@ -25,22 +25,7 @@ export default function RouteGuard({ children }) {
 
     if (loading || !isLoggedIn) {
         // Display a loading state aligned with the app's loading pattern
-        return (
-            <div className="fixed inset-0 z-1000 flex items-center justify-center bg-primary/90">
-                <div className="relative h-[140px] w-[140px]">
-                    <div className="absolute inset-0 rounded-full border-4 border-transparent border-r-white border-l-white animate-spin" />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                        <Image
-                            src="/images/new/logo-full.gif"
-                            alt="Loading..."
-                            width={180}
-                            height={50}
-                            className="h-12 w-auto object-contain"
-                        />
-                    </div>
-                </div>
-            </div>
-        );
+        return <Loading />;
     }
 
     return children;

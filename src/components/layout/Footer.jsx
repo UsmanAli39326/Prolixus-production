@@ -3,6 +3,7 @@ import { getAboutPayload } from "@/app/api/about/about";
 import Image from "next/image";
 import Link from "next/link";
 import NewsletterForm from "./NewsletterForm";
+import { formatDate } from "@/utitlis/formatters";
 
 export default async function MainFooter() {
   const about = await getAboutPayload();
@@ -18,11 +19,11 @@ export default async function MainFooter() {
           <div className="space-y-8 -mt-4">
             <div className="logo">
               <Image
-                src="/images/new/logo-full.gif"
+                src="/images/new/logo-font-size-big.gif"
                 alt="Prolixus Logo"
-                width={180}
-                height={50}
-                className="h-12 w-auto object-contain"
+                width={240}
+                height={66}
+                className="h-12 w-auto object-contain scale-[1.5] origin-left"
               />
             </div>
             <div className="text-(--white-color)/60 font-default text-[15px] leading-[1.6] max-w-sm text-justify">
@@ -120,7 +121,7 @@ export default async function MainFooter() {
         {/* ================= BOTTOM BAR ================= */}
         <div className="pt-10 flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-(--white-color)/40 font-default text-sm">
-            © {new Date().getFullYear()} {about?.companyName || "Prolixus"}. All rights reserved. | Powered by <Link href="https://devtechnoz.com/" target="_blank" className="hover:text-(--accent-color) transition-colors font-semibold">DevTechNoz</Link>
+            © {formatDate(new Date(), 'year')} {about?.companyName || "Prolixus"}. All rights reserved. | Powered by <Link href="https://devtechnoz.com/" target="_blank" className="hover:text-(--accent-color) transition-colors font-semibold">DevTechNoz</Link>
           </p>
 
           <div className="flex items-center gap-8 font-default">
