@@ -12,6 +12,7 @@ import { useCurrency } from "@/context/CurrencyContext";
 import { useCheckout } from "@/context/CheckoutContext";
 import PaymentMethodSelector from "./PaymentMethodSelector";
 import OrderConfirmation from "./OrderConfirmation";
+import { useRouter } from "next/navigation";
 
 export default function PaymentForm({
     prevStep,
@@ -34,6 +35,7 @@ export default function PaymentForm({
     const { isLoggedIn } = useAuth();
     const { currency, formatPrice } = useCurrency();
     const { setOrderCompleted, totals, walletBalance, isAuthenticated } = useCheckout();
+    const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [orderData, setOrderData] = useState(null);
@@ -47,6 +49,10 @@ export default function PaymentForm({
         setSuccess(true);
         setOrderCompleted(true);
         clearCart();
+        const invoiceNumber = data?.invoiceNumber || data?.orderId || data?.id;
+        if (invoiceNumber) {
+            router.push(`/order-detail?invoiceNumber=${invoiceNumber}`);
+        }
     };
 
     const handleError = (message) => {

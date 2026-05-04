@@ -156,7 +156,12 @@ export default function CheckoutWizard() {
                 setOrderData(response.data);
                 setOrderCompleted(true);
                 clearCart();
-                setCurrentStep(2); // Go to confirmation step
+                const invoiceNumber = response.data?.invoiceNumber || response.data?.orderId || response.data?.id;
+                if (invoiceNumber) {
+                    router.push(`/order-detail?invoiceNumber=${invoiceNumber}`);
+                } else {
+                    setCurrentStep(2); // Go to confirmation step
+                }
             } else {
                 alert(response.message || "Failed to create order");
             }

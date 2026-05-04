@@ -11,10 +11,12 @@ import {
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import Button from "@/components/ui/Button";
 import { getOrderDetails, getOrderInvoiceHtml } from "@/lib/OrderService";
+import { useAuth } from "@/context/AuthContext";
 
 export default function OrderDetailContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const { isLoggedIn } = useAuth();
 
     const [invoiceHtml, setInvoiceHtml] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -22,24 +24,29 @@ export default function OrderDetailContent() {
     const iframeRef = useRef(null);
 
     const orderId = searchParams.get("orderId");
+    const invoiceNumberParam = searchParams.get("invoiceNumber");
 
     useEffect(() => {
         const fetchInvoice = async () => {
             try {
                 setLoading(true);
 
-                // First get order details to retrieve invoice number
-                let invoiceNumber = null;
+                // Determine invoice number from params or fetch from orderId
+                let invoiceNumber = invoiceNumberParam;
 
-                if (orderId) {
+                // If invoiceNumber is provided directly, use it
+                if (!invoiceNumber && orderId) {
+                    // Fetch order details to retrieve invoice number
                     const orderResponse = await getOrderDetails(orderId);
                     if (orderResponse?.success && orderResponse.data) {
                         invoiceNumber = orderResponse.data?.order?.invoiceNumber || orderResponse.data?.order?.id;
                     } else if (orderResponse?.data) {
                         invoiceNumber = orderResponse.data?.order?.invoiceNumber || orderResponse.data?.order?.id;
                     }
-                } else {
-                    // Try sessionStorage fallback
+                }
+
+                // Try sessionStorage fallback if still no invoice number
+                if (!invoiceNumber) {
                     try {
                         const stored = sessionStorage.getItem("orderData");
                         if (stored) {
@@ -81,7 +88,7 @@ export default function OrderDetailContent() {
         };
 
         fetchInvoice();
-    }, [orderId]);
+    }, [orderId, invoiceNumberParam]);
 
     useEffect(() => {
         window.history.pushState(null, "", window.location.href);
@@ -168,16 +175,18 @@ export default function OrderDetailContent() {
             {/* TOP ACTIONS */}
             <div className="w-full flex justify-center print:hidden">
                 <FaderInAnimation>
-                    <div className="w-full max-w-[1400px] mb-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-                        <Button
-                            onClick={() => router.push("/dashboard")}
-                            variant="outline"
-                            size="sm"
-                            leftIcon={<FaArrowLeft size={14} />}
-                            className="w-full sm:w-auto rounded-lg border-2 border-divider font-bold hover:bg-secondary/50 transition-all shadow-sm"
-                        >
-                            Dashboard
-                        </Button>
+                    <div className={`w-full max-w-[1400px] mb-6 flex flex-col sm:flex-row items-center gap-4 ${isLoggedIn ? 'justify-between' : 'justify-end'}`}>
+                        {isLoggedIn && (
+                            <Button
+                                onClick={() => router.push("/dashboard")}
+                                variant="outline"
+                                size="sm"
+                                leftIcon={<FaArrowLeft size={14} />}
+                                className="w-full sm:w-auto rounded-lg border-2 border-divider font-bold hover:bg-secondary/50 transition-all shadow-sm"
+                            >
+                                Dashboard
+                            </Button>
+                        )}
                         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
                             <Button
                                 onClick={handlePrint}
