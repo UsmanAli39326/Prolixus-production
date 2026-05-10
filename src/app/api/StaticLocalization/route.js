@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import homepageData from '@/data/homepage_localization.json';
 
 export async function GET() {
   try {
