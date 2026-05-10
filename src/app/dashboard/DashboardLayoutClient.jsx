@@ -8,14 +8,15 @@ import { apiService } from "@/lib/api";
 import RouteGuard from "@/components/auth/RouteGuard";
 import { useAuth } from "@/context/AuthContext";
 
-const menuItems = [
-    { label: 'Overview', href: '/dashboard', icon: FaHome },
-    { label: 'My Orders', href: '/dashboard/orders', icon: FaShoppingBag },
-    { label: 'Profile Settings', href: '/dashboard/profile', icon: FaUser },
-    { label: 'Partner Program', href: '/dashboard/partner', icon: FaHandshake },
+const getMenuItems = (l) => [
+    { label: l?.dashboard_menu_overview, href: '/dashboard', icon: FaHome },
+    { label: l?.dashboard_menu_orders, href: '/dashboard/orders', icon: FaShoppingBag },
+    { label: l?.dashboard_menu_profile, href: '/dashboard/profile', icon: FaUser },
+    { label: l?.dashboard_menu_partner, href: '/dashboard/partner', icon: FaHandshake },
 ];
 
-export default function DashboardLayout({ children }) {
+export default function DashboardLayout({ children, localization }) {
+    const menuItems = getMenuItems(localization);
     const pathname = usePathname();
     const router = useRouter();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -44,11 +45,11 @@ export default function DashboardLayout({ children }) {
                 {/* Mobile Header */}
                 {/* Mobile Dashboard Sub-Header */}
                 <header className="md:hidden bg-white/10 backdrop-blur-md text-primary dark:text-white p-3 flex items-center justify-between sticky mt-20 z-40 border-b border-divider">
-                    <span className="text-sm font-bold uppercase tracking-wider ml-2">Dashboard Menu</span>
+                    <span className="text-sm font-bold uppercase tracking-wider ml-2">{localization?.dashboard_menu_label}</span>
                     <button
                         onClick={toggleSidebar}
                         className="p-2 text-2xl focus:outline-none bg-primary text-white rounded-lg "
-                        aria-label="Toggle Dashboard Menu"
+                        aria-label={localization?.dashboard_menu_toggle}
                     >
                         {isSidebarOpen ? <FaTimes /> : <FaBars />}
                     </button>
@@ -119,7 +120,7 @@ export default function DashboardLayout({ children }) {
                             className="flex w-full items-center justify-center gap-2 px-4 py-2 rounded-lg border border-white/20 text-white/80 hover:bg-white/10 hover:text-white transition-colors text-sm font-medium"
                         >
                             <span className="material-symbols-outlined text-lg flex items-center justify-center"><FaSignOutAlt /></span>
-                            Log Out
+                            {localization?.dashboard_logout}
                         </button>
                     </div>
                 </aside>

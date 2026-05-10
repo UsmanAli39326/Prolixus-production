@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 
-export default function BlogCard({ post, index }) {
+export default function BlogCard({ post, index, localization }) {
     return (
         <FaderInAnimation direction="up" delay={`${index * 0.1}s`}>
             <article className="post-item flex flex-col h-full overflow-hidden rounded-2xl border border-(--divider-color) bg-(--white-color) shadow-[0_0_30px_0_rgba(0,0,0,0.05)] hover:shadow-[0_8px_40px_0_rgba(0,0,0,0.12)] transition-shadow duration-300">
@@ -72,7 +72,7 @@ export default function BlogCard({ post, index }) {
                         {/* Read more */}
                         <div className="post-item-btn">
                             <Link href={post.href} className="readmore-btn text-sm">
-                                Mehr lesen
+                                {localization?.blog_read_more}
                             </Link>
                         </div>
                     </div>

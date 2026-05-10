@@ -50,6 +50,7 @@ export default function ProductInfo({
     rating = 0,
     reviewCount = 0,
     badges = [],
+    localization,
 }) {
     const { formatPrice } = useCurrency();
     return (
@@ -59,7 +60,7 @@ export default function ProductInfo({
                 <ol className="flex items-center gap-2">
                     <li>
                         <Link href="/products" className="hover:text-(--accent-color) transition-colors">
-                            Home
+                            {localization?.product_breadcrumb_home}
                         </Link>
                     </li>
                     <li className="text-(--divider-color)">/</li>
@@ -112,6 +113,10 @@ export default function ProductInfo({
 
             {/* Rating */}
             {/* <StarRating rating={rating} reviewCount={reviewCount} /> */}
+
+            <div className="flex items-center gap-2 text-sm text-(--text-color)">
+                {reviewCount} {localization?.product_reviews_count}
+            </div>
 
         </div>
     );

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import PageHeader from "@/components/layout/PageHeader";
 import BlogDetail from "@/components/layout/Blog/BlogDetail";
 import { getPostById, getAllPosts } from "@/lib/blogData";
+import { getLocalization } from "@/lib/getLocalization";
 
 export async function generateStaticParams() {
     const posts = await getAllPosts();
@@ -23,20 +24,22 @@ export default async function BlogDetailPage({ params }) {
     const post = await getPostById(id);
     if (!post) return notFound();
 
+    const localization = await getLocalization();
+
     return (
         <>
             <PageHeader
-                title={post.category || "Blog"}
-                subtitle="Artikel"
+                title={post.category || localization?.blog_breadcrumb_blog}
+                subtitle={localization?.blog_detail_subtitle}
                 bgImage={"/images/new/blog detail page banner.webp"}
                 mobileBgImage={"/images/new/Blog details mobile view.webp"}
                 breadcrumbs={[
-                    { label: "Home", href: "/" },
-                    { label: "Blog", href: "/blog" },
-                    { label: post.category || "Artikel", href: null }
+                    { label: localization?.product_breadcrumb_home, href: "/" },
+                    { label: localization?.blog_breadcrumb_blog, href: "/blog" },
+                    { label: post.category || localization?.blog_breadcrumb_article, href: null }
                 ]}
             />
-            <BlogDetail post={post} />
+            <BlogDetail post={post} localization={localization} />
         </>
     );
 }

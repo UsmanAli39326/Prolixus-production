@@ -7,6 +7,7 @@ import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import { apiService } from "@/lib/api";
 import Toast from "@/components/ui/Toast";
 import Image from "next/image";
+import { getLocalization } from "@/lib/getLocalization";
 
 export default function VerifyOTPPage() {
     const router = useRouter();
@@ -26,6 +27,15 @@ export default function VerifyOTPPage() {
         message: "",
         type: "success",
     });
+    const [localization, setLocalization] = useState(null);
+
+    useEffect(() => {
+        const fetchLocalization = async () => {
+            const data = await getLocalization();
+            setLocalization(data);
+        };
+        fetchLocalization();
+    }, []);
 
     useEffect(() => {
         if (!email) {
@@ -177,17 +187,19 @@ export default function VerifyOTPPage() {
                                         />
                                     </Link>
                                     <div className="leading-tight">
-                                        <div className="text-white font-semibold tracking-wide">Prolixus</div>
-                                        <div className="text-white/70 text-xs">Secure access portal</div>
+                                        <div className="text-white font-semibold tracking-wide">{localization?.brandname || "Prolixus"}</div>
+                                        <div className="text-white/70 text-xs">{localization?.sign_in}</div>
                                     </div>
                                 </div>
                             </div>
                             <div className="absolute bottom-7 left-7 right-7">
                                 <div className="text-white text-2xl font-semibold leading-snug font-accent">
-                                    {type === "reset" ? "Reset your password securely." : "Verify your email to get started."}
+                                    {type === "reset" 
+                                        ? (localization?.reset_password || "Reset your password securely.") 
+                                        : (localization?.welcome_title || "Verify your email to get started.")}
                                 </div>
                                 <div className="mt-3 text-white/80 text-sm">
-                                    A 6-digit code has been sent to your email.
+                                    {localization?.code_email || "A 6-digit code has been sent to your email."}
                                 </div>
                             </div>
                         </div>
@@ -207,8 +219,8 @@ export default function VerifyOTPPage() {
                                             />
                                         </Link>
                                         <div>
-                                            <div className="font-accent text-2xl text-primary">Prolixus</div>
-                                            <div className="text-sm text-text">Secure access portal</div>
+                                            <div className="font-accent text-2xl text-primary">{localization?.brandname || "Prolixus"}</div>
+                                            <div className="text-sm text-text">{localization?.sign_in}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -216,7 +228,7 @@ export default function VerifyOTPPage() {
 
 
                                 <h1 className="text-3xl font-bold font-accent text-center text-primary">
-                                    Verify <span className="text-accent">OTP</span>
+                                    {localization?.verify_otp || "Verify OTP"}
                                 </h1>
                                 <p className="mt-2 text-center text-sm text-text">
                                     Enter the 6-digit code sent to {maskedEmail}
@@ -257,18 +269,18 @@ export default function VerifyOTPPage() {
                                         loadingText="Verifying..."
                                         className="mt-8"
                                     >
-                                        Verify & Continue
+                                        {localization?.account_status || "Verify & Continue"}
                                     </Button>
 
                                     <div className="mt-4 text-center text-sm text-text">
-                                        Didn't receive code?{" "}
+                                        {localization?.account_receive_code || "Didn't receive code?"}{" "}
                                         <button
                                             type="button"
                                             onClick={handleResend}
                                             disabled={cooldown > 0 || resendLoading}
                                             className={`font-medium text-accent hover:underline ${cooldown > 0 ? "opacity-50 cursor-not-allowed" : ""}`}
                                         >
-                                            {resendLoading ? "Sending..." : cooldown > 0 ? `Resend in ${cooldown}s` : "Resend"}
+                                            {resendLoading ? "Sending..." : cooldown > 0 ? `Resend in ${cooldown}s` : (localization?.account_status_resend || "Resend")}
                                         </button>
                                     </div>
                                 </form>

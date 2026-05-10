@@ -6,14 +6,16 @@ import {
   ProductBuySection,
 } from "@/components/layout/Ecommerce/ProductPage";
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
+import { getLocalization } from "@/lib/getLocalization";
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const product = await getProductById(slug);
+  const data = await getLocalization();
 
   if (!product) {
     return {
-      title: "Product Not Found",
+      title: data?.product_not_found_title,
     };
   }
 
@@ -29,16 +31,17 @@ export async function generateMetadata({ params }) {
 export default async function ProductPage({ params }) {
   const { slug } = await params;
   const product = await getProductById(slug);
+  const data = await getLocalization();
 
   if (!product) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="text-center">
           <h1 className="font-accent text-2xl font-semibold text-(--primary-color)">
-            Product Not Found
+            {data?.product_not_found_title}
           </h1>
           <p className="mt-2 text-(--text-color)">
-            The product you're looking for (ID: {slug}) doesn't exist.
+            {data?.product_not_found_desc} (ID: {slug})
           </p>
         </div>
       </div>
@@ -63,8 +66,8 @@ export default async function ProductPage({ params }) {
     heroImage: product.image,
     accordionItems: [
       {
-        title: "Description",
-        content: product.description || "No detailed description available.",
+        title: data?.product_description_label,
+        content: product.description || data?.product_no_description,
       },
       /*
       {
@@ -91,9 +94,9 @@ export default async function ProductPage({ params }) {
 
           <FaderInAnimation direction="right" delay={0.2} distance={30}>
             <div>
-              <ProductInfo {...extendedProduct} />
+              <ProductInfo {...extendedProduct} localization={data} />
 
-              <ProductBuySection product={product} />
+              <ProductBuySection product={product} localization={data} />
 
               <ProductAccordion items={extendedProduct.accordionItems} />
             </div>

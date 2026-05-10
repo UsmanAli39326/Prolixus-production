@@ -2,18 +2,23 @@ import categories from "@/app/api/products/categories";
 import filters from "@/app/api/products/filter";
 import ShopHero from "@/components/layout/Ecommerce/ProductListingPage/ProductHero";
 import ProductsFilterManager from "@/components/layout/Ecommerce/ProductListingPage/ProductsFilterManager";
+import { getLocalization } from "@/lib/getLocalization";
 
 
 export const dynamic = "force-dynamic";
 
-export const metadata = {
-  title: "Shop All Products",
-  description: "Browse our complete collection of premium organic products.",
-};
+export async function generateMetadata() {
+  const data = await getLocalization();
+  return {
+    title: data?.shop_all_products_meta_title,
+    description: data?.shop_all_products_meta_desc,
+  };
+}
 
 export default async function ShopPage({ searchParams }) {
+  const data = await getLocalization();
   const resolvedParams = await searchParams;
-  
+
   const categoryList = await categories();
   const filterList = await filters();
 
@@ -25,8 +30,8 @@ export default async function ShopPage({ searchParams }) {
   return (
     <div className="bg-(--secondary-color)">
       <ShopHero
-        title="Shop All Products"
-        subtitle="Discover nature's finest ingredients, curated for your holistic well-being."
+        title={data?.shop_all_products_title}
+        subtitle={data?.shop_all_products_subtitle}
       />
       <ProductsFilterManager
         categoryList={categoryList}
@@ -34,6 +39,7 @@ export default async function ShopPage({ searchParams }) {
         initialPage={page}
         initialSort={sortBy}
         initialPriceRange={{ min: minPrice, max: maxPrice }}
+        localization={data}
       />
     </div>
   );

@@ -7,7 +7,7 @@ import ProductGrid from "./ProductGrid";
 import ShopTopBar from "./ProductHeader";
 import ProductCardSkeleton from "./ProductCardSkeleton";
 import getAllProducts from "@/app/api/products/products";
-export default function ProductsFilterManager({ categoryList, filters, initialPage = 1, initialSort, initialPriceRange }) {
+export default function ProductsFilterManager({ categoryList, filters, initialPage = 1, initialSort, initialPriceRange, localization }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -147,6 +147,7 @@ export default function ProductsFilterManager({ categoryList, filters, initialPa
           onSortChange={onSortChange}
           currentCategory={currentCategory}
           onCategoryChange={onCategoryChange}
+          localization={localization}
         />
       }
       content={
@@ -173,8 +174,9 @@ export default function ProductsFilterManager({ categoryList, filters, initialPa
                 showing={filteredAndSortedProducts.length}
                 onOpenFilters={() => setShowFilters(prev => !prev)}
                 filtersOpen={showFilters}
+                localization={localization}
               />
-              <ProductGrid products={filteredAndSortedProducts} />
+              <ProductGrid products={filteredAndSortedProducts} localization={localization} />
             </>
           )}
         </>

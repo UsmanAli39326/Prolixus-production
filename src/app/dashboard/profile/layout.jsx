@@ -6,19 +6,30 @@ import { usePathname } from "next/navigation";
 import DashboardHeader from "@/components/layout/Dashboard/DashboardHeader";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import { FaUser, FaShieldAlt, FaAddressBook } from "react-icons/fa";
+import { getLocalization } from "@/lib/getLocalization";
+
 
 export default function ProfileLayout({ children }) {
     const pathname = usePathname();
+    const [localization, setLocalization] = React.useState(null);
+
+    React.useEffect(() => {
+        const fetchLocalization = async () => {
+            const data = await getLocalization();
+            setLocalization(data);
+        };
+        fetchLocalization();
+    }, []);
 
     const tabs = [
         {
-            name: "Personal Info",
+            name: localization?.profile_personal_info || "Personal Info",
             href: "/dashboard/profile",
             icon: <FaUser className="text-xl" />,
             exact: true,
         },
         {
-            name: "Security",
+            name: localization?.security_title || "Security",
             href: "/dashboard/profile/security",
             icon: <FaShieldAlt className="text-xl" />,
         },
@@ -28,8 +39,8 @@ export default function ProfileLayout({ children }) {
         <div className="flex flex-col gap-8 pb-10">
             <RevealInAnimation direction="up">
                 <DashboardHeader
-                    title="Profile Settings"
-                    subtitle="Manage your account information and security preferences"
+                    title={localization?.dashboard_menu_profile}
+                    subtitle={localization?.profile_settings_subtitle}
                 />
             </RevealInAnimation>
 

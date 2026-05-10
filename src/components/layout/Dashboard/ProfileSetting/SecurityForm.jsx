@@ -3,23 +3,23 @@ import React from "react";
 import Input from "@/components/ui/Input";
 import { MdLock } from "react-icons/md";
 
-export default function SecurityForm({ formData = {}, onChange, errors = {}, isLoading }) {
+export default function SecurityForm({ formData = {}, onChange, errors = {}, isLoading, localization }) {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="md:col-span-2 flex justify-between items-center">
                 <div>
                     <h3 className="text-xl font-accent font-bold text-primary mb-2">
-                        Security
+                        {localization?.security_title}
                     </h3>
                     <p className="text-base text-text/70">
-                        Ensure your account is using a long, random password to stay secure.
+                        {localization?.security_desc}
                     </p>
                 </div>
                 <button
                     type="button"
                     className="text-sm font-medium text-accent hover:underline"
                 >
-                    Forgot Password?
+                    {localization?.security_forgot_password}
                 </button>
             </div>
 
@@ -27,10 +27,10 @@ export default function SecurityForm({ formData = {}, onChange, errors = {}, isL
                 <Input
                     id="currentPassword"
                     name="currentPassword"
-                    label="Current Password"
+                    label={localization?.security_current_password}
                     inputClassName="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-0 focus:border-primary"
                     type="password"
-                    placeholder="••••••••"
+                    placeholder={localization?.security_password_placeholder}
                     autoComplete="current-password"
                     icon={<MdLock />}
                     value={formData.currentPassword ?? ""}
@@ -43,10 +43,10 @@ export default function SecurityForm({ formData = {}, onChange, errors = {}, isL
             <Input
                 id="newPassword"
                 name="newPassword"
-                label="New Password"
+                label={localization?.security_new_password}
                 inputClassName="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-0 focus:border-primary"
                 type="password"
-                placeholder="Minimum 8 characters"
+                placeholder={localization?.security_password_placeholder}
                 autoComplete="new-password"
                 icon={<MdLock />}
                 value={formData.newPassword ?? ""}
@@ -58,10 +58,10 @@ export default function SecurityForm({ formData = {}, onChange, errors = {}, isL
             <Input
                 id="confirmPassword"
                 name="confirmPassword"
-                label="Confirm New Password"
+                label={localization?.security_confirm_password}
                 inputClassName={`w-full border rounded-md px-4 py-2 focus:ring-0 ${errors.confirmPassword ? 'border-red-500 focus:border-red-500' : 'border-gray-300 focus:border-primary'}`}
                 type="password"
-                placeholder="Minimum 8 characters"
+                placeholder={localization?.security_password_placeholder}
                 autoComplete="new-password"
                 icon={<MdLock className="text-xl" />}
                 value={formData.confirmPassword ?? ""}

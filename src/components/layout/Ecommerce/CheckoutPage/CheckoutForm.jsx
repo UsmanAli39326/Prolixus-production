@@ -9,7 +9,7 @@ import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import { getCountries } from "@/app/api/products/countries";
 
-export default function CheckoutForm({ nextStep, goToStep, formData, updateFormData, isAuthenticated, total, onDirectComplete, isSubmitting }) {
+export default function CheckoutForm({ nextStep, goToStep, formData, updateFormData, isAuthenticated, total, onDirectComplete, isSubmitting, localization }) {
     const [errors, setErrors] = useState({});
 
     const inputStyles = {
@@ -36,12 +36,12 @@ export default function CheckoutForm({ nextStep, goToStep, formData, updateFormD
 
     const validate = () => {
         const newErrors = {};
-        if (!formData.email) newErrors.email = "Email is required";
-        if (!formData.fullName) newErrors.fullName = "Full name is required";
-        if (!formData.phone) newErrors.phone = "Phone is required";
-        if (!formData.address) newErrors.address = "Address is required";
-        if (!formData.city) newErrors.city = "City is required";
-        if (!formData.zip) newErrors.zip = "Post code is required";
+        if (!formData.email) newErrors.email = `${localization?.checkout_email_label} is required`;
+        if (!formData.fullName) newErrors.fullName = `${localization?.checkout_fullname_label} is required`;
+        if (!formData.phone) newErrors.phone = `${localization?.checkout_phone_label} is required`;
+        if (!formData.address) newErrors.address = `${localization?.checkout_street_label} is required`;
+        if (!formData.city) newErrors.city = `${localization?.checkout_city_label} is required`;
+        if (!formData.zip) newErrors.zip = `${localization?.checkout_zip_label} is required`;
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -80,11 +80,11 @@ export default function CheckoutForm({ nextStep, goToStep, formData, updateFormD
         <div className="flex flex-col gap-8">
             <RevealInAnimation direction="left">
                 <nav className="flex items-center gap-3 text-sm font-medium font-default">
-                    <span className="text-primary font-bold">Information</span>
+                    <span className="text-primary font-bold">{localization?.checkout_breadcrumb_info}</span>
                     <div className="text-gray-400">
                         <svg className="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                     </div>
-                    <span className="text-gray-400 cursor-default">Payment</span>
+                    <span className="text-gray-400 cursor-default">{localization?.checkout_breadcrumb_payment}</span>
                 </nav>
             </RevealInAnimation>
 
@@ -93,10 +93,10 @@ export default function CheckoutForm({ nextStep, goToStep, formData, updateFormD
                 <FaderInAnimation direction="up" delay={0.1}>
                     <div className="space-y-6">
                         <div className="flex items-baseline justify-between">
-                            <h2 className="text-2xl font-bold tracking-tight text-primary">Contact Information</h2>
+                            <h2 className="text-2xl font-bold tracking-tight text-primary">{localization?.checkout_contact_info_title}</h2>
                             {!isAuthenticated && (
                                 <span className="text-sm font-accent text-gray-500">
-                                    Have an account? <Link href="/login?redirect=/checkout" className="text-accent font-bold hover:underline hover:cursor-pointer">Log in</Link>
+                                    {localization?.checkout_login_prompt} <Link href="/login?redirect=/checkout" className="text-accent font-bold hover:underline hover:cursor-pointer">{localization?.checkout_login_link}</Link>
                                 </span>
                             )}
                         </div>
@@ -104,7 +104,7 @@ export default function CheckoutForm({ nextStep, goToStep, formData, updateFormD
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
                             <div className="md:col-span-2">
                                 <Input
-                                    label="Email Address"
+                                    label={localization?.checkout_email_label}
                                     name="email"
                                     value={formData.email}
                                     onChange={handleChange}
@@ -117,7 +117,7 @@ export default function CheckoutForm({ nextStep, goToStep, formData, updateFormD
                                 />
                             </div>
                             <Input
-                                label="Full Name"
+                                label={localization?.checkout_fullname_label}
                                 name="fullName"
                                 value={formData.fullName}
                                 onChange={handleChange}
@@ -128,7 +128,7 @@ export default function CheckoutForm({ nextStep, goToStep, formData, updateFormD
                                 {...inputStyles}
                             />
                             <Input
-                                label="Phone Number"
+                                label={localization?.checkout_phone_label}
                                 name="phone"
                                 value={formData.phone}
                                 onChange={handleChange}
@@ -145,12 +145,12 @@ export default function CheckoutForm({ nextStep, goToStep, formData, updateFormD
                 {/* Shipping Address */}
                 <FaderInAnimation direction="up" delay={0.2}>
                     <div className="space-y-6">
-                        <h2 className="text-2xl font-bold tracking-tight text-primary">Shipping Address</h2>
+                        <h2 className="text-2xl font-bold tracking-tight text-primary">{localization?.checkout_shipping_address_title}</h2>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
                             <div className="md:col-span-2">
                                 <Input
-                                    label="Street Address"
+                                    label={localization?.checkout_street_label}
                                     name="address"
                                     value={formData.address}
                                     onChange={handleChange}
@@ -163,7 +163,7 @@ export default function CheckoutForm({ nextStep, goToStep, formData, updateFormD
                             </div>
                             <div className="md:col-span-2">
                                 <Input
-                                    label="Apartment, suite, etc. (optional)"
+                                    label={localization?.checkout_apartment_label}
                                     name="apartment"
                                     value={formData.apartment}
                                     onChange={handleChange}
@@ -172,7 +172,7 @@ export default function CheckoutForm({ nextStep, goToStep, formData, updateFormD
                                 />
                             </div>
                             <Input
-                                label="ZIP / Post Code"
+                                label={localization?.checkout_zip_label}
                                 name="zip"
                                 value={formData.zip}
                                 onChange={handleChange}
@@ -182,7 +182,7 @@ export default function CheckoutForm({ nextStep, goToStep, formData, updateFormD
                                 {...inputStyles}
                             />
                             <Input
-                                label="City"
+                                label={localization?.checkout_city_label}
                                 name="city"
                                 value={formData.city}
                                 onChange={handleChange}
@@ -192,16 +192,16 @@ export default function CheckoutForm({ nextStep, goToStep, formData, updateFormD
                                 {...inputStyles}
                             />
                             <div className="md:col-span-2">
-                                <label className="text-sm font-medium ml-2 text-primary font-accent block mb-1.5">Country</label>
+                                <label className="text-sm font-medium ml-2 text-primary font-accent block mb-1.5">{localization?.checkout_country_label}</label>
                                 <select
                                     name="countryId"
                                     className="w-full h-12 px-4 rounded-xl border border-divider bg-white dark:bg-white/5 focus:border-accent focus:ring-1 focus:ring-accent transition-colors"
                                     value={formData.countryId}
                                     onChange={handleChange}
                                 >
-                                    <option value="" disabled>Select your country</option>
+                                    <option value="" disabled>{localization?.checkout_select_country}</option>
                                     {isLoadingCountries ? (
-                                        <option disabled>Loading countries...</option>
+                                        <option disabled>{localization?.checkout_loading_countries}</option>
                                     ) : (
                                         countries.map(c => (
                                             <option key={c.id} value={c.id}>{c.name}</option>
@@ -221,7 +221,7 @@ export default function CheckoutForm({ nextStep, goToStep, formData, updateFormD
                             className="flex items-center gap-1 text-sm font-medium text-primary hover:text-accent transition-colors group"
                         >
                             <HiChevronLeft className="text-lg transition-transform group-hover:-translate-x-1" />
-                            Return to cart
+                            {localization?.checkout_return_to_cart}
                         </Link>
 
                         <Button
@@ -230,7 +230,7 @@ export default function CheckoutForm({ nextStep, goToStep, formData, updateFormD
                             disabled={isSubmitting}
                             className="w-full sm:w-auto h-14 bg-accent! hover:bg-accent! text-white! font-bold text-lg rounded-full! shadow-lg shadow-accent/10 px-10"
                         >
-                            {total === 0 ? "Complete Order" : "Continue to Payment"}
+                            {total === 0 ? localization?.checkout_complete_order : localization?.checkout_continue_to_payment}
                         </Button>
                     </div>
                 </FaderInAnimation>

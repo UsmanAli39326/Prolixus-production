@@ -11,12 +11,22 @@ import { apiService } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import Image from "next/image";
 import Toast from "@/components/ui/Toast";
+import { getLocalization } from "@/lib/getLocalization";
 
 export default function AuthPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isLogin, setIsLogin] = useState(true);
   const { login, isLoggedIn } = useAuth();
+  const [localization, setLocalization] = useState(null);
+
+  useEffect(() => {
+    const fetchLocalization = async () => {
+      const data = await getLocalization();
+      setLocalization(data);
+    };
+    fetchLocalization();
+  }, []);
 
   // Helper to safely redirect to an internal route or fallback
   const performRedirect = (path) => {
@@ -260,15 +270,15 @@ export default function AuthPage() {
                       <Link href="/" className="shrink-0">
                         <Image
                           src="/images/new/logo-full.gif"
-                          alt="Prolixus Logo"
+                          alt={localization?.brandname || "Prolixus Logo"}
                           width={160}
                           height={45}
                           className="h-12 w-auto object-contain"
                         />
                       </Link>
                       <div>
-                        <div className="font-accent text-2xl text-primary">Prolixus</div>
-                        <div className="text-sm text-text">Secure access portal</div>
+                        <div className="font-accent text-2xl text-primary">{localization?.brandname || "Prolixus"}</div>
+                        <div className="text-sm text-text">{localization?.sign_in}</div>
                       </div>
                     </div>
                   </div>
@@ -276,10 +286,10 @@ export default function AuthPage() {
 
 
                   <h1 className="text-3xl font-bold font-accent text-center text-primary">
-                    Welcome back to <span className="text-accent">Prolixus</span>
+                    {localization?.welcome || "Welcome back to"} <span className="text-accent">{localization?.brandname || "Prolixus"}</span>
                   </h1>
                   <p className="mt-2 text-center text-sm text-text">
-                    Sign in to continue to your dashboard.
+                    {localization?.sign_in}
                   </p>
 
                   {error && isLogin && (
@@ -291,7 +301,7 @@ export default function AuthPage() {
                       id="email"
                       name="email"
                       type="email"
-                      label="Email"
+                      label={localization?.checkout_email_label || "Email"}
                       inputClassName="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-0 focus:border-primary"
                       className="w-full"
                       placeholder="you@example.com"
@@ -305,10 +315,10 @@ export default function AuthPage() {
                       id="password"
                       name="password"
                       type="password"
-                      label="Password"
+                      label={localization?.security_current_password || "Password"}
                       inputClassName="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-0 focus:border-primary"
                       className="w-full"
-                      placeholder="••••••••"
+                      placeholder={localization?.security_password_placeholder || "••••••••"}
                       value={password}
                       onChange={(e) => { setPassword(e.target.value); clearFieldError("password"); }}
                       error={fieldErrors.password}
@@ -320,7 +330,7 @@ export default function AuthPage() {
                         href="/forgot-password"
                         className="text-sm font-medium text-accent hover:underline"
                       >
-                        Forgot password?
+                        {localization?.forgot_password || "Forgot password?"}
                       </Link>
 
                       {/* Remember me toggle hidden
@@ -360,7 +370,7 @@ export default function AuthPage() {
                       loadingText="Signing in..."
                       className="mt-2 hover:bg-accent/90 cursor-pointer duration-300"
                     >
-                      Log in
+                      {localization?.account_signin || "Log in"}
                     </Button>
 
                     {/* OR divider and Google sign-in hidden
@@ -383,13 +393,13 @@ export default function AuthPage() {
                     */}
 
                     <p className="text-center text-sm text-text pt-2">
-                      Don't have an account?{" "}
+                      {localization?.account_donot || "Don't have an account?"}{" "}
                       <Link
                         href={`/login?mode=register${searchParams.get("redirect") ? `&redirect=${encodeURIComponent(searchParams.get("redirect"))}` : ""}`}
                         className="font-medium text-primary hover:underline"
                         onClick={(e) => { e.preventDefault(); toggleMode(); }}
                       >
-                        Sign up
+                        {localization?.account_status || "Sign up"}
                       </Link>
                     </p>
                   </form>
@@ -419,19 +429,19 @@ export default function AuthPage() {
                         />
                       </Link>
                       <div>
-                        <div className="font-accent text-2xl text-primary">Prolixus</div>
-                        <div className="text-sm text-text">Secure access portal</div>
+                        <div className="font-accent text-2xl text-primary">{localization?.brandname || "Prolixus"}</div>
+                        <div className="text-sm text-text">{localization?.sign_in}</div>
                       </div>
                     </div>
                   </div>
 
 
 
-                  <h1 className="text-3xl font-bold font-accent text-center text-primary">
-                    Create your <span className="text-accent">Prolixus</span> account
+                   <h1 className="text-3xl font-bold font-accent text-center text-primary">
+                    {localization?.create_account || "Create your account"} <span className="text-accent">{localization?.brandname || "Prolixus"}</span>
                   </h1>
                   <p className="mt-2 text-center text-sm text-text">
-                    Join us and start your journey today.
+                    {localization?.join_today || "Join us and start your journey today."}
                   </p>
 
                   {error && !isLogin && (
@@ -443,10 +453,10 @@ export default function AuthPage() {
                       id="name"
                       name="name"
                       type="text"
-                      label="Full Name"
+                      label={localization?.checkout_fullname_label || "Full Name"}
                       inputClassName="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-0 focus:border-primary"
                       className="w-full"
-                      placeholder="John Doe"
+                      placeholder={localization?.profile_full_name_placeholder || "John Doe"}
                       value={name}
                       onChange={(e) => { setName(e.target.value); clearFieldError("name"); }}
                       error={fieldErrors.name}
@@ -457,7 +467,7 @@ export default function AuthPage() {
                       id="regEmail"
                       name="regEmail"
                       type="email"
-                      label="Email"
+                      label={localization?.checkout_email_label || "Email"}
                       inputClassName="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-0 focus:border-primary"
                       className="w-full"
                       placeholder="you@example.com"
@@ -477,7 +487,7 @@ export default function AuthPage() {
                       id="regPassword"
                       name="regPassword"
                       type="password"
-                      label="Password"
+                      label={localization?.security_current_password || "Password"}
                       inputClassName="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-0 focus:border-primary"
                       className="w-full"
                       placeholder="••••••••"
@@ -499,7 +509,7 @@ export default function AuthPage() {
                       id="confirmPassword"
                       name="confirmPassword"
                       type="password"
-                      label="Confirm Password"
+                      label={localization?.security_confirm_password || "Confirm Password"}
                       inputClassName="w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-0 focus:border-primary"
                       className="w-full"
                       placeholder="••••••••"
@@ -534,18 +544,7 @@ export default function AuthPage() {
                           </span>
                         </label>
                         <span className="text-sm text-text">
-                          I agree to the{" "}
-                          <Link href="/terms" className="font-medium text-accent hover:underline">
-                            Terms & Conditions
-                          </Link>
-                          ,{" "}
-                          <Link href="/privacy-policy" className="font-medium text-accent hover:underline">
-                            Privacy Policy
-                          </Link>{" "}
-                          and{" "}
-                          <Link href="/return-and-refund" className="font-medium text-accent hover:underline">
-                            Return Policy
-                          </Link>
+                          {localization?.terms_conditions || "I agree to the Terms & Conditions"}
                         </span>
                       </div>
                       {fieldErrors.agreeTerms && (
@@ -584,13 +583,13 @@ export default function AuthPage() {
                     */}
 
                     <p className="text-center text-sm text-text pt-2">
-                      Already have an account?{" "}
+                      {localization?.account_already || "Already have an account?"}{" "}
                       <Link
                         href={`/login${searchParams.get("redirect") ? `?redirect=${encodeURIComponent(searchParams.get("redirect"))}` : ""}`}
                         className="font-medium text-primary hover:underline"
                         onClick={(e) => { e.preventDefault(); toggleMode(); }}
                       >
-                        Sign in
+                        {localization?.account_signin || "Sign in"}
                       </Link>
                     </p>
                   </form>
@@ -624,11 +623,11 @@ export default function AuthPage() {
               >
                 <div className={`flex items-center gap-3 ${!isLogin ? "flex-row-reverse" : ""}`}>
                   <Link href="/">
-                    <Image src="/images/new/logo-full.gif" alt="Logo" width={200} height={56} className="h-14 w-auto object-contain" />
+                    <Image src="/images/new/logo-full.gif" alt={localization?.brandname || "Logo"} width={200} height={56} className="h-14 w-auto object-contain" />
                   </Link>
                   <div className={`leading-tight ${!isLogin ? "text-right" : ""}`}>
-                    <div className="text-white font-semibold tracking-wide">Prolixus</div>
-                    <div className="text-white/70 text-xs">Secure access portal</div>
+                    <div className="text-white font-semibold tracking-wide">{localization?.brandname || "Prolixus"}</div>
+                    <div className="text-white/70 text-xs">{localization?.sign_in}</div>
                   </div>
                 </div>
               </div>
@@ -643,8 +642,8 @@ export default function AuthPage() {
                   `}
                 >
                   {isLogin
-                    ? '"Simply the tools that my team and I need."'
-                    : '"Join thousands of users who trust Prolixus."'}
+                    ? (localization?.welcome_title || '"Simply the tools that my team and I need."')
+                    : (localization?.join_users || '"Join thousands of users who trust Prolixus."')}
                 </div>
                 <div
                   className={`
@@ -654,8 +653,8 @@ export default function AuthPage() {
                   `}
                 >
                   {isLogin
-                    ? "Prolixus User • Product Team"
-                    : "Prolixus Community • Growing Together"}
+                    ? (localization?.team || "Prolixus User • Product Team")
+                    : (localization?.community_growing || "Prolixus Community • Growing Together")}
                 </div>
               </div>
             </div>

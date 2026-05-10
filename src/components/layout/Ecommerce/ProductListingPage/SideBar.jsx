@@ -12,7 +12,8 @@ export default function FiltersSidebar({
   currentSort, 
   onSortChange,
   currentCategory,
-  onCategoryChange 
+  onCategoryChange,
+  localization 
 }) {
   const { formatPrice } = useCurrency();
 
@@ -53,7 +54,7 @@ export default function FiltersSidebar({
         {/* Categories */}
         <section className="border-b border-(--divider-color) pb-6">
           <h3 className="mb-4 font-accent text-xl font-semibold text-(--primary-color)">
-            Categories
+            {localization?.shop_sidebar_categories}
           </h3>
 
           <div className="space-y-1">
@@ -117,7 +118,7 @@ export default function FiltersSidebar({
         {/* Price Range */}
         <section className="border-b border-(--divider-color) pb-6">
           <h3 className="mb-4 font-accent text-xl font-semibold text-(--primary-color)">
-            Price Range
+            {localization?.shop_sidebar_price_range}
           </h3>
 
           <div className="px-1">
@@ -168,7 +169,7 @@ export default function FiltersSidebar({
         {/* Sort */}
         <section>
           <h3 className="mb-4 font-accent text-xl font-semibold text-(--primary-color)">
-            Sort By
+            {localization?.shop_sidebar_sort_by}
           </h3>
 
           <div className="space-y-3">

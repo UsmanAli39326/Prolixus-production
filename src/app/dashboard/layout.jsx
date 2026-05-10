@@ -1,3 +1,4 @@
+import { getLocalization } from "@/lib/getLocalization";
 import DashboardLayoutClient from "./DashboardLayoutClient";
 
 export const metadata = {
@@ -11,6 +12,11 @@ export const metadata = {
   },
 };
 
-export default function DashboardLayout({ children }) {
-  return <DashboardLayoutClient>{children}</DashboardLayoutClient>;
+export default async function DashboardLayout({ children }) {
+  const localization = await getLocalization();
+  return (
+    <DashboardLayoutClient localization={localization}>
+      {children}
+    </DashboardLayoutClient>
+  );
 }

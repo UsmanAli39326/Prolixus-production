@@ -63,7 +63,7 @@ async function renderContent(blocks) {
     });
 }
 
-export default async function BlogDetail({ post }) {
+export default async function BlogDetail({ post, localization }) {
     const relatedPosts = await getRelatedPostsById(post.id, 3);
 
     return (
@@ -85,7 +85,7 @@ export default async function BlogDetail({ post }) {
                                         className="inline-flex items-center gap-2 text-sm font-semibold text-(--accent-color) hover:text-(--primary-color) transition-colors duration-200"
                                     >
                                         <i className="fa-solid fa-arrow-left text-xs" />
-                                        Back to Blogs
+                                        {localization?.blog_back_to_blogs}
                                     </Link>
                                 </div>
                             </FaderInAnimation>
@@ -154,9 +154,9 @@ export default async function BlogDetail({ post }) {
                                         className="inline-flex items-center gap-2 text-sm font-semibold text-(--accent-color) hover:text-(--primary-color) transition-colors duration-200"
                                     >
                                         <i className="fa-solid fa-arrow-left text-xs" />
-                                        Back to Blogs
+                                        {localization?.blog_back_to_blogs}
                                     </Link>
-                                    <div className="flex items-center gap-3">
+                                    {/* <div className="flex items-center gap-3">
                                         <span className="text-sm text-(--text-color)/50">Share:</span>
                                         <a
                                             href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent("https://prolixus.de" + post.href)}`}
@@ -176,7 +176,7 @@ export default async function BlogDetail({ post }) {
                                         >
                                             <FaFacebookF className="text-sm" />
                                         </a>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </FaderInAnimation>
                         </article>
@@ -252,7 +252,7 @@ export default async function BlogDetail({ post }) {
                             <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
                                 <RevealInAnimation direction="left" duration={0.7}>
                                     <h2 className="text-2xl font-bold font-default text-(--primary-color)">
-                                        Weitere Artikel
+                                        {localization?.blog_further_articles}
                                     </h2>
                                 </RevealInAnimation>
                                 <FaderInAnimation direction="up" delay={0.2} duration={0.6}>
@@ -260,14 +260,14 @@ export default async function BlogDetail({ post }) {
                                         href="/blog"
                                         className="text-sm font-semibold text-(--accent-color) hover:text-(--primary-color) transition-colors duration-200 inline-flex items-center gap-2"
                                     >
-                                        Alle Artikel
+                                        {localization?.blog_all_articles}
                                         <i className="fa-solid fa-arrow-right text-xs" />
                                     </Link>
                                 </FaderInAnimation>
                             </div>
                             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                                 {relatedPosts.map((p, idx) => (
-                                    <BlogCard key={p.id} post={p} index={idx} />
+                                    <BlogCard key={p.id} post={p} index={idx} localization={localization} />
                                 ))}
                             </div>
                         </section>

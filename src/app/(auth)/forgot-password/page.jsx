@@ -7,12 +7,23 @@ import Input from "@/components/ui/Input";
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import { apiService } from "@/lib/api";
 import Image from "next/image";
+import { getLocalization } from "@/lib/getLocalization";
+import { useEffect } from "react";
 
 export default function ForgotPasswordPage() {
     const router = useRouter();
     const [email, setEmail] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [localization, setLocalization] = useState(null);
+
+    useEffect(() => {
+        const fetchLocalization = async () => {
+            const data = await getLocalization();
+            setLocalization(data);
+        };
+        fetchLocalization();
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -70,18 +81,18 @@ export default function ForgotPasswordPage() {
                                         />
                                     </Link>
                                     <div className="leading-tight">
-                                        <div className="text-white font-semibold tracking-wide">Prolixus</div>
-                                        <div className="text-white/70 text-xs">Secure access portal</div>
+                                        <div className="text-white font-semibold tracking-wide">{localization?.brandname || "Prolixus"}</div>
+                                        <div className="text-white/70 text-xs">{localization?.sign_in}</div>
                                     </div>
                                 </div>
                             </div>
 
                             <div className="absolute bottom-7 left-7 right-7">
                                 <div className="text-white text-2xl font-semibold leading-snug font-accent">
-                                    "We'll help you get back into your account."
+                                    {localization?.help_account}
                                 </div>
                                 <div className="mt-3 text-white/80 text-sm">
-                                    Prolixus Security • Account Recovery
+                                    {localization?.recovery_account}
                                 </div>
                             </div>
                         </div>
@@ -102,8 +113,8 @@ export default function ForgotPasswordPage() {
                                             />
                                         </Link>
                                         <div>
-                                            <div className="font-accent text-2xl text-primary">Prolixus</div>
-                                            <div className="text-sm text-text">Secure access portal</div>
+                                            <div className="font-accent text-2xl text-primary">{localization?.brandname || "Prolixus"}</div>
+                                            <div className="text-sm text-text">{localization?.sign_in}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -111,10 +122,10 @@ export default function ForgotPasswordPage() {
 
 
                                 <h1 className="text-3xl font-bold font-accent text-center text-primary">
-                                    Forgot <span className="text-accent">Password?</span>
+                                    {localization?.forgot_password}
                                 </h1>
                                 <p className="mt-2 text-center text-sm text-text">
-                                    Enter your email to receive a verification code.
+                                    {localization?.verification_email}
                                 </p>
 
                                 {error && (
@@ -126,7 +137,7 @@ export default function ForgotPasswordPage() {
                                         id="email"
                                         name="email"
                                         type="email"
-                                        label="Email Address"
+                                        label={localization?.checkout_email_label}
                                         inputClassName={`
                                         w-full rounded-md border text-lg bg-white px-4 py-2 text-primary transition-all duration-200
                                         focus:border-accent focus:ring-2 focus:ring-accent/25 focus: focus:outline-none
@@ -147,13 +158,13 @@ export default function ForgotPasswordPage() {
                                         loadingText="Sending code..."
                                         className="mt-2"
                                     >
-                                        Send Verification Code
+                                        {localization?.account_status}
                                     </Button>
 
                                     <p className="text-center text-sm text-text pt-2">
-                                        Remember your password?{" "}
+                                        {localization?.password_remember}{" "}
                                         <Link href="/login" className="font-medium text-primary hover:underline">
-                                            Sign in
+                                            {localization?.account_signin}
                                         </Link>
                                     </p>
                                 </form>

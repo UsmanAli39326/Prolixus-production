@@ -3,7 +3,7 @@ import React from "react";
 import Input from "@/components/ui/Input";
 import { FaUser, FaPhone, FaEnvelope, FaBuilding, FaMapMarkerAlt, FaGlobe, FaCity, FaRoad } from "react-icons/fa";
 
-export default function PersonalInfoForm({ formData = {}, onChange, isLoading, countries = [], isLoadingCountries = false }) {
+export default function PersonalInfoForm({ formData = {}, onChange, isLoading, countries = [], isLoadingCountries = false, localization }) {
     const inputClass =
         "w-full border border-gray-300 rounded-md px-4 py-2 focus:ring-0 focus:border-primary";
 
@@ -12,10 +12,10 @@ export default function PersonalInfoForm({ formData = {}, onChange, isLoading, c
             {/* Section header */}
             <div className="md:col-span-2">
                 <h3 className="text-xl font-accent font-bold text-primary mb-2">
-                    Personal Information
+                    {localization?.profile_personal_info}
                 </h3>
                 <p className="text-base text-text/70">
-                    Update your name and contact details here.
+                    {localization?.profile_personal_info_desc}
                 </p>
             </div>
 
@@ -23,8 +23,8 @@ export default function PersonalInfoForm({ formData = {}, onChange, isLoading, c
             <Input
                 id="name"
                 name="name"
-                label="Full Name"
-                placeholder="Enter your full name"
+                label={localization?.checkout_fullname_label}
+                placeholder={localization?.profile_full_name_placeholder}
                 inputClassName={inputClass}
                 value={formData.name ?? ""}
                 onChange={onChange}
@@ -38,7 +38,7 @@ export default function PersonalInfoForm({ formData = {}, onChange, isLoading, c
             <Input
                 id="email"
                 name="email"
-                label="Email Address"
+                label={localization?.checkout_email_label}
                 type="email"
                 placeholder="email@example.com"
                 inputClassName={inputClass}
@@ -52,7 +52,7 @@ export default function PersonalInfoForm({ formData = {}, onChange, isLoading, c
             <Input
                 id="mobile"
                 name="mobile"
-                label="Phone Number"
+                label={localization?.checkout_phone_label}
                 type="tel"
                 placeholder="+1 (555) 123-4567"
                 inputClassName={inputClass}
@@ -67,8 +67,8 @@ export default function PersonalInfoForm({ formData = {}, onChange, isLoading, c
             <Input
                 id="vatNumber"
                 name="vatNumber"
-                label="VAT Number"
-                placeholder="VAT Number"
+                label={localization?.cart_vat}
+                placeholder={localization?.cart_vat}
                 inputClassName={inputClass}
                 value={formData.vatNumber ?? ""}
                 onChange={onChange}
@@ -80,7 +80,7 @@ export default function PersonalInfoForm({ formData = {}, onChange, isLoading, c
             <Input
                 id="shippingPostCode"
                 name="shippingPostCode"
-                label="Shipping Post Code"
+                label={localization?.checkout_zip_label}
                 placeholder="Post Code"
                 inputClassName={inputClass}
                 value={formData.shippingPostCode ?? ""}
@@ -92,7 +92,7 @@ export default function PersonalInfoForm({ formData = {}, onChange, isLoading, c
             {/* Shipping Country */}
             <div className="input-field">
                 <label htmlFor="shippingCountryId" className="input-label">
-                    Shipping Country
+                    {localization?.checkout_country_label}
                 </label>
                 <div className={`flex justify-center items-center input-wrapper ${isLoading || isLoadingCountries ? "input-disabled" : ""}`}>
                     <span className="input-icon left">
@@ -107,10 +107,10 @@ export default function PersonalInfoForm({ formData = {}, onChange, isLoading, c
                         disabled={isLoading || isLoadingCountries}
                     >
                         {isLoadingCountries ? (
-                            <option disabled value="">Loading countries...</option>
+                            <option disabled value="">{localization?.checkout_loading_countries}</option>
                         ) : (
                             <>
-                                <option disabled value="">Select a country</option>
+                                <option disabled value="">{localization?.checkout_select_country}</option>
                                 {countries.map((c) => (
                                     <option key={c.id} value={c.id}>
                                         {c.name}
@@ -126,7 +126,7 @@ export default function PersonalInfoForm({ formData = {}, onChange, isLoading, c
             <Input
                 id="shippingCity"
                 name="shippingCity"
-                label="Shipping City"
+                label={localization?.checkout_city_label}
                 placeholder="City"
                 inputClassName={inputClass}
                 value={formData.shippingCity ?? ""}
@@ -139,7 +139,7 @@ export default function PersonalInfoForm({ formData = {}, onChange, isLoading, c
             <Input
                 id="shippingStreet"
                 name="shippingStreet"
-                label="Shipping Street"
+                label={localization?.checkout_street_label}
                 placeholder="Street Address"
                 inputClassName={inputClass}
                 value={formData.shippingStreet ?? ""}

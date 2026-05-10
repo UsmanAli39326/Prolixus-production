@@ -117,7 +117,7 @@ import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import Image from "next/image";
 
-export default function WhatWeDo() {
+export default function WhatWeDo({ data = {} }) {
   return (
     <section className="what-we-do py-12 sm:py-16 lg:py-20 relative bg-(--primary-color) overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 relative z-1">
@@ -176,14 +176,14 @@ export default function WhatWeDo() {
               <div className="section-title">
                 <FaderInAnimation direction="up">
                   <h3 className="text-sm tracking-[0.2em] text-(--white-color) font-accent italic font-thin uppercase">
-                    Was wir tun
+                    {data?.label}
                   </h3>
                 </FaderInAnimation>
 
                 <h2 className="text-2xl sm:text-3xl lg:text-5xl font-bold leading-tight text-(--white-color) font-default">
-                  Vital und fit bleiben{" "}
+                  {data?.title_main}{" "}
                   <span className="block font-light font-accent italic">
-                    für Sie und Ihre Familie
+                    {data?.title_accent}
                   </span>
                 </h2>
               </div>
@@ -195,12 +195,10 @@ export default function WhatWeDo() {
                 <FaderInAnimation direction="up" delay={0.2}>
                   <div className="what-we-item border-b border-(--dark-divider-color) pb-10">
                     <h3 className="mb-4 text-lg font-semibold text-(--white-color)">
-                      Fokus auf Verträglichkeit
+                      {data?.item1_title}
                     </h3>
                     <p className="text-sm sm:text-base text-(--white-color)/90 leading-relaxed">
-                      Prolixus wurde bewusst vegan, sojafrei und glutenfrei entwickelt
-                      und ist frei von Farb-, Aroma- und Konservierungsstoffen –
-                      für eine optimale Verträglichkeit.
+                      {data?.item1_desc}
                     </p>
                   </div>
                 </FaderInAnimation>
@@ -209,12 +207,10 @@ export default function WhatWeDo() {
                 <FaderInAnimation direction="up" delay={0.4}>
                   <div className="what-we-item">
                     <h3 className="mb-4 text-lg font-semibold text-(--white-color)">
-                      Unterstützung im Alltag
+                      {data?.item2_title}
                     </h3>
                     <p className="text-sm sm:text-base text-(--white-color)/90 leading-relaxed">
-                      Bereits drei Portionen täglich unterstützen Ihren Körper
-                      mit essenziellen Mineralstoffen und tragen zu einem
-                      aktiven und ausgeglichenen Lebensstil bei.
+                      {data?.item2_desc}
                     </p>
                   </div>
                 </FaderInAnimation>

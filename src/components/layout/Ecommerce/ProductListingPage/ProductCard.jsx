@@ -8,7 +8,7 @@ import AddToCartButton from "@/components/ui/AddToCartButton";
 import { useCurrency } from "@/context/CurrencyContext";
 import Image from "next/image";
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, localization }) {
   const { formatPrice } = useCurrency();
   return (
     <Link
@@ -69,7 +69,7 @@ export default function ProductCard({ product }) {
             {formatPrice(product.price)}
           </span>
 
-          <AddToCartButton product={product} size="card" />
+          <AddToCartButton product={product} size="card" localization={localization} />
         </div>
       </div>
     </Link>

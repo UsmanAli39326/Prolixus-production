@@ -1,10 +1,10 @@
 import React from "react";
 
-export default function ShopTopBar({ total = 0, showing = 0, onOpenFilters, filtersOpen }) {
+export default function ShopTopBar({ total = 0, showing = 0, onOpenFilters, filtersOpen, localization }) {
   return (
     <div className="mb-6 flex items-center justify-between">
       <span className="text-sm text-(--text-color)/70">
-        Showing {showing} of {total} products
+        {localization?.shop_showing_prefix} {showing} {localization?.shop_showing_of} {total} {localization?.shop_showing_suffix}
       </span>
 
       <button
@@ -17,7 +17,7 @@ export default function ShopTopBar({ total = 0, showing = 0, onOpenFilters, filt
           }`}
       >
         <span className="text-[16px]">{filtersOpen ? "✕" : "☰"}</span>
-        {filtersOpen ? "Close Filters" : "Filters"}
+        {filtersOpen ? localization?.shop_close_filters : localization?.shop_filters_button}
       </button>
     </div>
   );

@@ -232,7 +232,7 @@ import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import Image from "next/image";
 
-export default function OurKeyPoints() {
+export default function OurKeyPoints({ data = {} }) {
   return (
     <section className="our-key-points py-10 sm:py-16 overflow-hidden">
       <div className="container mx-auto px-4">
@@ -242,14 +242,14 @@ export default function OurKeyPoints() {
           <div className="lg:w-1/2">
             <div className="section-title pl-5">
               <h3 className="text-sm font-thin capitalize tracking-[0.2em] text-(--primary-color)">
-                Unsere Schwerpunkte
+                {data?.label}
               </h3>
 
               <RevealInAnimation direction="left">
                 <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight text-(--primary-color) font-default">
-                  Essenzielle Nährstoffe,
+                  {data?.title_main}
                   <span className="block text-(--accent-color) font-accent font-light italic">
-                    für Energie und Wohlbefinden
+                    {data?.title_accent}
                   </span>
                 </h2>
               </RevealInAnimation>
@@ -259,9 +259,7 @@ export default function OurKeyPoints() {
           <div className="lg:w-1/2">
             <div>
               <p className="text-sm sm:text-base text-(--primary-color)/75">
-                Prolixus vereint sorgfältig ausgewählte Vitamine und Mineralstoffe
-                in einer ausgewogenen Rezeptur – entwickelt zur täglichen
-                Unterstützung von Energie, Stoffwechsel und Vitalität.
+                {data?.desc}
               </p>
             </div>
           </div>
@@ -279,11 +277,10 @@ export default function OurKeyPoints() {
                 <div className="key-points-item flex items-center mb-6 sm:mb-14 flex-row-reverse lg:flex-row w-full">
                   <div className="key-points-item-content flex-1 text-left lg:text-right">
                     <h3 className="text-base sm:text-lg font-semibold mb-1 sm:mb-2 text-(--primary-color)">
-                      Unterstützt den Energiestoffwechsel
+                      {data?.item1_title}
                     </h3>
                     <p className="m-0 text-sm">
-                      Vitamin C und Eisen tragen zur Verringerung von Müdigkeit
-                      und Ermüdung bei.
+                      {data?.item1_desc}
                     </p>
                   </div>
                   <div className="icon-box flex h-14 w-14 sm:h-20 sm:w-20 shrink-0 items-center justify-center rounded-full bg-(--accent-color) mr-4 lg:mr-0 lg:ml-5">
@@ -301,11 +298,10 @@ export default function OurKeyPoints() {
                 <div className="key-points-item flex items-center mb-6 sm:mb-14 flex-row-reverse lg:flex-row w-full">
                   <div className="key-points-item-content flex-1 text-left lg:text-right">
                     <h3 className="text-base sm:text-lg font-semibold mb-1 sm:mb-2 text-(--primary-color)">
-                      Hohe Bioverfügbarkeit
+                      {data?.item2_title}
                     </h3>
                     <p className="m-0 text-sm">
-                      Optimal abgestimmte Kombination für eine effiziente
-                      Aufnahme im Körper.
+                      {data?.item2_desc}
                     </p>
                   </div>
                   <div className="icon-box flex h-14 w-14 sm:h-20 sm:w-20 shrink-0 items-center justify-center rounded-full bg-(--accent-color) mr-4 lg:mr-0 lg:ml-5">
@@ -323,11 +319,10 @@ export default function OurKeyPoints() {
                 <div className="key-points-item flex items-center mb-0 flex-row-reverse lg:flex-row w-full">
                   <div className="key-points-item-content flex-1 text-left lg:text-right">
                     <h3 className="text-base sm:text-lg font-semibold mb-1 sm:mb-2 text-(--primary-color)">
-                      Geprüfte Qualität
+                      {data?.item3_title}
                     </h3>
                     <p className="m-0 text-sm">
-                      Strenge Qualitätskontrollen sorgen für Reinheit
-                      und Sicherheit.
+                      {data?.item3_desc}
                     </p>
                   </div>
                   <div className="icon-box flex h-14 w-14 sm:h-20 sm:w-20 shrink-0 items-center justify-center rounded-full bg-(--accent-color) mr-4 lg:mr-0 lg:ml-5">
@@ -378,10 +373,10 @@ export default function OurKeyPoints() {
                   </div>
                   <div className="key-points-item-content flex-1">
                     <h3 className="text-base sm:text-lg font-semibold mb-1 sm:mb-2 text-(--primary-color)">
-                      Vegan & Glutenfrei
+                      {data?.item4_title}
                     </h3>
                     <p className="m-0 text-sm">
-                      Frei von Farb-, Aroma- und Konservierungsstoffen.
+                      {data?.item4_desc}
                     </p>
                   </div>
                 </div>
@@ -399,10 +394,10 @@ export default function OurKeyPoints() {
                   </div>
                   <div className="key-points-item-content flex-1">
                     <h3 className="text-base sm:text-lg font-semibold mb-1 sm:mb-2 text-(--primary-color)">
-                      Für jedes Alter geeignet
+                      {data?.item5_title}
                     </h3>
                     <p className="m-0 text-sm">
-                      Ideal für einen aktiven Lebensstil – auch für Generation 50+.
+                      {data?.item5_desc}
                     </p>
                   </div>
                 </div>
@@ -420,11 +415,10 @@ export default function OurKeyPoints() {
                   </div>
                   <div className="key-points-item-content flex-1">
                     <h3 className="text-base sm:text-lg font-semibold mb-1 sm:mb-2 text-(--primary-color)">
-                      Transparente Rezeptur
+                      {data?.item6_title}
                     </h3>
                     <p className="m-0 text-sm">
-                      Klare Deklaration aller Inhaltsstoffe für maximale
-                      Vertrauenswürdigkeit.
+                      {data?.item6_desc}
                     </p>
                   </div>
                 </div>

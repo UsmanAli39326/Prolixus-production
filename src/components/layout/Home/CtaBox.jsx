@@ -84,7 +84,7 @@ import Link from "next/link";
 import Button from "@/components/ui/Button";
 import Image from "next/image";
 
-export default function CtaBox() {
+export default function CtaBox({ data = {} }) {
   return (
     <section className="cta-box dark-section relative bg-(--primary-color) py-12 sm:py-16 lg:py-20">
       <div className="container mx-auto px-4 relative z-1">
@@ -99,17 +99,15 @@ export default function CtaBox() {
                 <RevealInAnimation>
                   <h2 className="leading-tight text-2xl sm:text-3xl lg:text-8xl font-bold text-(--white-color) text-center lg:text-center font-default">
                     <span className="block font-accent font-light italic lg:text-6xl">
-                      Starten Sie jetzt
+                      {data?.title_line1}
                     </span>
-                    mit Prolixus
+                    {data?.title_line2}
                   </h2>
                 </RevealInAnimation>
 
                 <FaderInAnimation direction="up">
                   <p className="mt-6 opacity-90 text-sm sm:text-base text-(--white-color) text-center lg:text-center leading-relaxed">
-                    Unterstützen Sie Ihren Energiestoffwechsel mit einer
-                    ausgewogenen Kombination aus Vitamin C, Eisen,
-                    Calcium und Magnesium – entwickelt für Ihren Alltag.
+                    {data?.description}
                   </p>
                 </FaderInAnimation>
 
@@ -124,7 +122,7 @@ export default function CtaBox() {
                       size="lg"
                       className="rounded-full! px-8! uppercase tracking-wide"
                     >
-                      Jetzt entdecken
+                      {data?.button_text}
                     </Button>
                   </Link>
                 </div>

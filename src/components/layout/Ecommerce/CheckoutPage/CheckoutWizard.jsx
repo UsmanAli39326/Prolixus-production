@@ -84,7 +84,7 @@ export function buildGuestOrderPayload(formData, cartItems, currency = "EURO", t
 // ---------------------------------------------------------------------------
 // WIZARD
 // ---------------------------------------------------------------------------
-export default function CheckoutWizard() {
+export default function CheckoutWizard({ localization }) {
     const router = useRouter();
     const { cartItems, isInitialized, clearCart } = useCart();
     const { currency, formatPrice } = useCurrency();
@@ -163,11 +163,11 @@ export default function CheckoutWizard() {
                     setCurrentStep(2); // Go to confirmation step
                 }
             } else {
-                alert(response.message || "Failed to create order");
+                alert(response.message || localization?.checkout_error_create_order);
             }
         } catch (error) {
             console.error("Direct completion failed:", error);
-            alert("An error occurred while processing your order.");
+            alert(localization?.checkout_error_generic);
         } finally {
             setIsSubmitting(false);
         }
@@ -179,9 +179,9 @@ export default function CheckoutWizard() {
     const goToStep = (step) => setCurrentStep(step);
 
     const steps = [
-        { name: "Information", component: OrderForm },
-        { name: "Payment", component: PaymentForm },
-        { name: "Confirmation", component: OrderConfirmation },
+        { name: localization?.checkout_breadcrumb_info, component: OrderForm },
+        { name: localization?.checkout_breadcrumb_payment, component: PaymentForm },
+        { name: localization?.checkout_confirm_title, component: OrderConfirmation },
     ];
 
     const CurrentFormComponent = steps[currentStep].component;
@@ -210,6 +210,7 @@ export default function CheckoutWizard() {
         isSubmitting,
         orderData,
         formatPrice: (p) => p, // Placeholder, wrapped by useCurrency inside components or passed
+        localization,
     };
 
     // If step is confirmation, we need to pass specific props

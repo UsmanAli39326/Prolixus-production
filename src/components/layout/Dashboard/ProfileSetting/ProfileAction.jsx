@@ -3,7 +3,7 @@ import React from "react";
 import { FaTrash, FaSave } from "react-icons/fa";
 import Button from "@/components/ui/Button";
 
-export default function ProfileActions({ isLoading, onCancel }) {
+export default function ProfileActions({ isLoading, onCancel, localization }) {
     return (
         <div className="flex flex-col-reverse md:flex-row justify-end items-center gap-6 pt-4">
             {/* <Button
@@ -17,7 +17,7 @@ export default function ProfileActions({ isLoading, onCancel }) {
 
             <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
                 <Button variant="outline" type="button" onClick={onCancel}>
-                    Cancel Changes
+                    {localization?.profile_cancel}
                 </Button>
 
                 <Button
@@ -27,7 +27,7 @@ export default function ProfileActions({ isLoading, onCancel }) {
                     loading={isLoading}
                     leftIcon={<FaSave />}
                 >
-                    Save Changes
+                    {localization?.profile_save}
                 </Button>
             </div>
         </div>

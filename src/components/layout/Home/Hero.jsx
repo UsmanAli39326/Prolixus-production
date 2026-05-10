@@ -134,7 +134,7 @@ import { FaPhone } from "react-icons/fa";
 import RevealInAniation from "@/Hooks/RevealInAnimation";
 import Button from "@/components/ui/Button";
 
-export default function Hero() {
+export default function Hero({ data = {} }) {
   return (
     <section
       className="relative min-h-screen lg:h-screen flex items-center overflow-hidden bg-cover bg-center pt-28 pb-8 sm:pt-20 sm:pb-0 lg:pt-20 bg--secondary-color  lg:pb-10"
@@ -167,20 +167,20 @@ export default function Hero() {
 
               <FadeInAnimation direction="up">
                 <h3 className="text-base sm:text-lg lg:text-xl font-accent italic tracking-wide text-white/90">
-                  Nahrungsergänzungsmittel mit hochwertigen Inhaltsstoffen
+                  {data?.subtitle}
                 </h3>
               </FadeInAnimation>
 
               <RevealInAniation delay={0.2} coverColor="#000">
                 <h1 className="flex flex-col gap-1 sm:gap-2 leading-tight mt-4">
                   <span className="text-4xl sm:text-5xl lg:text-6xl font-accent italic text-accent drop-shadow-[0_4px_12px_rgba(0,0,0,0.3)]">
-                    Prolixus
+                    {data?.title_line1}
                   </span>
                   <span className="text-2xl sm:text-4xl lg:text-5xl font-default text-white drop-shadow-md">
-                    Ihr perfekter Start
+                    {data?.title_line2}
                   </span>
                   <span className="text-2xl sm:text-4xl lg:text-5xl font-accent italic text-accent drop-shadow-md">
-                    in den Tag
+                    {data?.title_line3}
                   </span>
                 </h1>
               </RevealInAniation>
@@ -189,10 +189,7 @@ export default function Hero() {
                 <div className="hero-content-body mt-6 sm:mt-8 space-y-6">
 
                   <p className="max-w-xl text-sm sm:text-base text-white/90">
-                    Die Kombination aus Vitamin C, Eisen, Calcium und Magnesium
-                    unterstützt Ihren Stoffwechsel und trägt zu Ihrem täglichen
-                    Wohlbefinden bei. Ideal für einen aktiven Lebensstil – auch
-                    für die fitte Generation 50+ geeignet.
+                    {data?.description}
                   </p>
 
                   {/* CTA row — stacks on mobile, side-by-side on desktop */}
@@ -203,12 +200,12 @@ export default function Hero() {
                         size="lg"
                         className="rounded-full! shadow-md transition-transform duration-200 hover:translate-y-0.5 hover:shadow-lg w-full sm:w-auto"
                       >
-                        Zum Shop
+                        {data?.button_text}
                       </Button>
                     </Link>
 
                     <Link
-                      href="tel:+491234567890"
+                      href={`tel:${data?.phone_number}`}
                       className="inline-flex items-center text-left group"
                     >
                       <span className="bg-(--accent-color) rounded-full w-10 h-10 sm:w-12 sm:h-12 text-white flex justify-center items-center mr-3 sm:mr-4 shrink-0 transition-colors duration-300 group-hover:bg-white group-hover:text-(--accent-color) text-lg sm:text-2xl">
@@ -216,10 +213,10 @@ export default function Hero() {
                       </span>
                       <div>
                         <h3 className="text-base sm:text-lg font-semibold text-white mb-0.5 font-default leading-tight">
-                          Persönliche Beratung
+                          {data?.phone_label}
                         </h3>
                         <p className="m-0 text-xs sm:text-sm text-white/70 font-default">
-                          Jetzt Kontakt aufnehmen
+                          {data?.phone_sublabel}
                         </p>
                       </div>
                     </Link>

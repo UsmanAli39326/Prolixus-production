@@ -101,7 +101,7 @@ import ProductGrid from "../Ecommerce/ProductListingPage/ProductGrid";
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
 
-export default function ProductsSection({ products = [] }) {
+export default function ProductsSection({ products = [], data = {} }) {
   return (
     <section className="our-products py-16 lg:py-20">
       <div className="container mx-auto px-4">
@@ -111,13 +111,13 @@ export default function ProductsSection({ products = [] }) {
           <RevealInAnimation direction="left" delay={0.2} duration={0.8}>
             <div className="section-title max-w-xl">
               <h3 className="capitalize tracking-[0.2em] text-sm font-thin font-accent italic mb-4 text-(--primary-color)">
-                Unsere Produkte
+                {data?.label}
               </h3>
 
               <h2 className="text-3xl lg:text-4xl font-bold leading-tight font-default text-(--primary-color)">
-                Prolixus für Ihre tägliche
+                {data?.title_main}
                 <span className="block text-(--accent-color) font-accent font-light italic">
-                  Vitalität
+                  {data?.title_accent}
                 </span>
               </h2>
             </div>
@@ -128,7 +128,7 @@ export default function ProductsSection({ products = [] }) {
               href="/products"
               className="btn-default inline-block rounded-full bg-(--accent-color) px-6 py-2 text-sm font-semibold text-(--white-color)"
             >
-              Alle Produkte ansehen
+              {data?.view_all_button}
             </a>
           </div>
         </div>

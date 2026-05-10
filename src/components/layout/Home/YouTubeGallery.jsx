@@ -34,7 +34,7 @@ async function fetchVideoTitle(videoId) {
     }
 }
 
-export default async function YouTubeGallery() {
+export default async function YouTubeGallery({ data = {} }) {
     // Fetch all titles in parallel
     const videos = await Promise.all(
         videoUrls.map(async (url, idx) => {
@@ -57,14 +57,14 @@ export default async function YouTubeGallery() {
                 <div className="text-center mb-12">
                     <FaderInAnimation direction="up">
                         <h3 className="text-small font-semibold tracking-[0.2em] text-(--primary-color) uppercase mb-3">
-                            Video Mediathek
+                            {data?.label}
                         </h3>
                     </FaderInAnimation>
                     <FaderInAnimation direction="up" delay={0.2}>
                         <h2 className="font-default text-section lg:text-page font-bold leading-tight text-(--primary-color)">
-                            Erfahren Sie mehr über{" "}
+                            {data?.title_main}{" "}
                             <span className="text-(--accent-color) font-accent font-light italic">
-                                unsere Arbeit
+                                {data?.title_accent}
                             </span>
                         </h2>
                     </FaderInAnimation>
@@ -103,7 +103,7 @@ export default async function YouTubeGallery() {
                             target="_blank"
                             className="inline-flex items-center gap-3 bg-(--primary-color) text-white px-8 py-4 rounded-full font-bold hover:bg-(--accent-color) hover:text-(--primary-color) transition-all duration-300 transform hover:scale-105 shadow-lg group"
                         >
-                            <span>Besuchen Sie unseren YouTube-Kanal</span>
+                            <span>{data?.button_text}</span>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="20"

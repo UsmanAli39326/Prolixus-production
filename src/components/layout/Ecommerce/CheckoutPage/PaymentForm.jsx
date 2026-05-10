@@ -30,6 +30,7 @@ export default function PaymentForm({
     gateway,
     onDirectComplete,
     isSubmitting,
+    localization,
 }) {
     const { clearCart } = useCart();
     const { isLoggedIn } = useAuth();
@@ -82,7 +83,7 @@ export default function PaymentForm({
 
         // Final sanity check before processing payment
         if (!cartItems || cartItems.length === 0) {
-            setError("Your cart is empty. Please add items to your cart before proceeding.");
+            setError(localization?.checkout_error_empty_cart);
             return;
         }
 
@@ -94,7 +95,7 @@ export default function PaymentForm({
         }
 
         if (!selectedMethod || !selectedMethod.publishableKey) {
-            setError("This payment method is not properly configured.");
+            setError(localization?.checkout_error_payment_config);
             return;
         }
 
@@ -112,6 +113,7 @@ export default function PaymentForm({
                 orderData={orderData}
                 formatPrice={formatPrice}
                 isLoggedIn={isLoggedIn}
+                localization={localization}
             />
         );
     }
@@ -123,11 +125,11 @@ export default function PaymentForm({
         <div className="flex flex-col gap-8 text-left">
             <RevealInAnimation direction="left">
                 <nav className="flex items-center gap-3 text-sm font-medium font-default">
-                    <span className="text-gray-400 cursor-default">Information</span>
+                    <span className="text-gray-400 cursor-default">{localization?.checkout_breadcrumb_info}</span>
                     <div className="text-gray-400">
                         <svg className="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                     </div>
-                    <span className="text-primary font-bold">Payment</span>
+                    <span className="text-primary font-bold">{localization?.checkout_breadcrumb_payment}</span>
                 </nav>
             </RevealInAnimation>
 
@@ -137,24 +139,24 @@ export default function PaymentForm({
                     <div className="bg-white dark:bg-white/5 border border-divider rounded-2xl overflow-hidden text-sm">
                         <div className="p-5 flex items-baseline justify-between gap-4 border-b border-divider">
                             <div className="flex gap-6">
-                                <span className="text-gray-400 font-accent w-12 text-left">Contact</span>
+                                <span className="text-gray-400 font-accent w-12 text-left">{localization?.checkout_summary_contact}</span>
                                 <span className="text-primary">{formData.email}</span>
                             </div>
-                            <button onClick={() => goToStep(0)} className="text-accent text-xs font-bold hover:underline">Change</button>
+                            <button onClick={() => goToStep(0)} className="text-accent text-xs font-bold hover:underline">{localization?.checkout_change_button}</button>
                         </div>
                         <div className="p-5 flex items-baseline justify-between gap-4 border-b border-divider">
                             <div className="flex gap-6">
-                                <span className="text-gray-400 font-accent w-12 text-left">Ship to</span>
+                                <span className="text-gray-400 font-accent w-12 text-left">{localization?.checkout_summary_ship_to}</span>
                                 <span className="text-primary">
                                     {formData.address}, {formData.apartment ? `${formData.apartment}, ` : ''}{formData.city} {formData.zip}
                                 </span>
                             </div>
-                            <button onClick={() => goToStep(0)} className="text-accent text-xs font-bold hover:underline">Change</button>
+                            <button onClick={() => goToStep(0)} className="text-accent text-xs font-bold hover:underline">{localization?.checkout_change_button}</button>
                         </div>
                         <div className="p-5 flex items-baseline justify-between gap-4 border-divider">
                             <div className="flex gap-6">
-                                <span className="text-gray-400 font-accent w-12 text-left">Shipping</span>
-                                <span className="font-bold text-accent">Free</span>
+                                <span className="text-gray-400 font-accent w-12 text-left">{localization?.checkout_summary_shipping}</span>
+                                <span className="font-bold text-accent">{localization?.cart_shipping_free}</span>
                             </div>
                         </div>
                     </div>
@@ -179,10 +181,10 @@ export default function PaymentForm({
                                         </div>
                                         <div>
                                             <span className={`block font-bold text-lg transition-colors ${walletBalance > 0 ? 'text-primary group-hover:text-accent' : 'text-gray-400 dark:text-gray-500'}`}>
-                                                Use Wallet Balance
+                                                {localization?.checkout_use_wallet}
                                             </span>
                                             <span className="text-xs text-text/50 font-accent">
-                                                {walletBalance > 0 ? 'Apply your available funds to this order' : 'No funds available in your wallet'}
+                                                {walletBalance > 0 ? localization?.checkout_wallet_apply : localization?.checkout_wallet_no_funds}
                                             </span>
                                         </div>
                                     </div>
@@ -242,9 +244,9 @@ export default function PaymentForm({
                             <div className="size-12 bg-green-100 dark:bg-green-500/20 text-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
                                 <HiCheckCircle className="text-2xl" />
                             </div>
-                            <h3 className="text-lg font-bold text-green-700 dark:text-green-400 mb-1">No Additional Payment Required</h3>
+                            <h3 className="text-lg font-bold text-green-700 dark:text-green-400 mb-1">{localization?.checkout_no_payment_required}</h3>
                             <p className="text-sm text-green-600 dark:text-green-500/80 font-accent">
-                                Your wallet balance covers the entire order amount. You can proceed to complete your order.
+                                {localization?.checkout_wallet_covers_all}
                             </p>
                         </div>
                     </FaderInAnimation>
@@ -254,22 +256,14 @@ export default function PaymentForm({
                 <FaderInAnimation direction="up" delay={0.3}>
                     <div className="space-y-6">
                         <div className="text-left">
-                            <label className="text-sm font-medium ml-2 text-primary font-accent block mb-1.5">Order Notes (optional)</label>
+                            <label className="text-sm font-medium ml-2 text-primary font-accent block mb-1.5">{localization?.checkout_order_notes_label}</label>
                             <textarea
                                 className="w-full p-4 rounded-xl border border-divider bg-white dark:bg-white/5 focus:border-accent focus:ring-1 focus:ring-accent transition-colors min-h-[100px] font-default"
-                                placeholder="Special instructions for delivery..."
+                                placeholder={localization?.checkout_order_notes_placeholder}
                                 value={formData.orderNotes || ""}
                                 onChange={(e) => updateFormData({ orderNotes: e.target.value })}
                             />
                         </div>
-                        {/* 
-                        <div className="bg-secondary/50 rounded-xl p-4 flex items-start gap-3 mt-4 text-left">
-                            <HiLockClosed className="text-primary dark:text-accent text-xl mt-0.5" />
-                            <div>
-                                <p className="text-xs font-semibold uppercase tracking-wider text-primary mb-1 text-left">Security Guarantee</p>
-                                <p className="text-sm text-gray-600 dark:text-gray-400 leading-snug font-accent text-left">Your data is protected with 256-bit encryption. We do not store your full card details.</p>
-                            </div>
-                        </div> */}
 
                         {error && (
                             <p className="text-red-500 text-sm font-bold bg-red-50 p-4 rounded-xl border border-red-200 text-left">
@@ -284,7 +278,7 @@ export default function PaymentForm({
                     <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-6 pt-6 border-t border-divider">
                         <button onClick={prevStep} className="flex items-center gap-1 text-sm font-medium text-primary hover:text-accent transition-colors group">
                             <HiChevronLeft className="text-lg transition-transform group-hover:-translate-x-1" />
-                            Return to Information
+                            {localization?.checkout_return_to_info}
                         </button>
 
                         <Button
@@ -293,7 +287,7 @@ export default function PaymentForm({
                             disabled={loading || isSubmitting}
                             className="w-full sm:w-auto h-14 bg-accent! hover:bg-accent! text-white! font-bold text-lg rounded-full! shadow-lg shadow-accent/10 px-10"
                         >
-                            Complete Order
+                            {localization?.checkout_complete_order}
                         </Button>
                     </div>
                 </FaderInAnimation>

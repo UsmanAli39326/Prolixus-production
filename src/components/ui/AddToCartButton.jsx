@@ -23,6 +23,7 @@ export default function AddToCartButton({
     size = "card",
     className = "",
     onAdded,
+    localization
 }) {
     const { addToCart } = useCart();
     const [status, setStatus] = useState("idle"); // "idle" | "adding" | "added"
@@ -75,7 +76,7 @@ export default function AddToCartButton({
                 .filter(Boolean)
                 .join(" ")}
         >
-            {isAdded ? "Added!" : "Add to Cart"}
+            {isAdded ? (localization?.product_added_to_cart || "Added!") : (localization?.product_add_to_cart || "Add to Cart")}
         </Button>
     );
 }

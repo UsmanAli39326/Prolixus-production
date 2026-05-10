@@ -3,7 +3,7 @@ import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import { getAboutPayload } from "@/app/api/about/about";
 import Image from "next/image";
 
-export default async function AboutSection({ variant = "full" }) {
+export default async function AboutSection({ variant = "full", localization = {} }) {
   const about = await getAboutPayload();
 
   if (!about) return null;
@@ -25,7 +25,7 @@ export default async function AboutSection({ variant = "full" }) {
                 <div className="relative z-10 overflow-hidden rounded-2xl sm:rounded-4xl shadow-2xl transition-transform duration-500 hover:scale-[1.02]">
                   <Image
                     src="/images/new/about-us.webp"
-                    alt="Prolixus Vitalität"
+                    alt={localization?.image_alt}
                     width={560}
                     height={602}
                     className="w-full object-cover"
@@ -41,8 +41,8 @@ export default async function AboutSection({ variant = "full" }) {
                       <span className="text-xl font-black leading-none tracking-tighter">100%</span>
                     </div>
                     <div>
-                      <p className="text-xs font-bold uppercase tracking-wider text-primary/60">Natural Origin</p>
-                      <p className="font-accent text-lg font-bold text-primary">Pure Vitality</p>
+                      <p className="text-xs font-bold uppercase tracking-wider text-primary/60">{localization?.natural_origin_label}</p>
+                      <p className="font-accent text-lg font-bold text-primary">{localization?.pure_vitality_label}</p>
                     </div>
                   </div>
                 </div>
@@ -62,7 +62,7 @@ export default async function AboutSection({ variant = "full" }) {
                 <FaderInAnimation direction="up" delay={0.1}>
                   <div className="flex items-center gap-3">
                     <span className="h-px w-8 bg-accent" />
-                    <span className="text-sm font-bold uppercase tracking-[0.2em] text-accent">Our Philosophy</span>
+                    <span className="text-sm font-bold uppercase tracking-[0.2em] text-accent">{localization?.label}</span>
                     <span className="h-px w-8 bg-accent" />
                   </div>
                 </FaderInAnimation>
@@ -102,7 +102,7 @@ export default async function AboutSection({ variant = "full" }) {
                       href="/about"
                       className="group relative inline-flex items-center gap-3 sm:gap-4 overflow-hidden rounded-full bg-primary px-8 py-4 sm:px-10 sm:py-5 text-xs sm:text-sm font-bold tracking-widest text-white transition-all hover:bg-accent hover:px-10 sm:hover:px-12 active:scale-95"
                     >
-                      <span>EXPLORE OUR STORY</span>
+                      <span>{localization?.explore_button}</span>
                       <div className="translate-x-0 transition-transform group-hover:translate-x-2">
                         →
                       </div>

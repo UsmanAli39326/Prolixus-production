@@ -225,13 +225,11 @@
 
 
 // ====================
-//    NEW CODE
-// ====================
 
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import Image from "next/image";
 
-export default function OurBenefits() {
+export default function OurBenefits({ data = {} }) {
   return (
     <section className="our-benefits py-16 sm:py-24 lg:py-32 overflow-hidden">
       <div className="container mx-auto px-4">
@@ -270,13 +268,13 @@ export default function OurBenefits() {
               {/* Section Title */}
               <div className="section-title mb-8">
                 <h3 className="text-sm font-semibold tracking-[0.2em] text-(--primary-color)">
-                  Inhaltsstoffe
+                  {data?.label}
                 </h3>
 
                 <h2 className="font-default text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight text-(--primary-color)">
-                  Essenzielle Nährstoffe für{" "}
+                  {data?.title_main}{" "}
                   <span className="block text-(--accent-color) font-accent font-light italic">
-                    Energie und Wohlbefinden
+                    {data?.title_accent}
                   </span>
                 </h2>
               </div>
@@ -297,11 +295,10 @@ export default function OurBenefits() {
                         />
                       </div>
                       <h3 className="text-xl mb-2 font-bold text-(--primary-color) font-default">
-                        MSM
+                        {data?.msm_title}
                       </h3>
                       <p className="text-sm sm:text-base text-(--primary-color)/80 leading-relaxed">
-                        Schwefel, den Sie über die Nahrung nicht aufnehmen
-                        können – essentiell für viele Körperfunktionen.
+                        {data?.msm_desc}
                       </p>
                     </div>
 
@@ -317,11 +314,10 @@ export default function OurBenefits() {
                         />
                       </div>
                       <h3 className="text-xl mb-2 font-bold text-(--primary-color) font-default">
-                        Calcium
+                        {data?.calcium_title}
                       </h3>
                       <p className="text-sm sm:text-base text-(--primary-color)/80 leading-relaxed">
-                        Trägt zu einem normalen Energiestoffwechsel sowie zur
-                        Erhaltung gesunder Knochen und Zähne bei.
+                        {data?.calcium_desc}
                       </p>
                     </div>
 
@@ -337,11 +333,10 @@ export default function OurBenefits() {
                         />
                       </div>
                       <h3 className="text-xl mb-2 font-bold text-(--primary-color) font-default">
-                        Magnesium
+                        {data?.magnesium_title}
                       </h3>
                       <p className="text-sm sm:text-base text-(--primary-color)/80 leading-relaxed">
-                        Unterstützt eine normale Muskelfunktion und trägt zu
-                        einer normalen Funktion des Nervensystems bei.
+                        {data?.magnesium_desc}
                       </p>
                     </div>
 
@@ -357,11 +352,10 @@ export default function OurBenefits() {
                         />
                       </div>
                       <h3 className="text-xl mb-2 font-bold text-(--primary-color) font-default">
-                        Eisen
+                        {data?.eisen_title}
                       </h3>
                       <p className="text-sm sm:text-base text-(--primary-color)/80 leading-relaxed">
-                        Trägt zur normalen Bildung roter Blutkörperchen
-                        und zum Sauerstofftransport im Körper bei.
+                        {data?.eisen_desc}
                       </p>
                     </div>
 
@@ -377,11 +371,10 @@ export default function OurBenefits() {
                         />
                       </div>
                       <h3 className="text-xl mb-2 font-bold text-(--primary-color) font-default">
-                        Vitamin C
+                        {data?.vitaminc_title}
                       </h3>
                       <p className="text-sm sm:text-base text-(--primary-color)/80 leading-relaxed">
-                        Unterstützt das Immunsystem und schützt die Zellen
-                        vor oxidativem Stress.
+                        {data?.vitaminc_desc}
                       </p>
                     </div>
                   </div>

@@ -4,7 +4,7 @@ import { useState } from "react";
 import AddToCartButton from "@/components/ui/AddToCartButton";
 import { QuantitySelector } from "./index";
 
-export default function ProductBuySection({ product }) {
+export default function ProductBuySection({ product, localization }) {
   const [quantity, setQuantity] = useState(1);
 
   return (
@@ -17,6 +17,7 @@ export default function ProductBuySection({ product }) {
         product={product}
         quantity={quantity}
         size="page"
+        localization={localization}
       />
     </div>
   );

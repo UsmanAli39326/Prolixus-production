@@ -13,7 +13,7 @@ import Button from "@/components/ui/Button";
 import { getOrderDetails, getOrderInvoiceHtml } from "@/lib/OrderService";
 import { useAuth } from "@/context/AuthContext";
 
-export default function OrderDetailContent() {
+export default function OrderDetailContent({ localization }) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const { isLoggedIn } = useAuth();
@@ -60,7 +60,7 @@ export default function OrderDetailContent() {
                 }
 
                 if (!invoiceNumber) {
-                    setError("No invoice number found.");
+                    setError(localization?.order_detail_error_no_invoice);
                     return;
                 }
 
@@ -71,7 +71,7 @@ export default function OrderDetailContent() {
                 const base64Html = invoiceResponse?.data?.invoiceHtmlBase64;
 
                 if (!base64Html) {
-                    setError("Failed to load invoice.");
+                    setError(localization?.order_detail_error_failed_load);
                     return;
                 }
 
@@ -81,7 +81,7 @@ export default function OrderDetailContent() {
 
             } catch (err) {
                 console.error("Fetch invoice error:", err);
-                setError(err.message || "An error occurred while fetching the invoice.");
+                setError(err.message || localization?.order_detail_error_generic);
             } finally {
                 setLoading(false);
             }
@@ -148,7 +148,7 @@ export default function OrderDetailContent() {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen px-4 text-center">
                 <p className="text-lg sm:text-xl text-text/80 font-medium animate-pulse">
-                    Loading invoice...
+                    {localization?.order_detail_loading_invoice}
                 </p>
             </div>
         );
@@ -158,11 +158,11 @@ export default function OrderDetailContent() {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen px-4 text-center gap-5 sm:gap-6">
                 <p className="text-lg sm:text-xl text-red-500 font-medium wrap-break-word">
-                    {error || "No invoice found."}
+                    {error || localization?.order_detail_not_found}
                 </p>
                 <Link href="/products" className="w-full sm:w-auto">
                     <Button variant="accent" size="lg" className="w-full sm:w-auto rounded-full px-8 sm:px-10 py-4 sm:py-6 text-lg sm:text-xl">
-                        Go to Shop
+                        {localization?.order_detail_go_to_shop}
                     </Button>
                 </Link>
             </div>
@@ -184,7 +184,7 @@ export default function OrderDetailContent() {
                                 leftIcon={<FaArrowLeft size={14} />}
                                 className="w-full sm:w-auto rounded-lg border-2 border-divider font-bold hover:bg-secondary/50 transition-all shadow-sm"
                             >
-                                Dashboard
+                                {localization?.order_detail_dashboard_button}
                             </Button>
                         )}
                         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
@@ -195,7 +195,7 @@ export default function OrderDetailContent() {
                                 leftIcon={<FaPrint size={14} />}
                                 className="w-full sm:w-auto rounded-lg border-2 border-divider font-bold hover:bg-secondary/50 transition-all shadow-sm"
                             >
-                                Print Invoice
+                                {localization?.order_detail_print_button}
                             </Button>
                             <Link href="/products" className="w-full sm:w-auto">
                                 <Button
@@ -204,7 +204,7 @@ export default function OrderDetailContent() {
                                     leftIcon={<FaBagShopping size={14} />}
                                     className="w-full sm:w-auto rounded-lg shadow-md hover:scale-105 transition-all font-bold"
                                 >
-                                    Continue Shopping
+                                    {localization?.order_detail_continue_shopping}
                                 </Button>
                             </Link>
                         </div>

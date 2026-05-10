@@ -8,6 +8,7 @@ import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import { apiService } from "@/lib/api";
 import Toast from "@/components/ui/Toast";
 import Image from "next/image";
+import { getLocalization } from "@/lib/getLocalization";
 
 export default function ResetPasswordPage() {
     const router = useRouter();
@@ -21,6 +22,15 @@ export default function ResetPasswordPage() {
         type: "success",
     });
     const [hasToken, setHasToken] = useState(false);
+    const [localization, setLocalization] = useState(null);
+
+    useEffect(() => {
+        const fetchLocalization = async () => {
+            const data = await getLocalization();
+            setLocalization(data);
+        };
+        fetchLocalization();
+    }, []);
 
     useEffect(() => {
         const token = sessionStorage.getItem("reset_token");
@@ -122,8 +132,8 @@ export default function ResetPasswordPage() {
                                         />
                                     </Link>
                                     <div className="leading-tight">
-                                        <div className="text-white font-semibold tracking-wide">Prolixus</div>
-                                        <div className="text-white/70 text-xs">Secure access portal</div>
+                                        <div className="text-white font-semibold tracking-wide">{localization?.brandname || "Prolixus"}</div>
+                                        <div className="text-white/70 text-xs">{localization?.sign_in}</div>
                                     </div>
                                 </div>
                             </div>
@@ -131,10 +141,10 @@ export default function ResetPasswordPage() {
                             {/* Quote block */}
                             <div className="absolute bottom-7 left-7 right-7">
                                 <div className="text-white text-2xl font-semibold leading-snug font-accent">
-                                    "Secure your account with a new password."
+                                    {localization?.password_secure || '"Secure your account with a new password."'}
                                 </div>
                                 <div className="mt-3 text-white/80 text-sm">
-                                    Prolixus Security • Account Recovery
+                                    {localization?.recovery_security || "Prolixus Security • Account Recovery"}
                                 </div>
                             </div>
                         </div>
@@ -156,8 +166,8 @@ export default function ResetPasswordPage() {
                                             />
                                         </Link>
                                         <div>
-                                            <div className="font-accent text-2xl text-primary">Prolixus</div>
-                                            <div className="text-sm text-text">Secure access portal</div>
+                                            <div className="font-accent text-2xl text-primary">{localization?.brandname || "Prolixus"}</div>
+                                            <div className="text-sm text-text">{localization?.sign_in}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -165,10 +175,10 @@ export default function ResetPasswordPage() {
 
 
                                 <h1 className="text-3xl font-bold font-accent text-center text-primary">
-                                    Set <span className="text-accent">New Password</span>
+                                    {localization?.new_password || "Set New Password"}
                                 </h1>
                                 <p className="mt-2 text-center text-sm text-text">
-                                    Enter and confirm your new password below.
+                                    {localization?.enter_email || "Enter and confirm your new password below."}
                                 </p>
 
                                 {error && (
@@ -180,7 +190,7 @@ export default function ResetPasswordPage() {
                                         id="newPassword"
                                         name="newPassword"
                                         type="password"
-                                        label="New Password"
+                                        label={localization?.security_new_password || "New Password"}
                                         inputClassName="w-full bg-transparent px-4 py-3 outline-none"
                                         className="w-full"
                                         placeholder="Enter new password"
@@ -193,7 +203,7 @@ export default function ResetPasswordPage() {
                                         id="confirmPassword"
                                         name="confirmPassword"
                                         type="password"
-                                        label="Confirm Password"
+                                        label={localization?.security_confirm_password || "Confirm Password"}
                                         inputClassName="w-full bg-transparent px-4 py-3 outline-none"
                                         className="w-full"
                                         placeholder="Re-enter new password"
@@ -210,12 +220,12 @@ export default function ResetPasswordPage() {
                                         loadingText="Updating password..."
                                         className="mt-2 rounded-xl hover:bg-accent/90 transition-all duration-300"
                                     >
-                                        Update Password
+                                        {localization?.security_update_success || "Update Password"}
                                     </Button>
 
                                     <p className="text-center text-sm text-text pt-2">
                                         <Link href="/login" className="font-medium text-accent hover:underline">
-                                            Back to Login
+                                            {localization?.login_back || "Back to Login"}
                                         </Link>
                                     </p>
                                 </form>

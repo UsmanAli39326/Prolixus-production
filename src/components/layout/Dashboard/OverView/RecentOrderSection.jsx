@@ -1,7 +1,7 @@
 import Link from "next/link";
 import RecentOrderCard from "./RecentOrderCard";
 
-export default function RecentOrderSection({ order, loading }) {
+export default function RecentOrderSection({ order, loading, localization }) {
     if (loading) {
         return (
             <section>
@@ -18,10 +18,10 @@ export default function RecentOrderSection({ order, loading }) {
         return (
             <section>
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-accent text-primary">Recent Order</h2>
+                    <h2 className="text-xl font-accent text-primary">{localization?.dashboard_recent_order}</h2>
                 </div>
                 <div className="bg-white rounded-xl p-10 shadow-sm border border-divider text-center">
-                    <p className="text-text/60 font-default">No recent orders found.</p>
+                    <p className="text-text/60 font-default">{localization?.dashboard_no_recent_orders}</p>
                 </div>
             </section>
         );
@@ -30,12 +30,12 @@ export default function RecentOrderSection({ order, loading }) {
     return (
         <section>
             <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-accent text-primary">Recent Order</h2>
+                <h2 className="text-xl font-accent text-primary">{localization?.dashboard_recent_order}</h2>
                 <Link
                     href="/dashboard/orders"
                     className="text-sm font-bold text-accent hover:text-accent/80 underline decoration-2 underline-offset-4"
                 >
-                    View All Orders
+                    {localization?.dashboard_view_all_orders}
                 </Link>
             </div>
 
