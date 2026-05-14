@@ -1,21 +1,46 @@
 import React from "react";
 import Link from "next/link";
 
-export default function PageHeader({ title, subtitle, breadcrumbs, bgImage, mobileBgImage, className = "min-h-[160px]" }) {
-  // Mapping of titles to specific background images (convenient defaults)
+export default function PageHeader({ title, subtitle, breadcrumbs, bgImage, mobileBgImage, className = "min-h-[160px]", pageKey }) {
+  // Mapping of page keys to specific background images
   const bgMapping = {
-    "About": "/images/new/about us header banner copy.webp",
-    "Contact": "/images/new/contact us banner.webp",
-    "Unser": "/images/new/blog page banner.webp",
-    "Datenschutz": "/images/new/blog page banner.webp",
-    "Terms &": "/images/new/blog page banner.webp",
-    "Versand &": "/images/new/blog page banner.webp",
-    "Häufige": "/images/new/blog detail page banner.webp",
+    "about": {
+      bg: "/images/new/about us header banner copy.webp",
+      mobile: "/images/new/about us mobile view banner.webp"
+    },
+    "contact": {
+      bg: "/images/new/contact us banner.webp",
+      mobile: "/images/new/contact us mobile view copy.webp"
+    },
+    "blog": {
+      bg: "/images/new/blog page banner.webp",
+      mobile: "/images/new/blog page banner.webp"
+    },
+    "privacy": {
+      bg: "/images/new/blog page banner.webp",
+      mobile: "/images/new/blog page banner.webp"
+    },
+    "terms": {
+      bg: "/images/new/blog page banner.webp",
+      mobile: "/images/new/blog page banner.webp"
+    },
+    "refund": {
+      bg: "/images/new/blog page banner.webp",
+      mobile: "/images/new/blog page banner.webp"
+    },
+    "faq": {
+      bg: "/images/new/blog detail page banner.webp",
+      mobile: "/images/new/blog detail page banner.webp"
+    },
+    "blog-detail": {
+      bg: "/images/new/blog detail page banner.webp",
+      mobile: "/images/new/Blog details mobile view.webp"
+    },
   };
 
-  // Use the passed bgImage prop if available, otherwise fallback to mapping or default
-  const activeBg = bgImage || bgMapping[title] || "/images/page-header-bg.jpg";
-  const activeMobileBg = mobileBgImage || activeBg;
+  const defaultMapping = bgMapping[pageKey?.toLowerCase()] || {};
+  const activeBg = bgImage || defaultMapping.bg || "/images/page-header-bg.jpg";
+  const activeMobileBg = mobileBgImage || defaultMapping.mobile || activeBg;
 
   // If no breadcrumbs are provided, fallback to default Home / {title}
   let displayBreadcrumbs = breadcrumbs || [

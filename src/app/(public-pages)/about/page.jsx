@@ -1,29 +1,31 @@
-export const dynamic = "force-dynamic";
+import { getLocalization } from "@/lib/getLocalization";
 import AboutPageHeader from '@/components/layout/PageHeader';
-
-export const metadata = {
-  title: "About Us",
-  description: "Learn about our mission to provide sustainable, premium organic products.",
-};
 import About from '@/components/layout/About Us/About';
-import WhyChooseUs from '@/components/layout/Home/WhyChooseUs';
-// import OurApproach from '@/components/layout/About Us/OurApproach';
-// import OurKeyPoints from '@/components/layout/Home/OurKeyPoints';
-// import OurBenefits from '@/components/layout/Home/OurBenefits';
-// import OurFaqs from '@/components/layout/Home/OurFAQs';
-// import OurTestimonials from '@/components/layout/Home/Testemonials';
+import React from 'react';
 
-export default function AboutPage() {
+export async function generateMetadata() {
+    const data = await getLocalization();
+    return {
+        title: data?.about_meta_title,
+        description: data?.about_meta_description,
+    };
+}
+
+export default async function AboutPage() {
+  const data = await getLocalization();
+
   return (
     <>
-      <AboutPageHeader title="About" subtitle="us" mobileBgImage="/images/new/about us mobile view banner.webp" />
-      <About />
-      {/* <WhyChooseUs /> */}
-      {/* <OurApproach /> */}
-      {/* <OurKeyPoints /> */}
-      {/* <OurBenefits /> */}
-      {/* <OurFaqs /> */}
-      {/* <OurTestimonials /> */}
+      <AboutPageHeader
+        title={data?.about_header_title}
+        subtitle={data?.about_header_subtitle}
+        pageKey="about"
+        breadcrumbs={[
+            { label: data?.product_breadcrumb_home, href: "/" },
+            { label: data?.about_breadcrumb_about, href: null }
+        ]}
+      />
+      <About localization={data} />
     </>
   );
 }

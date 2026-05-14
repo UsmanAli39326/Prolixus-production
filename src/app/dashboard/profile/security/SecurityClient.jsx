@@ -79,14 +79,14 @@ export default function SecuritySettingsPage({ localization }) {
         dismissToast();
 
         if (formData.newPassword !== formData.confirmPassword) {
-            setErrors({ confirmPassword: localization?.security_password_mismatch || "Passwords do not match." });
+            setErrors({ confirmPassword: localization?.error_password_mismatch || "Passwords do not match." });
             return;
         }
 
         if (formData.newPassword.length < 8) {
             setToast({
                 type: "error",
-                message: localization?.security_password_length || "New password must be at least 8 characters long.",
+                message: localization?.error_password_length,
             });
             return;
         }
@@ -101,7 +101,7 @@ export default function SecuritySettingsPage({ localization }) {
 
             if (!response?.success && response !== true) {
                 // Adjust based on your actual API response structure (e.g., if response is just standard fetch output)
-                throw new Error(response?.message || response?.error || "Failed to update password.");
+                throw new Error(response?.message || response?.error || localization?.error_password_update_failed);
             }
 
             setToast({
@@ -113,7 +113,7 @@ export default function SecuritySettingsPage({ localization }) {
         } catch (err) {
             setToast({
                 type: "error",
-                message: `${localization?.security_update_error} ${err.message}`,
+                message: `${localization?.error_password_update_failed} ${err.message}`,
             });
         } finally {
             setIsSaving(false);

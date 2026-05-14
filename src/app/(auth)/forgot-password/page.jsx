@@ -32,12 +32,12 @@ export default function ForgotPasswordPage() {
         const value = email.trim();
 
         if (!value) {
-            setError("Please enter your email address");
+            setError(localization?.error_email_required || "Please enter your email address");
             return;
         }
 
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-            setError("Please enter a valid email address");
+            setError(localization?.error_email_invalid || "Please enter a valid email address");
             return;
         }
 
@@ -49,7 +49,7 @@ export default function ForgotPasswordPage() {
             // Redirect to unified OTP verification page
             router.push(`/verify-otp?email=${encodeURIComponent(value)}&type=reset`);
         } catch (err) {
-            setError(err.message || "Failed to send verification code. Please try again.");
+            setError(err.message || localization?.error_verification_code_failed || "Failed to send verification code. Please try again.");
         } finally {
             setLoading(false);
         }

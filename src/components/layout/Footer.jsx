@@ -87,7 +87,7 @@ export default async function MainFooter() {
                   href={`tel:${about?.phone}`}
                   className="text-(--white-color)/70 hover:text-(--accent-color) transition duration-300 font-default text-[15px]"
                 >
-                  {about?.phone || "+1 (555) 000-1234"}
+                  {about?.phone}
                 </a>
               </div>
 
@@ -98,7 +98,7 @@ export default async function MainFooter() {
                   href={`mailto:${about?.email}`}
                   className="text-(--white-color)/70 hover:text-(--accent-color) transition duration-300 font-default text-[15px]"
                 >
-                  {about?.email || "contact@prolixus.com"}
+                  {about?.email}
                 </a>
               </div>
             </div>
@@ -118,7 +118,7 @@ export default async function MainFooter() {
 
         </div>
 
-        {/* ================= BOTTOM BAR ================= */}
+        {/* ================= BOTTOM BAR =================  */}
         <div className="pt-10 flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-(--white-color)/40 font-default text-sm">
             © {formatDate(new Date(), 'year')} {about?.companyName || "Prolixus"}. All rights reserved. | Powered by <Link href="https://devtechnoz.com/" target="_blank" className="hover:text-(--accent-color) transition-colors font-semibold">DevTechNoz</Link>

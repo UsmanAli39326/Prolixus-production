@@ -97,7 +97,7 @@ export default function ProfileSettingsPage({ localization }) {
                 if (!cancelled) {
                     setToast({
                         type: "error",
-                        message: `${localization?.profile_load_error} ${err.message}`,
+                        message: `${localization?.error_profile_load_failed} ${err.message}`,
                     });
                 }
             } finally {
@@ -175,7 +175,7 @@ export default function ProfileSettingsPage({ localization }) {
         } catch (err) {
             setToast({
                 type: "error",
-                message: `${localization?.profile_update_error} ${err.message}`,
+                message: `${localization?.error_profile_update_failed} ${err.message}`,
             });
         } finally {
             setIsSaving(false);

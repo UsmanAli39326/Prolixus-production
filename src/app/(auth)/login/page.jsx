@@ -87,15 +87,15 @@ export default function AuthPage() {
     const cleanPassword = sanitize(password);
 
     if (!cleanEmail) {
-      errors.email = "Email is required";
+      errors.email = localization?.error_email_required;
     } else if (!validateEmail(cleanEmail)) {
-      errors.email = "Please enter a valid email address";
+      errors.email = localization?.error_email_invalid;
     }
 
     if (!cleanPassword) {
-      errors.password = "Password is required";
+      errors.password = localization?.error_password_required;
     } else if (!validatePassword(cleanPassword)) {
-      errors.password = "Min 8 characters, at least 1 letter and 1 number";
+      errors.password = localization?.error_password_invalid;
     }
 
     if (Object.keys(errors).length > 0) {
@@ -117,14 +117,14 @@ export default function AuthPage() {
       }
 
       if (!response?.success) {
-        throw new Error(response || "Login Failed")
+        throw new Error(response || localization?.error_login_failed)
       }
 
       setTimeout(() => {
         performRedirect(searchParams.get("redirect") || "/dashboard");
       }, 100);
     } catch (err) {
-      let errorMessage = "Login failed. Please try again.";
+      let errorMessage = localization?.error_login_failed;
       try {
         // If backend sent JSON string inside message → parse it
         if (typeof err.message === "string") {
@@ -158,30 +158,30 @@ export default function AuthPage() {
     const cleanConfirmPassword = sanitize(confirmPassword);
 
     if (!cleanName) {
-      errors.name = "Full name is required";
+      errors.name = localization?.error_fullname_required;
     }
 
     if (!cleanRegEmail) {
       errors.regEmail = "Email is required";
     } else if (!validateEmail(cleanRegEmail)) {
-      errors.regEmail = "Please enter a valid email address.";
+      errors.regEmail = localization?.error_email_invalid;
     }
 
     if (!cleanRegPassword) {
       errors.regPassword = "Password is required";
     } else if (!validatePassword(cleanRegPassword)) {
-      errors.regPassword = "Password must be at least 8 characters long and include a number and a special character.";
+      errors.regPassword = localization?.error_password_length || localization?.error_password_invalid;
     }
 
     if (!cleanConfirmPassword) {
-      errors.confirmPassword = "Please confirm your password";
+      errors.confirmPassword = localization?.error_confirm_password || "Please confirm your password";
     } else if (cleanRegPassword !== cleanConfirmPassword) {
-      errors.confirmPassword = "Passwords do not match";
+      errors.confirmPassword = localization?.error_password_mismatch;
     }
 
 
     if (!agreeTerms) {
-      errors.agreeTerms = "You must agree to the terms and conditions";
+      errors.agreeTerms = localization?.error_terms_required;
     }
 
     if (Object.keys(errors).length > 0) {
@@ -199,21 +199,21 @@ export default function AuthPage() {
         confirmPassword: cleanConfirmPassword,
       });
       if (!response?.success) {
-        throw new Error(response || "Registration Failed")
+        throw new Error(response || localization?.error_registration_failed)
       }
 
       // Redirect to OTP verification instead of just showing success toast and staying
       router.push(`/verify-otp?email=${encodeURIComponent(cleanRegEmail)}&type=signup`);
     } catch (err) {
       const raw = err.message || "";
-      let friendly = "Registration failed. Please try again.";
+      let friendly = localization?.error_registration_failed;
 
       try {
         const parsed = JSON.parse(raw);
         const msg = (parsed?.message || parsed?.title || "").toLowerCase();
 
         if (msg.includes("already") || msg.includes("duplicate") || msg.includes("exists")) {
-          friendly = "This email is already registered. Try logging in instead.";
+          friendly = localization?.error_email_exists;
         } else if (parsed?.message || parsed?.title) {
           friendly = parsed.message || parsed.title;
         }

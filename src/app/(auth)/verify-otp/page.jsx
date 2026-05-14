@@ -94,7 +94,7 @@ export default function VerifyOTPPage() {
 
         const otpValue = otp.join("");
         if (otpValue.length !== 6) {
-            setError("Please enter the 6-digit OTP code.");
+            setError(localization?.error_otp_required || "Please enter the 6-digit OTP code.");
             return;
         }
 
@@ -110,7 +110,7 @@ export default function VerifyOTPPage() {
                 if (type === "reset") {
                     setToast({
                         show: true,
-                        message: "OTP verified! You can now reset your password.",
+                        message: localization?.error_otp_verified || "OTP verified! You can now reset your password.",
                         type: "success"
                     });
                     // The API returns a token in the data field
@@ -124,14 +124,14 @@ export default function VerifyOTPPage() {
                 } else {
                     setToast({
                         show: true,
-                        message: "Account verified! Please login.",
+                        message: localization?.error_account_verified || "Account verified! Please login.",
                         type: "success"
                     });
                     setTimeout(() => router.push("/login"), 1500);
                 }
             }
         } catch (err) {
-            setError(err.message || "Invalid OTP. Please try again.");
+            setError(err.message || localization?.error_otp_invalid);
         } finally {
             setLoading(false);
         }
@@ -149,12 +149,12 @@ export default function VerifyOTPPage() {
             
             setToast({
                 show: true,
-                message: "OTP has been resent to your email.",
+                message: localization?.error_otp_resent || "OTP has been resent to your email.",
                 type: "success"
             });
             setCooldown(60);
         } catch (err) {
-            setError(err.message || "Failed to resend OTP. Please try again.");
+            setError(err.message || localization?.error_resend_failed);
         } finally {
             setResendLoading(false);
         }

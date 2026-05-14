@@ -235,13 +235,24 @@
     animation: bounce-subtle 3s ease-in-out infinite;
   }
 
-  /* === About page: HTML description from API === */
+  /* === Dynamic HTML content from API (About, Privacy, FAQs etc) === */
+  .about-description-content,
+  .dynamic-content-wrapper {
+    @apply max-w-none;
+  }
+
   .about-description-content h1,
+  .dynamic-content-wrapper h1,
   .about-description-content h2,
+  .dynamic-content-wrapper h2,
   .about-description-content h3,
+  .dynamic-content-wrapper h3,
   .about-description-content h4,
+  .dynamic-content-wrapper h4,
   .about-description-content h5,
-  .about-description-content h6 {
+  .dynamic-content-wrapper h5,
+  .about-description-content h6,
+  .dynamic-content-wrapper h6 {
     margin-top: 1.5em;
     margin-bottom: 0.5em;
     line-height: 1.3;
@@ -249,46 +260,55 @@
     color: var(--primary-color);
   }
 
-  .about-description-content h1 { font-size: 1.75rem; }
-  .about-description-content h2 { font-size: 1.5rem; }
-  .about-description-content h3 { font-size: 1.25rem; }
-  .about-description-content h4 { font-size: 1.125rem; }
+  .about-description-content h1, .dynamic-content-wrapper h1 { font-size: 1.75rem; }
+  .about-description-content h2, .dynamic-content-wrapper h2 { font-size: 1.5rem; }
+  .about-description-content h3, .dynamic-content-wrapper h3 { font-size: 1.25rem; }
+  .about-description-content h4, .dynamic-content-wrapper h4 { font-size: 1.125rem; }
 
-  .about-description-content p {
+  .about-description-content p,
+  .dynamic-content-wrapper p {
     margin-bottom: 1em;
   }
 
   .about-description-content ul,
-  .about-description-content ol {
+  .dynamic-content-wrapper ul,
+  .about-description-content ol,
+  .dynamic-content-wrapper ol {
     margin-bottom: 1em;
     padding-left: 1.5em;
   }
 
-  .about-description-content ul { list-style-type: disc; }
-  .about-description-content ol { list-style-type: decimal; }
+  .about-description-content ul, .dynamic-content-wrapper ul { list-style-type: disc; }
+  .about-description-content ol, .dynamic-content-wrapper ol { list-style-type: decimal; }
 
-  .about-description-content li {
+  .about-description-content li,
+  .dynamic-content-wrapper li {
     margin-bottom: 0.35em;
   }
 
-  .about-description-content a {
+  .about-description-content a,
+  .dynamic-content-wrapper a {
     color: var(--accent-color);
     text-decoration: underline;
     text-underline-offset: 2px;
     transition: color 0.2s ease;
   }
 
-  .about-description-content a:hover {
+  .about-description-content a:hover,
+  .dynamic-content-wrapper a:hover {
     color: var(--primary-color);
   }
 
   .about-description-content strong,
-  .about-description-content b {
+  .dynamic-content-wrapper strong,
+  .about-description-content b,
+  .dynamic-content-wrapper b {
     font-weight: 700;
     color: var(--primary-color);
   }
 
-  .about-description-content blockquote {
+  .about-description-content blockquote,
+  .dynamic-content-wrapper blockquote {
     border-left: 3px solid var(--accent-color);
     padding-left: 1em;
     margin: 1.25em 0;
@@ -297,28 +317,33 @@
     opacity: 0.8;
   }
 
-  .about-description-content img {
+  .about-description-content img,
+  .dynamic-content-wrapper img {
     max-width: 100%;
     height: auto;
     border-radius: 0.75rem;
     margin: 1em 0;
   }
 
-  .about-description-content table {
+  .about-description-content table,
+  .dynamic-content-wrapper table {
     width: 100%;
     border-collapse: collapse;
     margin: 1em 0;
   }
 
   .about-description-content th,
-  .about-description-content td {
+  .dynamic-content-wrapper th,
+  .about-description-content td,
+  .dynamic-content-wrapper td {
     border: 1px solid var(--divider-color);
     padding: 0.5em 0.75em;
     text-align: left;
   }
 
-  .about-description-content th {
+  .about-description-content th,
+  .dynamic-content-wrapper th {
     background-color: var(--secondary-color);
     font-weight: 700;
   }
-}
+}

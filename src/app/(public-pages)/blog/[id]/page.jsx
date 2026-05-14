@@ -31,8 +31,7 @@ export default async function BlogDetailPage({ params }) {
             <PageHeader
                 title={post.category || localization?.blog_breadcrumb_blog}
                 subtitle={localization?.blog_detail_subtitle}
-                bgImage={"/images/new/blog detail page banner.webp"}
-                mobileBgImage={"/images/new/Blog details mobile view.webp"}
+                pageKey="blog-detail"
                 breadcrumbs={[
                     { label: localization?.product_breadcrumb_home, href: "/" },
                     { label: localization?.blog_breadcrumb_blog, href: "/blog" },

@@ -16,7 +16,7 @@ const INITIAL_FORM = {
   messageDescription: "",
 };
 
-export default function ContactSection() {
+export default function ContactSection({ localization }) {
   const about = getAboutPayload();
   const [formData, setFormData] = useState(INITIAL_FORM);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -42,17 +42,17 @@ export default function ContactSection() {
         setToast({
           show: true,
           type: "success",
-          message: "Thank you for contacting us! We will get back to you soon.",
+          message: localization?.contact_success_message,
         });
         setFormData(INITIAL_FORM);
       } else {
-        throw new Error(response?.message || "Failed to submit form.");
+        throw new Error(response?.message || localization?.error_submission_failed);
       }
     } catch (error) {
       setToast({
         show: true,
         type: "error",
-        message: error.message || "An unexpected error occurred. Please try again later.",
+        message: error.message || localization?.error_unexpected,
       });
     } finally {
       setIsSubmitting(false);
@@ -82,14 +82,14 @@ export default function ContactSection() {
                 <FaderInAnimation direction="up">
                   <p className="mb-3 flex items-center gap-2 text-sm font-semibold tracking-[0.2em] text-accent">
                     <span className="inline-block h-2 w-2 rounded-full bg-accent" />
-                    contact us
+                    {localization?.contact_form_label}
                   </p>
                 </FaderInAnimation>
 
                 <FaderInAnimation direction="up">
                   <h2 className="text-primary text-3xl sm:text-4xl font-semibold leading-tight font-default">
-                    Get in touch{" "}
-                    <span className="font-accent italic font-normal">with us</span>
+                    {localization?.contact_form_title_main}{" "}
+                    <span className="font-accent italic font-normal">{localization?.contact_form_title_accent}</span>
                   </h2>
                 </FaderInAnimation>
               </div>
@@ -106,7 +106,7 @@ export default function ContactSection() {
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleChange}
-                      placeholder="First name"
+                      placeholder={localization?.contact_first_name_placeholder}
                       className={fieldClass}
                       required
                     />
@@ -118,7 +118,7 @@ export default function ContactSection() {
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleChange}
-                      placeholder="Last name"
+                      placeholder={localization?.contact_last_name_placeholder}
                       className={fieldClass}
                       required
                     />
@@ -132,7 +132,7 @@ export default function ContactSection() {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    placeholder="E-mail"
+                    placeholder={localization?.contact_email_placeholder}
                     className={fieldClass}
                     required
                   />
@@ -145,7 +145,7 @@ export default function ContactSection() {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    placeholder="Phone"
+                    placeholder={localization?.contact_phone_placeholder}
                     className={fieldClass}
                     required
                   />
@@ -158,7 +158,7 @@ export default function ContactSection() {
                     value={formData.messageDescription}
                     onChange={handleChange}
                     rows={5}
-                    placeholder="Write your message..."
+                    placeholder={localization?.contact_message_placeholder}
                     className="w-full px-4 py-3 rounded-xl border border-divider bg-white text-text placeholder:text-text/50 text-sm font-default outline-none resize-vertical transition-[border-color,box-shadow] duration-200 focus:border-accent focus:ring-2 focus:ring-accent/20 min-h-[130px]"
                     required
                   />
@@ -173,7 +173,7 @@ export default function ContactSection() {
                     disabled={isSubmitting}
                     className="mt-2 w-fit !rounded-full"
                   >
-                    {isSubmitting ? "Submitting..." : "Submit Message"}
+                    {isSubmitting ? localization?.contact_submitting_button : localization?.contact_submit_button}
                   </Button>
                 </FaderInAnimation>
               </form>

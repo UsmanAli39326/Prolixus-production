@@ -7,7 +7,6 @@ import { apiService } from '@/lib/api';
  */
 export const getLocalization = cache(async () => {
   try {
-    debugger
     // Using apiService.get which handles baseUrl and headers
     const response = await apiService.get('/StaticLocalization');
     console.log('Localization response:', response);

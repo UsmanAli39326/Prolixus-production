@@ -46,17 +46,17 @@ export default function ResetPasswordPage() {
         setError("");
 
         if (!newPassword.trim() || !confirmPassword.trim()) {
-            setError("Please fill in all fields.");
+            setError(localization?.error_fields_required || "Please fill in all fields.");
             return;
         }
 
         if (newPassword.length < 8) {
-            setError("Password must be at least 8 characters.");
+            setError(localization?.error_password_length || "Password must be at least 8 characters.");
             return;
         }
 
         if (newPassword !== confirmPassword) {
-            setError("Passwords do not match.");
+            setError(localization?.error_password_mismatch);
             return;
         }
 
@@ -67,7 +67,7 @@ export default function ResetPasswordPage() {
             const token = sessionStorage.getItem("reset_token");
 
             if (!email || !token) {
-                throw new Error("Session expired. Please try the forgot password flow again.");
+                throw new Error(localization?.error_session_expired || "Session expired. Please try the forgot password flow again.");
             }
 
             const response = await apiService.post("/Account/reset-password", {
@@ -79,7 +79,7 @@ export default function ResetPasswordPage() {
             if (response?.success || response) {
                 setToast({
                     show: true,
-                    message: "Password reset successful! You can now login.",
+                    message: localization?.error_reset_success || "Password reset successful! You can now login.",
                     type: "success"
                 });
 
@@ -92,7 +92,7 @@ export default function ResetPasswordPage() {
                 }, 2000);
             }
         } catch (err) {
-            setError(err.message || "Failed to reset password. Please try again.");
+            setError(err.message || localization?.error_reset_failed || "Failed to reset password. Please try again.");
         } finally {
             setLoading(false);
         }
