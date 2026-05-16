@@ -9,6 +9,7 @@ export const getLocalization = cache(async () => {
   try {
     // Using apiService.get which handles baseUrl and headers
     const response = await apiService.get('/StaticLocalization');
+    console.log('Localization response:', response);
 
     // Handle new API format: { success: true, data: [{ key: '...', value: '...' }, ...] }
     if (response && response.success && Array.isArray(response.data)) {

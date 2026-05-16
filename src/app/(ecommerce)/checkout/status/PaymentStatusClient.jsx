@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { loadStripe } from "@stripe/stripe-js";
 import { apiService } from "@/lib/api";
@@ -10,7 +10,38 @@ import { useAuth } from "@/context/AuthContext";
 import useCart from "@/Hooks/useCart";
 import { HiCheckCircle, HiXCircle, HiRefresh, HiShoppingBag } from "react-icons/hi";
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+/**
+ * Fetches the Stripe publishable key dynamically from the payment methods API
+ * and returns a cached Stripe promise.
+ */
+let cachedStripePromise = null;
+async function getStripePromise() {
+    if (cachedStripePromise) return cachedStripePromise;
+
+    try {
+        const response = await apiService.get("/Configuration/paymentmethods");
+        const methods = Array.isArray(response)
+            ? response
+            : response?.data ?? response?.result ?? [];
+
+        const stripeMethod = methods.find(
+            (m) => m.name?.toLowerCase() === "stripe" && m.isActive === true
+        );
+
+        if (!stripeMethod) return null;
+
+        const publishableKey = stripeMethod.isTestingEnvironment
+            ? stripeMethod.testPublishablekey
+            : stripeMethod.livePublishablekey;
+
+        if (!publishableKey) return null;
+
+        cachedStripePromise = loadStripe(publishableKey);
+        return cachedStripePromise;
+    } catch {
+        return null;
+    }
+}
 
 export default function PaymentStatusClient({ localization }) {
     const searchParams = useSearchParams();
@@ -36,7 +67,13 @@ export default function PaymentStatusClient({ localization }) {
 
         const checkStatus = async () => {
             try {
-                const stripe = await stripePromise;
+                const stripe = await getStripePromise();
+                if (!stripe) {
+                    setStatus("error");
+                    setMessage("Stripe configuration not available.");
+                    clearInterval(pollInterval);
+                    return;
+                }
                 const { paymentIntent } = await stripe.retrievePaymentIntent(clientSecret);
 
                 if (!paymentIntent) {
