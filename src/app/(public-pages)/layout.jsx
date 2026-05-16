@@ -1,4 +1,3 @@
-
 import MainFooter from "@/components/layout/Footer";
 import CartFAB from "@/components/layout/CartFAB";
 

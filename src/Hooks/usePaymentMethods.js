@@ -28,6 +28,7 @@ function sanitizePaymentMethods(rawMethods) {
                 displayName: method.displayName,
                 imageUrl: "https://admin.aa-consultants.de/" + method.imageUrl,
                 publishableKey: publishableKey || null,
+                isTestingEnvironment: method.isTestingEnvironment ?? false,
             };
         });
 }
