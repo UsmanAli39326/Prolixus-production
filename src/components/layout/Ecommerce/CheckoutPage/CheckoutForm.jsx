@@ -25,6 +25,12 @@ export default function CheckoutForm({ nextStep, goToStep, formData, updateFormD
             try {
                 const data = await getCountries();
                 setCountries(data);
+                if (formData.countryId && !formData.countryCode && data.length > 0) {
+                    const match = data.find(c => String(c.id) === String(formData.countryId));
+                    if (match) {
+                        updateFormData({ countryCode: match.code || "" });
+                    }
+                }
             } catch (error) {
                 console.error("Failed to fetch countries:", error);
             } finally {
@@ -32,7 +38,7 @@ export default function CheckoutForm({ nextStep, goToStep, formData, updateFormD
             }
         };
         fetchCountries();
-    }, []);
+    }, [formData.countryId, formData.countryCode, updateFormData]);
 
     const validate = () => {
         const newErrors = {};
@@ -42,6 +48,9 @@ export default function CheckoutForm({ nextStep, goToStep, formData, updateFormD
         if (!formData.address) newErrors.address = `${localization?.checkout_street_label} is required`;
         if (!formData.city) newErrors.city = `${localization?.checkout_city_label} is required`;
         if (!formData.zip) newErrors.zip = `${localization?.checkout_zip_label} is required`;
+        if (formData.countryCode === "US" && !formData.state) {
+            newErrors.state = localization?.checkout_state_required || "State is required for United States shipping";
+        }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -209,6 +218,21 @@ export default function CheckoutForm({ nextStep, goToStep, formData, updateFormD
                                     )}
                                 </select>
                             </div>
+                            {formData.countryCode === "US" && (
+                                <div className="md:col-span-2">
+                                    <Input
+                                        label={localization?.checkout_state_label || "State"}
+                                        name="state"
+                                        value={formData.state || ""}
+                                        onChange={handleChange}
+                                        error={errors.state}
+                                        placeholder="e.g. CA"
+                                        className="space-y-1.5"
+                                        required
+                                        {...inputStyles}
+                                    />
+                                </div>
+                            )}
                         </div>
                     </div>
                 </FaderInAnimation>

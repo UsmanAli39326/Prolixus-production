@@ -65,8 +65,8 @@ export async function POST(req) {
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(parsedAmount * 100),
-      currency: currency || "eur",
-      payment_method_types: ["card", "sepa_debit", "klarna"],
+      currency: (currency || "eur").toLowerCase(),
+      payment_method_types: ["card", "klarna"],
       metadata: {
         integration: "nextjs_checkout",
       },

@@ -160,6 +160,10 @@ function StripeCheckoutForm({
         payload.paymentMethod = "Stripe";
         localStorage.setItem("pendingOrderPayload", JSON.stringify(payload));
 
+        const shippingCountry = (formData.countryCode || (currency?.toLowerCase() === 'eur' ? 'DE' : 'US')).toUpperCase();
+        const billingCountry = (formData.countryCode || (currency?.toLowerCase() === 'eur' ? 'DE' : 'US')).toUpperCase();
+        const stateValue = formData.state ? formData.state.toUpperCase() : (shippingCountry === 'US' ? 'CA' : undefined);
+
         try {
             const { error, paymentIntent } = await stripe.confirmPayment({
                 elements,
@@ -169,8 +173,9 @@ function StripeCheckoutForm({
                         address: {
                             line1: formData.address,
                             city: formData.city,
+                            state: stateValue,
                             postal_code: formData.zip,
-                            country: formData.countryCode || (currency === 'eur' ? 'DE' : 'US'),
+                            country: shippingCountry,
                         },
                     },
                     payment_method_data: {
@@ -181,8 +186,9 @@ function StripeCheckoutForm({
                             address: {
                                 line1: formData.address,
                                 city: formData.city,
+                                state: stateValue,
                                 postal_code: formData.zip,
-                                country: formData.countryCode || (currency === 'eur' ? 'DE' : 'US'),
+                                country: billingCountry,
                             }
                         }
                     },

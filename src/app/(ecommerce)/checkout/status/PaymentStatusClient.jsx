@@ -94,10 +94,12 @@ export default function PaymentStatusClient({ localization }) {
                         setMessage(localization?.status_processing_title);
                         attempts++;
                         
-                        // We do NOT call finalizeOrder here because the backend requires success
-                        // We just wait or let the user leave.
+                        // We do NOT call finalizeOrder immediately here because the backend prefers success.
+                        // However, if the polling times out (e.g. after 30 seconds of processing), we call
+                        // finalizeOrder as a fallback so that the order is registered in the system.
                         if (attempts >= 10) {
-                             clearInterval(pollInterval);
+                            clearInterval(pollInterval);
+                            await finalizeOrder(paymentIntent);
                         }
                         break;
 
