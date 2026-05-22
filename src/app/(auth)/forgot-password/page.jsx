@@ -101,22 +101,20 @@ export default function ForgotPasswordPage() {
                         <div className="flex items-center justify-center p-8 sm:p-12">
                             <div className="w-full max-w-md">
 
-                                <div className="lg:hidden mb-8">
-                                    <div className="flex items-center gap-3">
-                                        <Link href="/" className="flex-shrink-0">
-                                            <Image
-                                                src="/images/new/logo-full.gif"
-                                                alt="Prolixus Logo"
-                                                width={160}
-                                                height={45}
-                                                className="h-12 w-auto object-contain"
-                                            />
-                                        </Link>
-                                        <div>
-                                            <div className="font-accent text-2xl text-primary">{localization?.brandname || "Prolixus"}</div>
-                                            <div className="text-sm text-text">{localization?.sign_in}</div>
-                                        </div>
-                                    </div>
+                                {/* Brand (for mobile) */}
+                                <div className="lg:hidden mb-8 flex flex-col items-center text-center gap-2">
+                                    <Link href="/" className="shrink-0">
+                                        <Image
+                                            src="/images/new/logo-full.gif"
+                                            alt={localization?.brandname || "Prolixus Logo"}
+                                            width={160}
+                                            height={45}
+                                            className="h-12 w-auto object-contain brightness-0"
+                                        />
+                                    </Link>
+                                    <p className="text-sm text-text">
+                                        {localization?.sign_in}
+                                    </p>
                                 </div>
 
 

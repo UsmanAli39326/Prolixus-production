@@ -9,6 +9,7 @@ import YouTubeGallery from "@/components/layout/Home/YouTubeGallery";
 import { Suspense } from "react";
 import DynamicProductsSection from "@/components/layout/Home/DynamicProductsSection";
 import { getLocalization } from "@/lib/getLocalization";
+import { getAboutPayload } from "@/app/api/about/about";
 
 export const metadata = {
   title: "Prolixus - Premium Organic Products",
@@ -41,6 +42,7 @@ const ProductsLoading = () => (
 
 export default async function Home() {
   const data = await getLocalization();
+  const about = await getAboutPayload();
   
   // Group flattened data keys for components
   const homeData = {
@@ -52,8 +54,8 @@ export default async function Home() {
       description: data?.hero_description,
       button_text: data?.hero_button_text,
       phone_label: data?.hero_phone_label,
-      phone_sublabel: data?.hero_phone_sublabel,
-      phone_number: data?.hero_phone_number,
+      phone_sublabel: about?.phone || data?.hero_phone_sublabel,
+      phone_number: about?.phone || data?.hero_phone_number,
     },
     about: {
       label: data?.about_label,

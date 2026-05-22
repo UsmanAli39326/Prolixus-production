@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import Image from "next/image";
+import { getLocalization } from "@/lib/getLocalization";
 
 export default function VerifyOTPPage() {
     const router = useRouter();
@@ -13,6 +14,15 @@ export default function VerifyOTPPage() {
     const [loading, setLoading] = useState(false);
     const [deliveryInfo, setDeliveryInfo] = useState("");
     const inputRefs = useRef([]);
+    const [localization, setLocalization] = useState(null);
+
+    useEffect(() => {
+        const fetchLocalization = async () => {
+            const data = await getLocalization();
+            setLocalization(data);
+        };
+        fetchLocalization();
+    }, []);
 
     useEffect(() => {
         // Get method and value from session storage
@@ -161,22 +171,19 @@ export default function VerifyOTPPage() {
                             <div className="w-full max-w-md">
 
                                 {/* Brand (for mobile) */}
-                                <div className="lg:hidden mb-8">
-                                    <div className="flex items-center gap-3">
-                                        <Link href="/" className="flex-shrink-0">
-                                            <Image
-                                                src="/images/new/logo-full.gif"
-                                                alt="Prolixus Logo"
-                                                width={160}
-                                                height={45}
-                                                className="h-12 w-auto object-contain"
-                                            />
-                                        </Link>
-                                        <div>
-                                            <div className="font-accent text-2xl text-primary">Prolixus</div>
-                                            <div className="text-sm text-text">Secure access portal</div>
-                                        </div>
-                                    </div>
+                                <div className="lg:hidden mb-8 flex flex-col items-center text-center gap-2">
+                                    <Link href="/" className="shrink-0">
+                                        <Image
+                                            src="/images/new/logo-full.gif"
+                                            alt={localization?.brandname || "Prolixus Logo"}
+                                            width={160}
+                                            height={45}
+                                            className="h-12 w-auto object-contain brightness-0"
+                                        />
+                                    </Link>
+                                    <p className="text-sm text-text">
+                                        {localization?.sign_in || "Secure access portal"}
+                                    </p>
                                 </div>
 
                                 <Link href="/forgot-password" className="flex justify-end w-full">

@@ -265,22 +265,19 @@ export default function AuthPage() {
               >
                 <div className="w-full max-w-md">
                   {/* Brand (for mobile) */}
-                  <div className="lg:hidden mb-8">
-                    <div className="flex items-center gap-3">
-                      <Link href="/" className="shrink-0">
-                        <Image
-                          src="/images/new/logo-full.gif"
-                          alt={localization?.brandname || "Prolixus Logo"}
-                          width={160}
-                          height={45}
-                          className="h-12 w-auto object-contain"
-                        />
-                      </Link>
-                      <div>
-                        <div className="font-accent text-2xl text-primary">{localization?.brandname || "Prolixus"}</div>
-                        <div className="text-sm text-text">{localization?.sign_in}</div>
-                      </div>
-                    </div>
+                  <div className="lg:hidden mb-8 flex flex-col items-center text-center gap-2">
+                    <Link href="/">
+                      <Image
+                        src="/images/new/logo-full.gif"
+                        alt={localization?.brandname || "Prolixus Logo"}
+                        width={160}
+                        height={45}
+                        className="h-12 w-auto object-contain brightness-0"
+                      />
+                    </Link>
+                    <p className="text-sm text-text">
+                      {localization?.sign_in}
+                    </p>
                   </div>
 
 
@@ -417,22 +414,19 @@ export default function AuthPage() {
               >
                 <div className="w-full max-w-md">
                   {/* Brand (for mobile) */}
-                  <div className="lg:hidden mb-8">
-                    <div className="flex items-center gap-3">
-                      <Link href="/" className="flex-shrink-0">
-                        <Image
-                          src="/images/new/logo-full.gif"
-                          alt="Prolixus Logo"
-                          width={160}
-                          height={45}
-                          className="h-12 w-auto object-contain"
-                        />
-                      </Link>
-                      <div>
-                        <div className="font-accent text-2xl text-primary">{localization?.brandname || "Prolixus"}</div>
-                        <div className="text-sm text-text">{localization?.sign_in}</div>
-                      </div>
-                    </div>
+                  <div className="lg:hidden mb-8 flex flex-col items-center text-center gap-2">
+                    <Link href="/">
+                      <Image
+                        src="/images/new/logo-full.gif"
+                        alt="Prolixus Logo"
+                        width={160}
+                        height={45}
+                        className="h-12 w-auto object-contain brightness-0"
+                      />
+                    </Link>
+                    <p className="text-sm text-text">
+                      {localization?.join_today || "Join us and start your journey today."}
+                    </p>
                   </div>
 
 
@@ -520,37 +514,36 @@ export default function AuthPage() {
                     />
 
                     <div className="flex flex-col pt-1">
-                      <div className="flex items-center gap-3">
-                        <label className="flex items-center gap-2 select-none cursor-pointer">
-                          <Input
-                            type="checkbox"
-                            checked={agreeTerms}
-                            onChange={(e) => { setAgreeTerms(e.target.checked); clearFieldError("agreeTerms"); }}
-                            className="hidden"
-                          />
+                      <label className="flex items-start gap-3 text-left w-full select-none cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={agreeTerms}
+                          onChange={(e) => { setAgreeTerms(e.target.checked); clearFieldError("agreeTerms"); }}
+                          className="sr-only"
+                        />
+                        <span
+                          className={`
+                            relative w-[46px] h-[26px] rounded-full transition-colors duration-200 shrink-0 mt-0.5 block
+                            ${agreeTerms ? "bg-accent/90" : "bg-primary/20"}
+                          `}
+                        >
                           <span
                             className={`
-                              relative w-[46px] h-[26px] rounded-full transition-colors duration-200
-                              ${agreeTerms ? "bg-accent/90" : "bg-primary/20"}
+                              absolute top-[3px] left-[3px] w-5 h-5 rounded-full bg-white shadow-md
+                              transition-transform duration-200 block
+                              ${agreeTerms ? "translate-x-5" : "translate-x-0"}
                             `}
-                          >
-                            <span
-                              className={`
-                                absolute top-[3px] left-[3px] w-5 h-5 rounded-full bg-white shadow-md
-                                transition-transform duration-200
-                                ${agreeTerms ? "translate-x-5" : "translate-x-0"}
-                              `}
-                            />
-                          </span>
-                        </label>
-                        <span className="text-sm text-text">
+                          />
+                        </span>
+                        <span className="text-sm text-text leading-relaxed">
                           {localization?.terms_conditions || "I agree to the Terms & Conditions"}
                         </span>
-                      </div>
+                      </label>
                       {fieldErrors.agreeTerms && (
                         <p className="text-error text-sm mt-1">{fieldErrors.agreeTerms}</p>
                       )}
                     </div>
+
 
                     <Button
                       type="submit"

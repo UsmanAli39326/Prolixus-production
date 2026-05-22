@@ -101,7 +101,7 @@ export default function CheckoutForm({ nextStep, goToStep, formData, updateFormD
                 {/* Contact Section */}
                 <FaderInAnimation direction="up" delay={0.1}>
                     <div className="space-y-6">
-                        <div className="flex items-baseline justify-between">
+                        <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 sm:gap-4">
                             <h2 className="text-2xl font-bold tracking-tight text-primary">{localization?.checkout_contact_info_title}</h2>
                             {!isAuthenticated && (
                                 <span className="text-sm font-accent text-gray-500">

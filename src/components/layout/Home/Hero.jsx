@@ -137,7 +137,7 @@ import Button from "@/components/ui/Button";
 export default function Hero({ data = {} }) {
   return (
     <section
-      className="relative min-h-screen lg:h-screen flex items-center overflow-hidden bg-cover bg-center pt-28 pb-8 sm:pt-20 sm:pb-0 lg:pt-20 bg--secondary-color  lg:pb-10"
+      className="relative min-h-screen lg:h-screen flex items-center overflow-hidden bg-cover bg-center pt-20 pb-8 sm:pt-14 sm:pb-0 lg:pt-14 bg--secondary-color lg:pb-10"
     >
       {/* Background Image Desktop */}
       <Image
@@ -164,6 +164,18 @@ export default function Hero({ data = {} }) {
           {/* Left: Content */}
           <div>
             <div className="hero-content text--white-color">
+
+              <FadeInAnimation direction="up">
+                <div className="mb-4 sm:mb-6">
+                  <Image
+                    src="/images/new/Apotheken.webp"
+                    width={180}
+                    height={90}
+                    alt="Apotheken"
+                    className="w-auto h-14 sm:h-18 lg:h-22 object-contain"
+                  />
+                </div>
+              </FadeInAnimation>
 
               <FadeInAnimation direction="up">
                 <h3 className="text-base sm:text-lg lg:text-xl font-accent italic tracking-wide text-white/90">
@@ -223,20 +235,9 @@ export default function Hero({ data = {} }) {
                   </div>
                 </div>
               </FadeInAnimation>
-
-              <FadeInAnimation direction="up" >
-                <div className="">
-                  <Image
-                    src="/images/new/Apotheken.webp"
-                    width={200}
-                    height={100}
-                    alt="Apotheken"
-                    className="lg:mt-6 sm:mt-10 w-auto h-20 sm:h-28 lg:h-36 object-contain lg:mb-2"
-                  />
-                </div>
-              </FadeInAnimation>
             </div>
           </div>
+
         </div>
       </div>
     </section>
