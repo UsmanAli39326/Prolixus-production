@@ -137,11 +137,11 @@ import Button from "@/components/ui/Button";
 export default function Hero({ data = {} }) {
   return (
     <section
-      className="relative min-h-screen lg:h-screen flex items-center overflow-hidden bg-cover bg-center pt-20 pb-8 sm:pt-14 sm:pb-0 lg:pt-14 bg--secondary-color lg:pb-10"
+      className="relative min-h-screen lg:h-screen flex flex-col lg:items-center lg:justify-center overflow-hidden bg-cover bg-center pt-8 pb-12 sm:pt-12 sm:pb-10 lg:pt-0 lg:pb-0 bg--secondary-color"
     >
       {/* Background Image Desktop */}
       <Image
-        src="/images/new/mainSlider.webp"
+        src="/images/new/main slider copy2.jpg.jpeg"
         alt="Hero Background Desktop"
         fill
         className="hidden md:block absolute inset-0 w-full h-full bg-fixed object-cover z-0"
@@ -158,7 +158,7 @@ export default function Hero({ data = {} }) {
       />
       <div className="absolute inset-0 bg-linear-to-r from-(--primary-color)/85 via-(--primary-color)/60 to-transparent z-1" />
 
-      <div className="relative z-2 container mx-auto px-4">
+      <div className="relative z-2 container mx-auto px-4 w-full">
         <div className="grid items-center gap-10 lg:grid-cols-2">
 
           {/* Left: Content */}
