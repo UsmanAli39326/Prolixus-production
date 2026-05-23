@@ -36,7 +36,7 @@ export default function Header({ menus = [] }) {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-divider bg-primary font-sans">
-      <nav className="container mx-auto flex items-center justify-between px-4 py-4 lg:py-6">
+      <nav className="container mx-auto relative flex items-center justify-between px-4 py-4 lg:py-6">
         {/* Logo */}
         <Link href="/" className="flex-shrink-0 w-[180px] lg:w-[270px]">
           <Image
@@ -48,6 +48,24 @@ export default function Header({ menus = [] }) {
             priority
           />
         </Link>
+
+        {/* Mobile Google Rating - Only on mobile */}
+        <div className="absolute lg:hidden left-[55%] top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center px-2 max-w-[110px]">
+          <a
+            href="https://share.google/kgDhjqnMrkgLLtv8m"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center hover:opacity-80 transition-opacity no-underline"
+          >
+            <Image
+              src="/images/new/Stars-01.svg"
+              alt="5 Stars"
+              width={30}
+              height={7}
+              className="h-auto w-auto"
+            />
+          </a>
+        </div>
 
         {/* Desktop Menu */}
         <div className="hidden lg:flex flex-1 items-center justify-between ml-6">
@@ -302,31 +320,8 @@ export default function Header({ menus = [] }) {
                 <div className="flex flex-col gap-4">
                   <p className="text-[10px] text-white/40 uppercase tracking-widest font-bold">Preferences</p>
                   <div className="flex items-center justify-between bg-black/20 p-3 rounded-2xl border border-white/5">
-                    {/* Google Rating First */}
-                    <a
-                      href="https://share.google/kgDhjqnMrkgLLtv8m"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 no-underline"
-                    >
-                      <Image
-                        src="/images/new/Google.svg"
-                        alt="Google"
-                        width={45}
-                        height={15}
-                        className="h-auto w-auto"
-                      />
-                      <Image
-                        src="/images/new/Stars-01.svg"
-                        alt="Stars"
-                        width={50}
-                        height={10}
-                        className="h-auto w-auto"
-                      />
-                    </a>
-
-                    {/* Language Switcher Second */}
-                    <div className="scale-90 origin-right">
+                    {/* Language Switcher Only */}
+                    <div className="scale-90 origin-left">
                       <LanguageSwitcher />
                     </div>
                   </div>

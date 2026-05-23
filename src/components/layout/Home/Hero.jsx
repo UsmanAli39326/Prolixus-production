@@ -150,7 +150,7 @@ export default function Hero({ data = {} }) {
       
       {/* Background Image Mobile */}
       <Image
-        src="/images/new/main hero banner mobile view copy.webp"
+        src="/images/new/main hero banner mobile view.webp"
         alt="Hero Background Mobile"
         fill
         className="block md:hidden absolute inset-0 w-full h-full bg-fixed object-cover z-0"
