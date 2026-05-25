@@ -6,6 +6,8 @@ import Image from "next/image";
 
 
 import { FaCircleUser } from "react-icons/fa6";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import LanguageSwitcher from "@/components/layout/LanguageSwitcher";
 
 
@@ -38,7 +40,7 @@ export default function Header({ menus = [] }) {
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-divider bg-primary font-sans">
       <nav className="container mx-auto relative flex items-center justify-between px-4 py-4 lg:py-6">
         {/* Logo */}
-        <Link href="/" className="flex-shrink-0 w-[180px] lg:w-[270px]">
+       <Link href="/" className="shrink-0 w-40 lg:w-64">
           <Image
             src="/images/new/logo-font-size-big.gif"
             alt="Prolixus Logo"
@@ -50,13 +52,14 @@ export default function Header({ menus = [] }) {
         </Link>
 
         {/* Mobile Google Rating - Only on mobile */}
-        <div className="absolute lg:hidden left-[55%] top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center px-2 max-w-[110px]">
+       <div className="absolute lg:hidden left-[59%] top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center px-2 max-w-28">
           <a
             href="https://share.google/kgDhjqnMrkgLLtv8m"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center hover:opacity-80 transition-opacity no-underline"
+            className="flex items-center gap-1.5 hover:opacity-80 transition-opacity no-underline"
           >
+            <FontAwesomeIcon icon={faGoogle} className="text-white text-sm" />
             <Image
               src="/images/new/Stars-01.svg"
               alt="5 Stars"
@@ -115,10 +118,10 @@ export default function Header({ menus = [] }) {
                       onClick={() => setUserMenuOpen(!userMenuOpen)}
                       className="flex items-center gap-2 text-white hover:text-accent transition-all duration-300 py-1.5 px-2 rounded-full hover:bg-white/5"
                     >
-                      <div className="h-9 w-9 rounded-full bg-gradient-to-br from-accent to-accent/60 flex items-center justify-center text-primary font-bold shadow-lg shadow-accent/20 border border-white/20">
-                        {profile?.name?.charAt(0).toUpperCase() || <FaUser size={14} />}
-                      </div>
-                      <div className="flex flex-col items-start leading-none hidden lg:flex">
+                   <div className="h-9 w-9 rounded-full bg-accent flex items-center justify-center text-primary font-bold shadow-lg border border-white">
+  {profile?.name?.charAt(0).toUpperCase() || <FaUser size={14} />}
+</div>
+                   <div className="hidden lg:flex flex-col items-start leading-none">
                         <span className="text-[10px] text-white/40 uppercase tracking-widest font-bold mb-0.5">Welcome</span>
                         <span className="font-bold text-sm">{profile?.name || "User"}</span>
                       </div>
@@ -129,7 +132,7 @@ export default function Header({ menus = [] }) {
                       <>
                         <div className="fixed inset-0 z-40" onClick={() => setUserMenuOpen(false)} />
                         <div className="absolute right-0 mt-3 w-64 bg-primary/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200 origin-top-right">
-                          <div className="p-4 border-b border-white/10 bg-gradient-to-br from-white/10 to-transparent">
+                         <div className="p-4 border-b border-white bg-primary">
                             <p className="text-[10px] text-accent font-bold uppercase tracking-[0.2em] mb-1">Account Member</p>
                             <div className="flex items-center gap-3">
                               <div className="h-10 w-10 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold border border-accent/20">
@@ -137,7 +140,9 @@ export default function Header({ menus = [] }) {
                               </div>
                               <div className="flex flex-col">
                                 <p className="text-sm font-bold text-white truncate">{profile?.name}</p>
-                                <p className="text-[11px] text-white/50 truncate max-w-[140px]">{profile?.email}</p>
+                            <p className="text-xs text-white/50 truncate">
+                               {profile?.email}
+                                  </p>
                               </div>
                             </div>
                           </div>
@@ -203,9 +208,9 @@ export default function Header({ menus = [] }) {
             {isLoggedIn ? (
               <div className="relative">
                 <button
-                  onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center justify-center h-10 w-10 rounded-full bg-gradient-to-br from-accent to-accent/60 text-primary font-bold shadow-lg shadow-accent/20 border border-white/20 active:scale-95 transition-all"
-                >
+                onClick={() => setUserMenuOpen(!userMenuOpen)}
+                    className="flex items-center justify-center h-10 w-10 rounded-full bg-accent text-primary font-bold shadow-lg border border-white transition-all"
+>
                   {profile?.name?.charAt(0).toUpperCase() || <FaUser size={14} />}
                 </button>
 
@@ -213,7 +218,7 @@ export default function Header({ menus = [] }) {
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setUserMenuOpen(false)} />
                     <div className="absolute right-0 mt-3 w-64 bg-primary/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200 origin-top-right">
-                      <div className="p-4 border-b border-white/10 bg-gradient-to-br from-white/10 to-transparent">
+                    <div className="p-4 border-b border-white bg-gray-900">
                         <p className="text-[10px] text-accent font-bold uppercase tracking-[0.2em] mb-1">Account Member</p>
                         <div className="flex items-center gap-3">
                           <div className="h-10 w-10 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold border border-accent/20">
@@ -221,7 +226,7 @@ export default function Header({ menus = [] }) {
                           </div>
                           <div className="flex flex-col">
                             <p className="text-sm font-bold text-white truncate">{profile?.name}</p>
-                            <p className="text-[11px] text-white/50 truncate max-w-[140px]">{profile?.email}</p>
+                           <p className="text-xs text-white truncate">{profile?.email}</p>
                           </div>
                         </div>
                       </div>
@@ -294,10 +299,10 @@ export default function Header({ menus = [] }) {
       {mobileOpen && (
         <>
           <div
-            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden mt-[72px]"
+           className="fixed inset-0 z-40 bg-black lg:hidden mt-16"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="fixed top-[72px] left-0 right-0 h-[50vh] z-50 bg-primary shadow-2xl lg:hidden animate-in slide-in-from-top duration-300 font-sans border-b border-white/10">
+     <div className="fixed top-16 left-0 right-0 h-1/2 z-50 bg-primary shadow-2xl lg:hidden font-sans border-b border-white">
             <div className="flex flex-col h-full">
               <nav className="flex-1 overflow-y-auto px-6 py-8">
                 <ul className="flex flex-col gap-6">
