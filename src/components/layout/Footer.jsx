@@ -1,12 +1,45 @@
-import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
+import { 
+  FaMapMarkerAlt, 
+  FaPhoneAlt, 
+  FaEnvelope,
+  FaFacebook,
+  FaTwitter,
+  FaInstagram,
+  FaLinkedin,
+  FaYoutube,
+  FaTiktok,
+  FaPinterest,
+  FaGlobe,
+  FaGooglePay,
+  FaPaypal,
+  FaCcVisa,
+  FaCcMastercard,
+  FaCcAmex
+} from "react-icons/fa";
+import { SiKlarna } from "react-icons/si";
 import { getAboutPayload } from "@/app/api/about/about";
+import { getSocials } from "@/app/api/socials/socials";
 import Image from "next/image";
 import Link from "next/link";
 import NewsletterForm from "./NewsletterForm";
 import { formatDate } from "@/utitlis/formatters";
 
+const getSocialIcon = (iconClass) => {
+  if (!iconClass) return <FaGlobe />;
+  const lowerClass = iconClass.toLowerCase();
+  if (lowerClass.includes("facebook")) return <FaFacebook />;
+  if (lowerClass.includes("twitter")) return <FaTwitter />;
+  if (lowerClass.includes("instagram")) return <FaInstagram />;
+  if (lowerClass.includes("linkedin")) return <FaLinkedin />;
+  if (lowerClass.includes("youtube")) return <FaYoutube />;
+  if (lowerClass.includes("tiktok")) return <FaTiktok />;
+  if (lowerClass.includes("pinterest")) return <FaPinterest />;
+  return <FaGlobe />;
+};
+
 export default async function MainFooter() {
   const about = await getAboutPayload();
+  const socials = await getSocials();
 
   return (
     <footer className="bg-(--primary-color) text-(--white-color) pt-24 pb-12">
@@ -41,6 +74,18 @@ export default async function MainFooter() {
                 );
               })()}
             </div>
+            
+            {/* Payment Methods */}
+            <div className="pt-4">
+              <div className="flex items-center gap-4 text-(--white-color)/60 text-3xl">
+                <FaGooglePay title="Google Pay" className="hover:text-(--white-color) transition-colors cursor-pointer text-4xl -mx-2" />
+                <SiKlarna title="Klarna" className="hover:text-[#FFB3C7] transition-colors cursor-pointer text-2xl mx-1" />
+                <FaPaypal title="PayPal" className="hover:text-[#00457C] transition-colors cursor-pointer text-[22px] mx-1" />
+                <FaCcVisa title="Visa" className="hover:text-[#1A1F71] transition-colors cursor-pointer" />
+                <FaCcMastercard title="Mastercard" className="hover:text-[#EB001B] transition-colors cursor-pointer" />
+                <FaCcAmex title="American Express" className="hover:text-[#002663] transition-colors cursor-pointer" />
+              </div>
+            </div>
           </div>
 
           {/* Column 2: Quick Links */}
@@ -49,6 +94,7 @@ export default async function MainFooter() {
             <ul className="space-y-4">
               {[
                 { name: "Login", href: "/login" },
+                { name: "Certificates", href: "/certificates" },
                 { name: "Terms & Conditions", href: "/terms" },
                 { name: "Privacy Policy", href: "/privacy-policy" },
                 { name: "Return & Refund Policy", href: "/return-and-refund" },
@@ -113,6 +159,28 @@ export default async function MainFooter() {
               </p>
 
               <NewsletterForm />
+
+              {socials && socials.length > 0 && (
+                <div className="pt-4">
+                  <h4 className="text-(--white-color) font-accent font-bold text-lg mb-4">Follow Us</h4>
+                  <div className="flex flex-wrap gap-4">
+                    {socials.filter(s => s.isActive).sort((a, b) => a.sortOrder - b.sortOrder).map((social) => (
+                      <Link
+                        key={social.id}
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-(--white-color)/60 hover:text-(--accent-color) transition-colors group"
+                      >
+                        <div className="text-xl group-hover:scale-110 transition-transform">
+                          {getSocialIcon(social.icon)}
+                        </div>
+                        <span className="font-default text-[15px]">{social.displayName}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -120,7 +188,7 @@ export default async function MainFooter() {
 
         {/* ================= BOTTOM BAR =================  */}
         <div className="pt-10 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-(--white-color)/40 font-default text-sm">
+          <p className="text-(--white-color)/40 font-default text-sm text-center md:text-left">
             © {formatDate(new Date(), 'year')} {about?.companyName || "Prolixus"}. All rights reserved. | Powered by <Link href="https://devtechnoz.com/" target="_blank" className="hover:text-(--accent-color) transition-colors font-semibold">DevTechNoz</Link>
           </p>
 

@@ -26,6 +26,9 @@ export async function getAboutPayload() {
       logoId: about.fileId,
       taxNumber: about.taxNumber,
       ustNumber: about.ustIdNr || about.ustNumber || about.vatNumber,
+      demoVideoUrl: about.demoVideoUrl,
+      triggerTimeInSeconds: about.triggerTimeInSeconds,
+      isRenderVideoDisable: false,
     };
 
   } catch (error) {
@@ -34,3 +37,13 @@ export async function getAboutPayload() {
   }
 }
 
+export async function getTeamMembers() {
+  try {
+    const response = await apiService.get("/Configuration/team-members", {}, { next: { revalidate: 30 } });
+    if (!response?.success || !response?.data) return [];
+    return response.data;
+  } catch (error) {
+    console.error("Team Members API Error:", error);
+    return [];
+  }
+}

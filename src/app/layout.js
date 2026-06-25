@@ -5,6 +5,8 @@ import { CurrencyProvider } from "@/context/CurrencyContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { LanguageProvider } from "@/context/LanguageContext";
 import Navbar from "@/components/layout/NavbarWrapper";
+import DemoVideoModalWrapper from "@/components/layout/DemoVideoModalWrapper";
+import { Suspense } from "react";
 
 
 export const metadata = {
@@ -54,6 +56,9 @@ export default function RootLayout({ children }) {
                 <main className="min-h-screen">
                   {children}
                 </main>
+                <Suspense fallback={null}>
+                  <DemoVideoModalWrapper />
+                </Suspense>
               </CartProvider>
             </CurrencyProvider>
           </AuthProvider>

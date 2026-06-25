@@ -85,12 +85,10 @@ export default async function AboutSection({ variant = "full", localization = {}
 
               {/* Rich Description Body — only shown on the full About page */}
               {variant === "full" && (
-                <FaderInAnimation direction="up" delay={0.4}>
-                  <div
-                    className="about-description-content max-w-none text-sm leading-relaxed text-text/75 sm:text-base sm:leading-loose"
-                    dangerouslySetInnerHTML={{ __html: about.description }}
-                  />
-                </FaderInAnimation>
+                <div
+                  className="about-description-content max-w-none text-sm leading-relaxed text-text/75 sm:text-base sm:leading-loose mt-4"
+                  dangerouslySetInnerHTML={{ __html: about.description }}
+                />
               )}
 
 
