@@ -197,6 +197,8 @@
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import Image from "next/image";
+import Link from "next/link";
+import { getImageUrl } from "@/lib/ImageService";
 
 export default function PremiumProducts() {
   return (
@@ -275,14 +277,21 @@ export default function PremiumProducts() {
                   <div className="premium-products-item relative w-full md:w-[calc(33.33%-20px)]">
                     <div className="premium-products-image relative">
                       <figure className="block overflow-hidden rounded-2xl relative">
-                        <Image
-                          src="/images/new/Purchase-Now-copy.webp"
-                          alt="Essenzielle Nährstoffe"
-                          width={800}
-                          height={800}
-                          className="w-full aspect-[1/1.01]"
-                        />
-                        <span className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-[rgba(10,44,15,0.9)]" />
+                        <Link href="/blog" className="block w-full h-full group relative">
+                          <Image
+                            src={getImageUrl("/uploadimages/Purchase_Now_9.webp")}
+                            alt="Essenzielle Nährstoffe"
+                            width={800}
+                            height={800}
+                            className="w-full aspect-[1/1.01]"
+                          />
+                          <span className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-[rgba(10,44,15,0.9)] pointer-events-none" />
+                          <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20">
+                            <span className="text-white font-bold text-lg flex items-center gap-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                              Read more &rarr;
+                            </span>
+                          </div>
+                        </Link>
                       </figure>
                     </div>
                     <div className="absolute right-5 bottom-5 left-5 text-center">
@@ -317,14 +326,21 @@ export default function PremiumProducts() {
                   <div className="premium-products-item relative w-full md:w-[calc(33.33%-20px)]">
                     <div className="premium-products-image relative">
                       <figure className="block overflow-hidden rounded-2xl relative">
-                        <Image
-                          src="/images/new/prolixus-uv.jpeg"
-                          alt="Geprüfte Qualität"
-                          width={800}
-                          height={800}
-                          className="w-full aspect-[1/1.01] object-cover"
-                        />
-                        <span className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-[rgba(10,44,15,0.9)]" />
+                        <Link href="/blog" className="block w-full h-full group relative">
+                          <Image
+                            src={getImageUrl("/uploadimages/prolixus_uv_8.jpeg")}
+                            alt="Geprüfte Qualität"
+                            width={800}
+                            height={800}
+                            className="w-full aspect-[1/1.01] object-cover"
+                          />
+                          <span className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-[rgba(10,44,15,0.9)] pointer-events-none" />
+                          <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20">
+                            <span className="text-white font-bold text-lg flex items-center gap-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                              Read more &rarr;
+                            </span>
+                          </div>
+                        </Link>
                       </figure>
                     </div>
                     <div className="absolute right-5 bottom-5 left-5 text-center">
@@ -346,14 +362,21 @@ export default function PremiumProducts() {
               <div className="products-intro-video relative h-full">
                 <div className="products-intro-image relative overflow-hidden h-full">
                   <figure className="block relative h-full">
-                    <Image
-                      src="/images/new/prolixus-steps.jpeg"
-                      alt="Prolixus Anwendung"
-                      width={800}
-                      height={800}
-                      className="w-full h-full object-cover"
-                    />
-                    <span className="absolute inset-0 bg-(--primary-color)/30" />
+                    <Link href="/blog" className="block w-full h-full group relative">
+                      <Image
+                        src={getImageUrl("/uploadimages/prolixus_steps_7.jpeg")}
+                        alt="Prolixus Anwendung"
+                        width={800}
+                        height={800}
+                        className="w-full h-full object-cover"
+                      />
+                      <span className="absolute inset-0 bg-(--primary-color)/30 pointer-events-none" />
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20">
+                        <span className="text-white font-bold text-lg flex items-center gap-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                          Read more &rarr;
+                        </span>
+                      </div>
+                    </Link>
                   </figure>
                 </div>
 

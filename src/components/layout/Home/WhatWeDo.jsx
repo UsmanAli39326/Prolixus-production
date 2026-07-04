@@ -116,6 +116,8 @@
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import Image from "next/image";
+import Link from "next/link";
+import { getImageUrl } from "@/lib/ImageService";
 
 export default function WhatWeDo({ data = {} }) {
   return (
@@ -131,26 +133,40 @@ export default function WhatWeDo({ data = {} }) {
                 {/* Image 1 */}
                 <div className="what-we-image-1 w-full pr-0 lg:pr-12">
                   <figure className="block rounded-2xl overflow-hidden">
-                    <Image
-                      src="/images/new/big-product.webp"
-                      alt="Prolixus Anwendung"
-                      width={800}
-                      height={800}
-                      className="w-full object-cover rounded-2xl aspect-[1/0.73]"
-                    />
+                    <Link href="/blog" className="block w-full h-full group relative">
+                      <Image
+                        src={getImageUrl("/uploadimages/big_product_3.webp")}
+                        alt="Prolixus Anwendung"
+                        width={800}
+                        height={800}
+                        className="w-full object-cover rounded-2xl aspect-[1/0.73]"
+                      />
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20">
+                        <span className="text-white font-bold text-lg flex items-center gap-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                          Read more &rarr;
+                        </span>
+                      </div>
+                    </Link>
                   </figure>
                 </div>
 
                 {/* Image 2 */}
                 <div className="what-we-image-2 relative w-full max-w-[280px] sm:max-w-[410px] ml-auto -mt-10 sm:-mt-20 z-1">
                   <figure className="block rounded-2xl overflow-hidden">
-                    <Image
-                      src="/images/new/small-product-copy.jpg.jpeg"
-                      alt="Prolixus Einnahme"
-                      width={800}
-                      height={800}
-                      className="w-full object-cover rounded-2xl aspect-[1/0.62]"
-                    />
+                    <Link href="/blog" className="block w-full h-full group relative">
+                      <Image
+                        src={getImageUrl("/uploadimages/small_product_copy_11.jpeg")}
+                        alt="Prolixus Einnahme"
+                        width={800}
+                        height={800}
+                        className="w-full object-cover rounded-2xl aspect-[1/0.62]"
+                      />
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20">
+                        <span className="text-white font-bold text-lg flex items-center gap-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                          Read more &rarr;
+                        </span>
+                      </div>
+                    </Link>
                   </figure>
                 </div>
 

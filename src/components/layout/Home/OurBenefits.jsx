@@ -228,6 +228,8 @@
 
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import Image from "next/image";
+import Link from "next/link";
+import { getImageUrl } from "@/lib/ImageService";
 
 export default function OurBenefits({ data = {} }) {
   return (
@@ -241,13 +243,20 @@ export default function OurBenefits({ data = {} }) {
           <div className="w-full lg:w-5/12">
             <div className="benefit-image relative lg:mr-4 h-full">
               <figure className="h-full">
-                <Image
-                  src="/images/new/Benefits copy 2.jpg"
-                  alt="Prolixus Inhaltsstoffe"
-                  width={800}
-                  height={1000}
-                  className="w-full h-full object-cover rounded-2xl"
-                />
+                <Link href="/blog" className="block w-full h-full group relative">
+                  <Image
+                    src={getImageUrl("/uploadimages/Benefits_copy_2.jpg")}
+                    alt="Prolixus Inhaltsstoffe"
+                    width={800}
+                    height={1000}
+                    className="w-full h-full object-cover rounded-2xl"
+                  />
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 rounded-2xl">
+                    <span className="text-white font-bold text-lg flex items-center gap-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                      Read more &rarr;
+                    </span>
+                  </div>
+                </Link>
               </figure>
               <div className="benefit-quality-circle absolute -right-2 -top-2 sm:-right-6 sm:-top-6 z-1 bg-(--accent-color) p-0 rounded-full shadow-lg border-4 border-white justify-center items-center flex overflow-hidden">
                 <Image

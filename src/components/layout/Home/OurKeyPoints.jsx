@@ -231,6 +231,8 @@
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import Image from "next/image";
+import Link from "next/link";
+import { getImageUrl } from "@/lib/ImageService";
 
 export default function OurKeyPoints({ data = {} }) {
   return (
@@ -344,13 +346,20 @@ export default function OurKeyPoints({ data = {} }) {
           <div className="w-full lg:w-[40%] order-1 lg:order-2 mb-8 lg:mb-0">
             <div className="key-points-image text-center">
               <figure>
-                <Image
-                  src="/images/new/Our-Key-Point-copy.webp"
-                  alt="Prolixus Produkt"
-                  width={800}
-                  height={800}
-                  className="mx-auto w-full max-w-[250px] sm:max-w-[280px] lg:max-w-[420px]"
-                />
+                <Link href="/blog" className="block w-full h-full group relative mx-auto max-w-[250px] sm:max-w-[280px] lg:max-w-[420px]">
+                  <Image
+                    src={getImageUrl("/uploadimages/Our_Key_Point_copy_6.webp")}
+                    alt="Prolixus Produkt"
+                    width={800}
+                    height={800}
+                    className="w-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 rounded-2xl">
+                    <span className="text-white font-bold text-lg flex items-center gap-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                      Read more &rarr;
+                    </span>
+                  </div>
+                </Link>
               </figure>
             </div>
           </div>

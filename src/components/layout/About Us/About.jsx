@@ -2,6 +2,8 @@ import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import { getAboutPayload } from "@/app/api/about/about";
 import Image from "next/image";
+import Link from "next/link";
+import { getImageUrl } from "@/lib/ImageService";
 
 export default async function AboutSection({ variant = "full", localization = {} }) {
   const about = await getAboutPayload();
@@ -23,13 +25,20 @@ export default async function AboutSection({ variant = "full", localization = {}
               <div className="relative">
                 {/* Main Image */}
                 <div className="relative z-10 overflow-hidden rounded-2xl sm:rounded-4xl shadow-2xl transition-transform duration-500 hover:scale-[1.02]">
-                  <Image
-                    src="/images/new/about-us.webp"
-                    alt={localization?.image_alt || "About Us"}
-                    width={560}
-                    height={602}
-                    className="w-full object-cover"
-                  />
+                  <Link href="/blog" className="block w-full h-full group relative">
+                    <Image
+                      src={getImageUrl("/uploadimages/about_us_1.webp")}
+                      alt={localization?.image_alt || "About Us"}
+                      width={560}
+                      height={602}
+                      className="w-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20">
+                      <span className="text-white font-bold text-lg flex items-center gap-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                        Read more &rarr;
+                      </span>
+                    </div>
+                  </Link>
                   {/* Subtle overlay gradient */}
                   <div className="absolute inset-0 bg-linear-to-t from-primary/20 via-transparent to-transparent" />
                 </div>

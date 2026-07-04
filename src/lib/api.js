@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic'
 export const fetchCache = 'default-no-store'
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+export const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 // Read the auth token at request-time so the token stored during login is used.
 // Falls back to the build-time env var if localStorage is not available (e.g. SSR).

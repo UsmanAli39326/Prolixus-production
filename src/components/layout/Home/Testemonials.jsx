@@ -4,6 +4,8 @@ import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import Image from "next/image";
 import { useMemo, useRef, useState } from "react";
+import Link from "next/link";
+import { getImageUrl } from "@/lib/ImageService";
 
 const testimonials = [
   {
@@ -164,13 +166,20 @@ export default function OurTestimonials({ data = {} }) {
           <div className="w-full lg:w-[32%]">
             <FaderInAnimation direction="left" duration={0.6}>
               <div className="overflow-hidden rounded-[28px] bg-white/10">
-                <Image
-                  src="/images/new/Testimonials-copy.webp"
-                  alt="Happy customers"
-                  width={800}
-                  height={800}
-                  className="w-full h-auto"
-                />
+                <Link href="/blog" className="block w-full h-full group relative">
+                  <Image
+                    src={getImageUrl("/uploadimages/Testimonials_copy_12.webp")}
+                    alt="Happy customers"
+                    width={800}
+                    height={800}
+                    className="w-full h-auto"
+                  />
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20">
+                    <span className="text-white font-bold text-lg flex items-center gap-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                      Read more &rarr;
+                    </span>
+                  </div>
+                </Link>
               </div>
             </FaderInAnimation>
           </div>
