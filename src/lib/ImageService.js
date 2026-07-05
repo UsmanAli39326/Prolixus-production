@@ -16,12 +16,12 @@ export function getImageUrl(path) {
   if (path.startsWith('http://') || path.startsWith('https://')) {
     return path;
   }
-  
-  const baseUrl = BASE_URL 
-    ? BASE_URL.replace(/\/api\/?$/, '') 
+
+  const baseUrl = BASE_URL
+    ? BASE_URL.replace(/\/api\/?$/, '')
     : 'https://prolixus.aa-consultants.de';
-    
+
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-  
+
   return `${baseUrl}${normalizedPath}`;
 }

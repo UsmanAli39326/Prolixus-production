@@ -25,9 +25,9 @@ export default async function AboutSection({ variant = "full", localization = {}
               <div className="relative">
                 {/* Main Image */}
                 <div className="relative z-10 overflow-hidden rounded-2xl sm:rounded-4xl shadow-2xl transition-transform duration-500 hover:scale-[1.02]">
-                  <Link href="/blog" className="block w-full h-full group relative">
+                  <Link href={localization?.links?.about_us || "/blog"} className="block w-full h-full group relative">
                     <Image
-                      src={getImageUrl("/uploadimages/about_us_1.webp")}
+                      src="/images/new/about-us.webp"
                       alt={localization?.image_alt || "About Us"}
                       width={560}
                       height={602}

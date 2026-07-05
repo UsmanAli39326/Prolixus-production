@@ -133,7 +133,6 @@ import FadeInAnimation from "@/Hooks/FaderInAnimation";
 import { FaPhone } from "react-icons/fa";
 import RevealInAniation from "@/Hooks/RevealInAnimation";
 import Button from "@/components/ui/Button";
-import { getImageUrl } from "@/lib/ImageService";
 
 export default function Hero({ data = {} }) {
   return (
@@ -141,9 +140,9 @@ export default function Hero({ data = {} }) {
       className="relative min-h-screen lg:h-screen flex flex-col lg:items-center lg:justify-center overflow-hidden bg-cover bg-center pt-8 pb-12 sm:pt-12 sm:pb-10 lg:pt-0 lg:pb-0 bg--secondary-color"
     >
       {/* Background Image Desktop */}
-      <Link href="/blog" className="hidden md:block absolute inset-0 w-full h-full z-0 cursor-pointer group">
+      <Link href={data?.links?.desktop || "/blog"} className="hidden md:block absolute inset-0 w-full h-full z-0 cursor-pointer group">
         <Image
-          src={getImageUrl("/uploadimages/main_slider_copy_5.jpg")}
+          src="/images/new/main slider copy2.jpg.jpeg"
           alt="Hero Background Desktop"
           fill
           className="w-full h-full bg-fixed object-cover"
@@ -157,9 +156,9 @@ export default function Hero({ data = {} }) {
       </Link>
 
       {/* Background Image Mobile */}
-      <Link href="/blog" className="block md:hidden absolute inset-0 w-full h-full z-0 cursor-pointer group">
+      <Link href={data?.links?.mobile || "/blog"} className="block md:hidden absolute inset-0 w-full h-full z-0 cursor-pointer group">
         <Image
-          src={getImageUrl("/uploadimages/main_hero_banner_mobile_view_4.webp")}
+          src="/images/new/main hero banner mobile view.webp"
           alt="Hero Background Mobile"
           fill
           className="w-full h-full bg-fixed object-cover"

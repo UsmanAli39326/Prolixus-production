@@ -10,40 +10,42 @@ import { Suspense } from "react";
 import DynamicProductsSection from "@/components/layout/Home/DynamicProductsSection";
 import { getLocalization } from "@/lib/getLocalization";
 import { getAboutPayload } from "@/app/api/about/about";
+import { getImageUrls } from "@/lib/getImageUrls";
 
 export const metadata = {
   title: "Prolixus - Premium Organic Products",
   description: "Shop nature's finest organic ingredients, curated for your holistic well-being.",
 };
 
-import ProductCardSkeleton from "@/components/layout/Ecommerce/ProductListingPage/ProductCardSkeleton";
+// import ProductCardSkeleton from "@/components/layout/Ecommerce/ProductListingPage/ProductCardSkeleton";
 
-const ProductsLoading = () => (
-  <section className="our-products py-16">
-    <div className="container mx-auto px-4">
-      {/* Header Placeholder */}
-      <div className="mb-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between animate-pulse">
-        <div className="max-w-xl space-y-4">
-          <div className="h-4 w-32 rounded bg-gray-200"></div>
-          <div className="h-10 w-64 rounded bg-gray-200"></div>
-        </div>
-        <div className="h-10 w-44 rounded-full bg-gray-200"></div>
-      </div>
+// const ProductsLoading = () => (
+//   <section className="our-products py-16">
+//     <div className="container mx-auto px-4">
+//       {/* Header Placeholder */}
+//       <div className="mb-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between animate-pulse">
+//         <div className="max-w-xl space-y-4">
+//           <div className="h-4 w-32 rounded bg-gray-200"></div>
+//           <div className="h-10 w-64 rounded bg-gray-200"></div>
+//         </div>
+//         <div className="h-10 w-44 rounded-full bg-gray-200"></div>
+//       </div>
 
-      {/* Grid Placeholder */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <ProductCardSkeleton key={i} />
-        ))}
-      </div>
-    </div>
-  </section>
-);
+//       {/* Grid Placeholder */}
+//       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+//         {Array.from({ length: 4 }).map((_, i) => (
+//           <ProductCardSkeleton key={i} />
+//         ))}
+//       </div>
+//     </div>
+//   </section>
+// );
 
 export default async function Home() {
   const data = await getLocalization();
   const about = await getAboutPayload();
-  
+  const imageUrls = await getImageUrls();
+
   // Group flattened data keys for components
   const homeData = {
     hero: {
@@ -56,6 +58,10 @@ export default async function Home() {
       phone_label: data?.hero_phone_label,
       phone_sublabel: about?.phone || data?.hero_phone_sublabel,
       phone_number: about?.phone || data?.hero_phone_number,
+      links: {
+        desktop: imageUrls['main_slider_copy_5'] || '/blog',
+        mobile: imageUrls['main_hero_banner_mobile_view_4'] || '/blog',
+      }
     },
     about: {
       label: data?.about_label,
@@ -63,6 +69,9 @@ export default async function Home() {
       natural_origin_label: data?.about_natural_origin_label,
       pure_vitality_label: data?.about_pure_vitality_label,
       image_alt: data?.about_image_alt,
+      links: {
+        about_us: imageUrls['about_us_1'] || '/blog',
+      }
     },
     products: {
       label: data?.products_label,
@@ -78,6 +87,10 @@ export default async function Home() {
       item1_desc: data?.whatwedo_item1_desc,
       item2_title: data?.whatwedo_item2_title,
       item2_desc: data?.whatwedo_item2_desc,
+      links: {
+        big_product: imageUrls['big_product_3'] || '/blog',
+        small_product: imageUrls['small_product_copy_11'] || '/blog',
+      }
     },
     benefits: {
       label: data?.benefits_label,
@@ -93,12 +106,18 @@ export default async function Home() {
       eisen_desc: data?.benefits_eisen_desc,
       vitaminc_title: data?.benefits_vitaminc_title,
       vitaminc_desc: data?.benefits_vitaminc_desc,
+      links: {
+        benefit: imageUrls['Benefits_copy_2'] || '/blog',
+      }
     },
     testimonials: {
       label: data?.testimonials_label,
       title_main: data?.testimonials_title_main,
       title_accent: data?.testimonials_title_accent,
       happy_customers_text: data?.testimonials_happy_customers_text,
+      links: {
+        testimonial: imageUrls['Testimonials_copy_12'] || '/blog',
+      }
     },
     keypoints: {
       label: data?.keypoints_label,
@@ -117,12 +136,18 @@ export default async function Home() {
       item5_desc: data?.keypoints_item5_desc,
       item6_title: data?.keypoints_item6_title,
       item6_desc: data?.keypoints_item6_desc,
+      links: {
+        keypoint: imageUrls['Our_Key_Point_copy_6'] || '/blog',
+      }
     },
     cta: {
       title_line1: data?.cta_title_line1,
       title_line2: data?.cta_title_line2,
       description: data?.cta_description,
       button_text: data?.cta_button_text,
+      links: {
+        purchase: imageUrls['Purchase_Now_9'] || '/blog',
+      }
     },
     youtube: {
       label: data?.youtube_label,
@@ -136,9 +161,9 @@ export default async function Home() {
     <>
       <Hero data={homeData.hero} />
       <AboutSection variant="short" localization={homeData.about} />
-      <Suspense fallback={<ProductsLoading />}>
+      {/* <Suspense fallback={<ProductsLoading />}>
         <DynamicProductsSection localization={homeData.products} />
-      </Suspense>
+      </Suspense> */}
       <WhatWeDo data={homeData.whatwedo} />
       <OurBenefits data={homeData.benefits} />
       <OurTestimonials data={homeData.testimonials} />

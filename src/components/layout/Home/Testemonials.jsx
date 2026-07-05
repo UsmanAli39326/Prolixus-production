@@ -5,7 +5,6 @@ import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import Image from "next/image";
 import { useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { getImageUrl } from "@/lib/ImageService";
 
 const testimonials = [
   {
@@ -166,9 +165,9 @@ export default function OurTestimonials({ data = {} }) {
           <div className="w-full lg:w-[32%]">
             <FaderInAnimation direction="left" duration={0.6}>
               <div className="overflow-hidden rounded-[28px] bg-white/10">
-                <Link href="/blog" className="block w-full h-full group relative">
+                <Link href={data?.links?.testimonial || "/blog"} className="block w-full h-full group relative">
                   <Image
-                    src={getImageUrl("/uploadimages/Testimonials_copy_12.webp")}
+                    src="/images/new/Testimonials-copy.webp"
                     alt="Happy customers"
                     width={800}
                     height={800}

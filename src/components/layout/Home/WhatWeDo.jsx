@@ -117,7 +117,6 @@ import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import Image from "next/image";
 import Link from "next/link";
-import { getImageUrl } from "@/lib/ImageService";
 
 export default function WhatWeDo({ data = {} }) {
   return (
@@ -133,9 +132,9 @@ export default function WhatWeDo({ data = {} }) {
                 {/* Image 1 */}
                 <div className="what-we-image-1 w-full pr-0 lg:pr-12">
                   <figure className="block rounded-2xl overflow-hidden">
-                    <Link href="/blog" className="block w-full h-full group relative">
+                    <Link href={data?.links?.big_product || "/blog"} className="block w-full h-full group relative">
                       <Image
-                        src={getImageUrl("/uploadimages/big_product_3.webp")}
+                        src="/images/new/big-product.webp"
                         alt="Prolixus Anwendung"
                         width={800}
                         height={800}
@@ -153,9 +152,9 @@ export default function WhatWeDo({ data = {} }) {
                 {/* Image 2 */}
                 <div className="what-we-image-2 relative w-full max-w-[280px] sm:max-w-[410px] ml-auto -mt-10 sm:-mt-20 z-1">
                   <figure className="block rounded-2xl overflow-hidden">
-                    <Link href="/blog" className="block w-full h-full group relative">
+                    <Link href={data?.links?.small_product || "/blog"} className="block w-full h-full group relative">
                       <Image
-                        src={getImageUrl("/uploadimages/small_product_copy_11.jpeg")}
+                        src="/images/new/small-product-copy.jpg.jpeg"
                         alt="Prolixus Einnahme"
                         width={800}
                         height={800}

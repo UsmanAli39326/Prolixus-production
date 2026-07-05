@@ -229,7 +229,6 @@
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import Image from "next/image";
 import Link from "next/link";
-import { getImageUrl } from "@/lib/ImageService";
 
 export default function OurBenefits({ data = {} }) {
   return (
@@ -243,9 +242,9 @@ export default function OurBenefits({ data = {} }) {
           <div className="w-full lg:w-5/12">
             <div className="benefit-image relative lg:mr-4 h-full">
               <figure className="h-full">
-                <Link href="/blog" className="block w-full h-full group relative">
+                <Link href={data?.links?.benefit || "/blog"} className="block w-full h-full group relative">
                   <Image
-                    src={getImageUrl("/uploadimages/Benefits_copy_2.jpg")}
+                    src="/images/new/Benefits copy 2.jpg"
                     alt="Prolixus Inhaltsstoffe"
                     width={800}
                     height={1000}

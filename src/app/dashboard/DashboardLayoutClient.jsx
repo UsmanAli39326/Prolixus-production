@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { FaBars, FaHandshake, FaHome, FaShoppingBag, FaSignOutAlt, FaTimes, FaUser, FaUserAlt } from "react-icons/fa";
+import { FaBars, FaHandshake, FaHome, FaShoppingBag, FaSignOutAlt, FaTimes, FaUser, FaUserAlt, FaCreditCard } from "react-icons/fa";
 import { apiService } from "@/lib/api";
 
 import RouteGuard from "@/components/auth/RouteGuard";
@@ -11,6 +11,7 @@ import { useAuth } from "@/context/AuthContext";
 const getMenuItems = (l) => [
     { label: l?.dashboard_menu_overview, href: '/dashboard', icon: FaHome },
     { label: l?.dashboard_menu_orders, href: '/dashboard/orders', icon: FaShoppingBag },
+    { label: l?.dashboard_menu_subscriptions || 'Subscriptions', href: '/dashboard/subscriptions', icon: FaCreditCard },
     { label: l?.dashboard_menu_profile, href: '/dashboard/profile', icon: FaUser },
     { label: l?.dashboard_menu_partner, href: '/dashboard/partner', icon: FaHandshake },
 ];

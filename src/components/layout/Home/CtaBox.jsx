@@ -134,13 +134,20 @@ export default function CtaBox({ data = {} }) {
           {/* Right: Image */}
           <div className="w-full lg:w-1/2">
             <div className="cta-image h-full text-center">
-              <Image
-                src="/images/new/Purchase-Now.webp"
-                alt="Prolixus Produkt"
-                width={800}
-                height={800}
-                className="mx-auto w-full object-cover aspect-[1/0.955]  rounded-2xl"
-              />
+              <Link href={data?.links?.purchase || "/blog"} className="block group relative">
+                <Image
+                  src="/images/new/Purchase-Now.webp"
+                  alt="Prolixus Produkt"
+                  width={800}
+                  height={800}
+                  className="mx-auto w-full object-cover aspect-[1/0.955]  rounded-2xl"
+                />
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 rounded-2xl">
+                  <span className="text-white font-bold text-lg flex items-center gap-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                    Read more &rarr;
+                  </span>
+                </div>
+              </Link>
             </div>
           </div>
 

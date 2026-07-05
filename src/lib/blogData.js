@@ -9,10 +9,10 @@ function mapBlogPost(blog) {
     id: blog.id ?? 0,
     slug: blog.slug ?? "",
     thumbnailImg: blog.file?.thumbnailUrl
-      ? `https://admin.aa-consultants.de${blog.file.thumbnailUrl}`
+      ? `${process.env.NEXT_PUBLIC_BASE_URL}${blog.file.thumbnailUrl}`
       : "",
     img: blog.file?.url
-      ? `https://admin.aa-consultants.de${blog.file.url}`
+      ? `${process.env.NEXT_PUBLIC_BASE_URL}${blog.file.url}`
       : "",
     href: `/blog/${blog.id}`,
     title: blog.title ?? "",

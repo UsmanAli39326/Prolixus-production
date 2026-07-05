@@ -198,7 +198,6 @@ import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import Image from "next/image";
 import Link from "next/link";
-import { getImageUrl } from "@/lib/ImageService";
 
 export default function PremiumProducts() {
   return (
@@ -279,7 +278,7 @@ export default function PremiumProducts() {
                       <figure className="block overflow-hidden rounded-2xl relative">
                         <Link href="/blog" className="block w-full h-full group relative">
                           <Image
-                            src={getImageUrl("/uploadimages/Purchase_Now_9.webp")}
+                            src="/images/new/Purchase-Now.webp"
                             alt="Essenzielle Nährstoffe"
                             width={800}
                             height={800}
@@ -328,7 +327,7 @@ export default function PremiumProducts() {
                       <figure className="block overflow-hidden rounded-2xl relative">
                         <Link href="/blog" className="block w-full h-full group relative">
                           <Image
-                            src={getImageUrl("/uploadimages/prolixus_uv_8.jpeg")}
+                            src="/images/new/prolixus-uv.jpeg"
                             alt="Geprüfte Qualität"
                             width={800}
                             height={800}
@@ -364,7 +363,7 @@ export default function PremiumProducts() {
                   <figure className="block relative h-full">
                     <Link href="/blog" className="block w-full h-full group relative">
                       <Image
-                        src={getImageUrl("/uploadimages/prolixus_steps_7.jpeg")}
+                        src="/images/new/prolixus-steps.jpeg"
                         alt="Prolixus Anwendung"
                         width={800}
                         height={800}

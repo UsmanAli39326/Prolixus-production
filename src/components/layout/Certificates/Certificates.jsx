@@ -1,3 +1,4 @@
+import Link from "next/link";
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import { getCertificates } from "@/app/api/certificates/certificates";
@@ -31,7 +32,10 @@ export default async function CertificatesSection({ localization = {} }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-12">
           {certificates.map((cert, index) => (
             <FaderInAnimation key={cert.id} direction="up" delay={0.2 + (index * 0.1)}>
-              <div className="group h-full flex flex-col bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-500 overflow-hidden border border-gray-100">
+              <Link 
+                href={`/certificate/${cert.id}`} 
+                className="group h-full flex flex-col bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-500 overflow-hidden border border-gray-100"
+              >
                 
                 {/* Image Container */}
                 <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-gray-50/50 p-6 flex items-center justify-center">
@@ -68,7 +72,7 @@ export default async function CertificatesSection({ localization = {} }) {
                     />
                   )}
                 </div>
-              </div>
+              </Link>
             </FaderInAnimation>
           ))}
         </div>
