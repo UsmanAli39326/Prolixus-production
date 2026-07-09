@@ -324,13 +324,9 @@ export default function Header({ menus = [] }) {
 
               {/* Drawer Footer */}
               <div className="p-6 border-t border-white/10 bg-white/5">
-                <div className="flex flex-col gap-4">
-                  <p className="text-[10px] text-white/40 uppercase tracking-widest font-bold">Preferences</p>
-                  <div className="flex items-center justify-between bg-black/20 p-3 rounded-2xl border border-white/5">
-                    {/* Language Switcher Only */}
-                    <div className="scale-90 origin-left">
-                      <LanguageSwitcher />
-                    </div>
+                <div className="flex items-center">
+                  <div className="scale-90 origin-left">
+                    <LanguageSwitcher />
                   </div>
                 </div>
               </div>
