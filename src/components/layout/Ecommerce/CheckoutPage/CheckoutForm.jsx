@@ -9,7 +9,7 @@ import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import { getCountries } from "@/app/api/products/countries";
 
-export default function CheckoutForm({ nextStep, goToStep, formData, updateFormData, isAuthenticated, total, onDirectComplete, isSubmitting, localization }) {
+export default function CheckoutForm({ nextStep, goToStep, formData, updateFormData, isAuthenticated, total, onDirectComplete, isSubmitting, isSubscription, localization }) {
     const [errors, setErrors] = useState({});
 
     const inputStyles = {
@@ -96,6 +96,20 @@ export default function CheckoutForm({ nextStep, goToStep, formData, updateFormD
                     <span className="text-gray-400 cursor-default">{localization?.checkout_breadcrumb_payment}</span>
                 </nav>
             </RevealInAnimation>
+
+            {isSubscription && (
+                <RevealInAnimation direction="right">
+                    <div className="flex items-center gap-3 p-4 rounded-2xl bg-accent/5 border border-accent/20">
+                        <div className="size-10 rounded-full bg-accent/10 flex items-center justify-center shrink-0">
+                            <svg className="size-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                        </div>
+                        <div>
+                            <p className="text-sm font-bold text-primary">You're setting up a subscription</p>
+                            <p className="text-xs text-text/60 font-accent">You'll be billed monthly. Cancel anytime from your dashboard.</p>
+                        </div>
+                    </div>
+                </RevealInAnimation>
+            )}
 
             <div className="space-y-10">
                 {/* Contact Section */}
@@ -254,7 +268,12 @@ export default function CheckoutForm({ nextStep, goToStep, formData, updateFormD
                             disabled={isSubmitting}
                             className="w-full sm:w-auto h-14 bg-accent! hover:bg-accent! text-white! font-bold text-lg rounded-full! shadow-lg shadow-accent/10 px-10"
                         >
-                            {total === 0 ? localization?.checkout_complete_order : localization?.checkout_continue_to_payment}
+                            {total === 0
+                                ? localization?.checkout_complete_order
+                                : isSubscription
+                                    ? (localization?.checkout_continue_to_payment_setup || 'Continue to Payment Setup')
+                                    : localization?.checkout_continue_to_payment
+                            }
                         </Button>
                     </div>
                 </FaderInAnimation>

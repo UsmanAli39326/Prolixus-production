@@ -1,13 +1,27 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import OrderSummary from "@/components/layout/Ecommerce/CheckoutPage/OrderSummary";
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import { CheckoutProvider, useCheckout } from "@/context/CheckoutContext";
 
 export default function CheckoutLayout({ children }) {
     return (
-        <CheckoutProvider>
+        <CheckoutLayoutWrapper>{children}</CheckoutLayoutWrapper>
+    );
+}
+
+/**
+ * Reads the ?type= URL parameter and passes it to the CheckoutProvider.
+ * This component exists separately because useSearchParams() requires
+ * a client component, while CheckoutProvider needs the value as a prop.
+ */
+function CheckoutLayoutWrapper({ children }) {
+    const searchParams = useSearchParams();
+    const checkoutType = searchParams.get("type") || "one-time";
+
+    return (
+        <CheckoutProvider checkoutType={checkoutType}>
             <CheckoutLayoutInner>{children}</CheckoutLayoutInner>
         </CheckoutProvider>
     );

@@ -3,16 +3,14 @@ import { useState } from "react";
 import OrderItem from "./OrderItem";
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
-import useCart from "@/Hooks/useCart";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useCheckout } from "@/context/CheckoutContext";
 import { apiService } from "@/lib/api";
 import { buildGuestOrderPayload } from "./CheckoutWizard";
 
 export default function OrderSummary() {
-    const { cartItems } = useCart();
     const { formatPrice } = useCurrency();
-    const { formData, updateFormData, totals, user, isAuthenticated } = useCheckout();
+    const { formData, updateFormData, totals, user, isAuthenticated, checkoutItems, isSubscription } = useCheckout();
 
     const [inputCode, setInputCode] = useState("");
     const [codeType, setCodeType] = useState("promo");
@@ -94,16 +92,23 @@ export default function OrderSummary() {
             <div className="sticky top-28 bg-surface rounded-4xl p-6 lg:p-8 shadow-xl shadow-divider/50 border border-divider">
                 <RevealInAnimation direction="bottom">
                     <div className="flex items-center justify-between mb-6 pb-4 border-b border-divider">
-                        <h3 className="text-xl font-bold text-primary">Order Summary</h3>
-                        <span className="text-sm text-gray-400 font-accent">{cartItems.length} items</span>
+                        <div className="flex items-center gap-3">
+                            <h3 className="text-xl font-bold text-primary">Order Summary</h3>
+                            {isSubscription && (
+                                <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-accent/10 text-accent border border-accent/20">
+                                    Subscription
+                                </span>
+                            )}
+                        </div>
+                        <span className="text-sm text-gray-400 font-accent">{checkoutItems.length} items</span>
                     </div>
                 </RevealInAnimation>
 
                 {/* Items */}
                 <FaderInAnimation direction="up" delay={0.1}>
                     <div className="space-y-4 mb-6 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
-                        {cartItems.length > 0 ? (
-                            cartItems.map((item) => (
+                        {checkoutItems.length > 0 ? (
+                            checkoutItems.map((item) => (
                                 <OrderItem key={item.id} item={item} />
                             ))
                         ) : (
@@ -218,8 +223,11 @@ export default function OrderSummary() {
 
                 <FaderInAnimation direction="up" delay={0.3}>
                     <div className="flex justify-between items-end mt-6 pt-6 border-t border-divider">
-                        <span className="text-base font-medium text-text/60 font-accent">Total due</span>
-                        <span className="text-3xl font-bold text-accent tracking-tight">{formatPrice(totals.total)}</span>
+                        <span className="text-base font-medium text-text/60 font-accent">{isSubscription ? 'Monthly total' : 'Total due'}</span>
+                        <div className="flex items-baseline gap-1">
+                            <span className="text-3xl font-bold text-accent tracking-tight">{formatPrice(totals.total)}</span>
+                            {isSubscription && <span className="text-sm font-medium text-text/50">/mo</span>}
+                        </div>
                     </div>
                 </FaderInAnimation>
             </div>

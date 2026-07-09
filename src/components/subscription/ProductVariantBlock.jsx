@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { getProductPricing } from "@/lib/productPricing";
 import useCart from "@/Hooks/useCart";
+import { useCurrency } from "@/context/CurrencyContext";
 import { ProductImageGallery, ProductAccordion } from "@/components/layout/Ecommerce/ProductPage";
 
 export default function ProductVariantBlock({ product, isGrid = false }) {
@@ -15,6 +16,7 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
   const [selectedVariantId, setSelectedVariantId] = useState(null);
 
   const { addToCart } = useCart();
+  const { formatPrice } = useCurrency();
   const [addStatus, setAddStatus] = useState("idle");
 
   useEffect(() => {
@@ -89,9 +91,17 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
     setAddStatus("adding");
 
     const variantId = purchaseType === 'one-time' ? selectedVariantId : primarySubscription?.id;
-    const price = purchaseType === 'one-time' ? selectedOneTimeOption?.price : primarySubscription?.price;
+    
+    // The system should consider it as 1 item (a single bundle/subscription package).
+    // The total price is passed as the item price.
+    const price = purchaseType === 'one-time' 
+      ? selectedOneTimeOption?.price
+      : primarySubscription?.price;
+      
     const label = purchaseType === 'one-time' ? selectedOneTimeOption?.label : primarySubscription?.label;
-    const quantity = purchaseType === 'one-time' ? selectedOneTimeOption?.quantity : primarySubscription?.quantity || 1;
+    
+    // The physical number of bottles/items for display purposes
+    const bundleQuantity = purchaseType === 'one-time' ? selectedOneTimeOption?.quantity : primarySubscription?.quantity || 1;
 
     const cartProduct = {
       ...product,
@@ -99,10 +109,11 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
       variantId,
       variantLabel: label,
       purchaseType, // 'one-time' | 'subscribe'
+      bundleQuantity, // Displayed as description in Cart
       id: `${product.id}-${variantId}-${purchaseType}` // Make a unique cart ID so different variants don't merge wrongly
     };
 
-    addToCart(cartProduct, quantity);
+    addToCart(cartProduct, 1);
 
     setTimeout(() => setAddStatus("added"), 600);
     setTimeout(() => setAddStatus("idle"), 2000);
@@ -215,9 +226,9 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
                     <span className="font-semibold text-(--primary-color)">{opt.label}</span>
                   </div>
                   <div className="flex flex-col items-end">
-                    <span className="font-bold text-(--primary-color)">${opt.price.toFixed(2)}</span>
+                    <span className="font-bold text-(--primary-color)">{formatPrice(opt.price)}</span>
                     {opt.quantity > 1 && (
-                      <span className="text-xs text-gray-500">${(opt.price / opt.quantity).toFixed(2)} / each</span>
+                      <span className="text-xs text-gray-500">{formatPrice(opt.price / opt.quantity)} / each</span>
                     )}
                   </div>
                 </button>
@@ -231,7 +242,7 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
                 {primarySubscription?.label || "Subscription Plan"}
               </h4>
               <span className="text-2xl font-bold text-(--accent-color)">
-                ${primarySubscription?.price.toFixed(2)}<span className="text-sm font-normal text-(--primary-color)/70">/mo</span>
+                {formatPrice(primarySubscription?.price)}<span className="text-sm font-normal text-(--primary-color)/70">/mo</span>
               </span>
             </div>
             

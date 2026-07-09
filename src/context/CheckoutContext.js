@@ -9,9 +9,25 @@ import { useAuth } from "./AuthContext";
 
 const CheckoutContext = createContext();
 
-export const CheckoutProvider = ({ children }) => {
+/**
+ * @param {Object} props
+ * @param {"one-time"|"subscribe"} [props.checkoutType] – Purchase type filter from URL ?type=
+ */
+export const CheckoutProvider = ({ children, checkoutType: initialType }) => {
     const { cartItems } = useCart();
     const { user: authUser, isLoggedIn, token } = useAuth();
+
+    // ── Checkout type awareness ─────────────────────────────────────────────
+    const [checkoutType, setCheckoutType] = useState(initialType || "one-time");
+    const isSubscription = checkoutType === "subscribe";
+
+    // Filter cart items to only the type being checked out
+    const checkoutItems = useMemo(() =>
+        cartItems.filter(item =>
+            checkoutType === "subscribe"
+                ? item.purchaseType === "subscribe"
+                : item.purchaseType !== "subscribe"
+        ), [cartItems, checkoutType]);
 
     const [user, setUser] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -96,9 +112,9 @@ export const CheckoutProvider = ({ children }) => {
         setFormData((prev) => ({ ...prev, ...newData }));
     };
 
-    // Calculate totals including discount and wallet
+    // Calculate totals from FILTERED checkout items (not all cart items)
     const totals = useMemo(() => {
-        const baseTotals = calcCartTotals(cartItems);
+        const baseTotals = calcCartTotals(checkoutItems);
         // Truncate to 2 decimal places — never round up
         const t = (n) => Math.trunc((n ?? 0) * 100) / 100;
         const discountAmount = t(formData.discountAmount || 0);
@@ -111,7 +127,7 @@ export const CheckoutProvider = ({ children }) => {
             walletAmount,
             total: t(Math.max(0, afterDiscount - walletAmount)),
         };
-    }, [cartItems, formData.discountAmount, formData.useWallet, formData.walletAmount]);
+    }, [checkoutItems, formData.discountAmount, formData.useWallet, formData.walletAmount]);
 
     return (
         <CheckoutContext.Provider
@@ -124,6 +140,11 @@ export const CheckoutProvider = ({ children }) => {
                 walletBalance,
                 orderCompleted,
                 setOrderCompleted,
+                // ── New type-aware values ──
+                checkoutType,
+                setCheckoutType,
+                isSubscription,
+                checkoutItems,
             }}
         >
             {children}

@@ -1,4 +1,5 @@
 "use client";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
@@ -6,15 +7,32 @@ import Button from "@/components/ui/Button";
 import useCart from "@/Hooks/useCart";
 import { stripHtmlTags } from "@/utitlis/formatters";
 import { calcCartTotals } from "@/lib/cart";
-import { FiMinus, FiPlus, FiTrash2, FiArrowLeft, FiArrowRight, FiCheck, FiShield, FiTruck, FiPackage } from "react-icons/fi";
+import { FiMinus, FiPlus, FiTrash2, FiArrowLeft, FiArrowRight, FiCheck, FiShield, FiTruck, FiPackage, FiLock } from "react-icons/fi";
 import { useCurrency } from "@/context/CurrencyContext";
+import { useAuth } from "@/context/AuthContext";
 
 export default function CartClient({ localization }) {
   const { cartItems, updateQuantity, removeFromCart } = useCart();
   const { formatPrice } = useCurrency();
+  const { isLoggedIn } = useAuth();
+
+  const [activeTab, setActiveTab] = useState("one-time");
+
+  const oneTimeItems = cartItems.filter(item => item.purchaseType !== "subscribe");
+  const subscriptionItems = cartItems.filter(item => item.purchaseType === "subscribe");
+
+  useEffect(() => {
+    if (subscriptionItems.length > 0 && oneTimeItems.length === 0) {
+      setActiveTab("subscribe");
+    } else if (oneTimeItems.length > 0 && subscriptionItems.length === 0) {
+      setActiveTab("one-time");
+    }
+  }, [cartItems.length]);
+
+  const displayedItems = activeTab === "subscribe" ? subscriptionItems : oneTimeItems;
 
   // Calculate totals — single source of truth via shared utility
-  const { subtotal, vatAmount, shipping, total, vatPercentage, allVatPercentages, combinedVatPercentage, vatDetails } = calcCartTotals(cartItems);
+  const { subtotal, vatAmount, shipping, total, vatPercentage, allVatPercentages, combinedVatPercentage, vatDetails } = calcCartTotals(displayedItems);
 
   return (
     <FaderInAnimation direction="up">
@@ -65,19 +83,53 @@ export default function CartClient({ localization }) {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
               {/* Cart Items Column */}
               <div className="lg:col-span-2">
-                {/* Table Header - Desktop Only */}
-                <FaderInAnimation direction="left" delay={0.15}>
-                  <div className="hidden md:grid grid-cols-12 gap-4 pb-4 text-xs font-semibold text-text uppercase tracking-wider border-b border-divider">
-                    <div className="col-span-6">{localization?.cart_header_product}</div>
-                    <div className="col-span-2 text-center">{localization?.cart_header_quantity}</div>
-                    <div className="col-span-2 text-center">{localization?.cart_header_price}</div>
-                    <div className="col-span-2 text-right">{localization?.cart_header_total}</div>
+                {/* Tabs */}
+                <div className="flex w-full mb-6 border-b border-divider overflow-x-auto scrollbar-hide">
+                  <div className="flex w-full sm:w-auto min-w-max">
+                    <button
+                      onClick={() => setActiveTab("one-time")}
+                      className={`flex-1 sm:flex-none whitespace-nowrap pb-3 font-semibold transition-colors duration-200 border-b-2 px-4 sm:px-8 text-sm sm:text-base ${
+                        activeTab === "one-time"
+                          ? "border-accent text-accent"
+                          : "border-transparent text-text hover:text-primary"
+                      }`}
+                    >
+                      One-Time Purchases ({oneTimeItems.length})
+                    </button>
+                    <button
+                      onClick={() => setActiveTab("subscribe")}
+                      className={`flex-1 sm:flex-none whitespace-nowrap pb-3 font-semibold transition-colors duration-200 border-b-2 px-4 sm:px-8 text-sm sm:text-base ${
+                        activeTab === "subscribe"
+                          ? "border-accent text-accent"
+                          : "border-transparent text-text hover:text-primary"
+                      }`}
+                    >
+                      Subscriptions ({subscriptionItems.length})
+                    </button>
                   </div>
-                </FaderInAnimation>
+                </div>
 
-                {/* Cart Items */}
-                <div className="space-y-4 mt-4">
-                  {cartItems.map((item, index) => (
+                {displayedItems.length === 0 ? (
+                  <div className="text-center py-12 bg-white rounded-2xl border border-divider">
+                    <p className="text-text">
+                      You have no {activeTab === "subscribe" ? "subscriptions" : "one-time purchases"} in your cart.
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    {/* Table Header - Desktop Only */}
+                    <FaderInAnimation direction="left" delay={0.15}>
+                      <div className="hidden md:grid grid-cols-12 gap-4 pb-4 text-xs font-semibold text-text uppercase tracking-wider border-b border-divider">
+                        <div className="col-span-6">{localization?.cart_header_product}</div>
+                        <div className="col-span-2 text-center">{localization?.cart_header_quantity}</div>
+                        <div className="col-span-2 text-center">{localization?.cart_header_price}</div>
+                        <div className="col-span-2 text-right">{localization?.cart_header_total}</div>
+                      </div>
+                    </FaderInAnimation>
+
+                    {/* Cart Items */}
+                    <div className="space-y-4 mt-4">
+                      {displayedItems.map((item, index) => (
                     <FaderInAnimation key={item.id} direction="left" delay={0.2 + index * 0.1}>
                       <div className="group bg-white rounded-2xl p-4 md:p-6 shadow-sm border border-divider hover:shadow-md transition-shadow duration-300">
                         {/* Desktop layout: 12-col grid */}
@@ -103,24 +155,30 @@ export default function CartClient({ localization }) {
 
                           {/* Quantity Controls */}
                           <div className="col-span-2 flex justify-center">
-                            <div className="flex items-center gap-1 bg-secondary rounded-full p-1 border border-divider">
-                              <button
-                                onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                disabled={item.quantity <= 1}
-                                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white text-primary transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                              >
-                                <FiMinus className="w-4 h-4" />
-                              </button>
-                              <span className="w-8 text-center font-medium text-primary">
-                                {item.quantity}
+                            {item.bundleQuantity ? (
+                              <span className="text-sm font-medium text-text bg-surface-2 px-4 py-2 rounded-full border border-divider">
+                                Qty: {item.bundleQuantity}
                               </span>
-                              <button
-                                onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white text-primary transition-colors duration-200"
-                              >
-                                <FiPlus className="w-4 h-4" />
-                              </button>
-                            </div>
+                            ) : (
+                              <div className="flex items-center gap-1 bg-secondary rounded-full p-1 border border-divider">
+                                <button
+                                  onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                  disabled={item.quantity <= 1}
+                                  className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white text-primary transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                  <FiMinus className="w-4 h-4" />
+                                </button>
+                                <span className="w-8 text-center font-medium text-primary">
+                                  {item.quantity}
+                                </span>
+                                <button
+                                  onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                  className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white text-primary transition-colors duration-200"
+                                >
+                                  <FiPlus className="w-4 h-4" />
+                                </button>
+                              </div>
+                            )}
                           </div>
 
                           {/* Unit Price */}
@@ -169,24 +227,30 @@ export default function CartClient({ localization }) {
                           {/* Bottom row: quantity | total | delete */}
                           <div className="flex items-center justify-between pt-2 border-t border-divider/50">
                             {/* Quantity Controls */}
-                            <div className="flex items-center gap-1 bg-secondary rounded-full p-0.5 border border-divider">
-                              <button
-                                onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                disabled={item.quantity <= 1}
-                                className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-white text-primary transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                              >
-                                <FiMinus className="w-3.5 h-3.5" />
-                              </button>
-                              <span className="w-6 text-center text-sm font-medium text-primary">
-                                {item.quantity}
+                            {item.bundleQuantity ? (
+                              <span className="text-xs font-medium text-text bg-surface-2 px-3 py-1.5 rounded-full border border-divider">
+                                Qty: {item.bundleQuantity}
                               </span>
-                              <button
-                                onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-white text-primary transition-colors duration-200"
-                              >
-                                <FiPlus className="w-3.5 h-3.5" />
-                              </button>
-                            </div>
+                            ) : (
+                              <div className="flex items-center gap-1 bg-secondary rounded-full p-0.5 border border-divider">
+                                <button
+                                  onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                  disabled={item.quantity <= 1}
+                                  className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-white text-primary transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                  <FiMinus className="w-3.5 h-3.5" />
+                                </button>
+                                <span className="w-6 text-center text-sm font-medium text-primary">
+                                  {item.quantity}
+                                </span>
+                                <button
+                                  onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                  className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-white text-primary transition-colors duration-200"
+                                >
+                                  <FiPlus className="w-3.5 h-3.5" />
+                                </button>
+                              </div>
+                            )}
 
                             {/* Line Total + Delete */}
                             <div className="flex items-center gap-3">
@@ -206,7 +270,9 @@ export default function CartClient({ localization }) {
                       </div>
                     </FaderInAnimation>
                   ))}
-                </div>
+                    </div>
+                  </>
+                )}
 
                 {/* Trust Badges - Mobile */}
                 <FaderInAnimation direction="up" delay={0.5}>
@@ -258,17 +324,50 @@ export default function CartClient({ localization }) {
                       </div>
 
                       {/* Checkout Button */}
-                      <Link href="/checkout">
+                      {displayedItems.length > 0 ? (
+                        activeTab === "subscribe" && !isLoggedIn ? (
+                          /* Subscription checkout requires login */
+                          <div className="space-y-3">
+                            <Link href="/login?redirect=/cart">
+                              <Button
+                                variant="accent"
+                                size="lg"
+                                fullWidth
+                                className="group"
+                                rightIcon={<FiLock className="w-4 h-4" />}
+                              >
+                                {localization?.cart_login_to_subscribe || 'Login to Subscribe'}
+                              </Button>
+                            </Link>
+                            <p className="text-center text-xs text-text/60">
+                              An account is required for subscriptions
+                            </p>
+                          </div>
+                        ) : (
+                          <Link href={`/checkout?type=${activeTab}`}>
+                            <Button
+                              variant="accent"
+                              size="lg"
+                              fullWidth
+                              className="group"
+                              rightIcon={<FiArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />}
+                            >
+                              {localization?.cart_checkout_button}
+                            </Button>
+                          </Link>
+                        )
+                      ) : (
                         <Button
                           variant="accent"
                           size="lg"
                           fullWidth
-                          className="group"
-                          rightIcon={<FiArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />}
+                          disabled
+                          className="group opacity-50 cursor-not-allowed"
+                          rightIcon={<FiArrowRight className="w-5 h-5" />}
                         >
                           {localization?.cart_checkout_button}
                         </Button>
-                      </Link>
+                      )}
 
                       <p className="text-center text-xs text-text mt-4 flex items-center justify-center gap-1">
                         <FiShield className="w-3 h-3" /> {localization?.cart_secure_checkout}

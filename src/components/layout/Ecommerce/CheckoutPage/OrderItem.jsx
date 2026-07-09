@@ -41,6 +41,11 @@ export default function OrderItem({ item }) {
                         {item.variant || stripHtmlTags(item.description) || "Product"}
                     </span>
                     <span className="shrink-0">Qty: {item.quantity}</span>
+                    {item.purchaseType === "subscribe" && (
+                        <span className="shrink-0 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-accent/10 text-accent">
+                            Monthly
+                        </span>
+                    )}
                 </div>
             </div>
 

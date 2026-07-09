@@ -6,13 +6,13 @@ import { formatDate } from "@/utitlis/formatters";
 
 export default function CertificateDetail({ certificate, localization }) {
     return (
-        <div className="certificate-detail-page pt-16 pb-24">
+        <div className="certificate-detail-page pt-16 pb-24 overflow-x-hidden">
             <div className="container mx-auto px-4">
                 <div className="max-w-7xl mx-auto">
                     {/* Main Layout: Article style like Blog */}
                     <div className="flex flex-col lg:flex-row gap-12">
                         {/* ── Article ── */}
-                        <article className="flex-1 min-w-0 max-w-5xl mx-auto w-full">
+                        <article className="flex-1 min-w-0 max-w-5xl mx-auto w-full overflow-hidden">
                             {/* Back to Certificates link (Top) - Optional depending on if there is a listing page */}
                             {/* We point it to / for now or a /certificates page if it exists */}
                             <FaderInAnimation direction="up" delay={0} duration={0.6}>
@@ -41,7 +41,7 @@ export default function CertificateDetail({ certificate, localization }) {
 
                             {/* Title */}
                             <RevealInAnimation direction="left" delay={0.1} duration={0.8}>
-                                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-default text-(--primary-color) leading-tight mb-8">
+                                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-default text-(--primary-color) leading-tight mb-8 break-words">
                                     {certificate?.title}
                                 </h1>
                             </RevealInAnimation>
@@ -65,7 +65,7 @@ export default function CertificateDetail({ certificate, localization }) {
                             {/* Excerpt lead */}
                             {certificate?.shortDescription && (
                                 <FaderInAnimation direction="up" delay={0.1} duration={0.7}>
-                                    <p className="mb-8 text-lg font-medium text-(--primary-color)/80 leading-relaxed border-l-4 border-(--accent-color) pl-5">
+                                    <p className="mb-8 text-lg font-medium text-(--primary-color)/80 leading-relaxed border-l-4 border-(--accent-color) pl-5 break-words">
                                         {certificate.shortDescription}
                                     </p>
                                 </FaderInAnimation>
@@ -75,7 +75,7 @@ export default function CertificateDetail({ certificate, localization }) {
                             {certificate?.description && (
                                 <div 
                                     dangerouslySetInnerHTML={{ __html: certificate.description }} 
-                                    className="prose-blog" 
+                                    className="dynamic-content-wrapper break-words overflow-hidden" 
                                 />
                             )}
 

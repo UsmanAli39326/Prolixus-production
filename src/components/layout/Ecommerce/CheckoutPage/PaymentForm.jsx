@@ -30,6 +30,7 @@ export default function PaymentForm({
     gateway,
     onDirectComplete,
     isSubmitting,
+    isSubscription,
     localization,
 }) {
     const { clearCart } = useCart();
@@ -159,11 +160,22 @@ export default function PaymentForm({
                                 <span className="font-bold text-accent">{localization?.cart_shipping_free}</span>
                             </div>
                         </div>
+                        {isSubscription && (
+                            <div className="p-5 flex items-baseline justify-between gap-4 border-t border-divider bg-accent/5">
+                                <div className="flex gap-6">
+                                    <span className="text-gray-400 font-accent w-12 text-left">Type</span>
+                                    <span className="font-bold text-accent flex items-center gap-2">
+                                        <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                                        Monthly Subscription
+                                    </span>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </FaderInAnimation>
 
-                {/* Wallet Balance (for all authenticated users) */}
-                {isAuthenticated && (
+                {/* Wallet Balance — hidden for subscriptions (require payment method on file for recurring) */}
+                {isAuthenticated && !isSubscription && (
                     <FaderInAnimation direction="up" delay={0.15}>
                         <div className={`border rounded-2xl p-6 mb-2 transition-all ${walletBalance > 0 ? 'bg-accent/5 border-accent/20' : 'bg-gray-50 dark:bg-white/[0.02] border-divider opacity-60'}`}>
                             <label className={`flex items-center gap-4 group ${walletBalance > 0 ? 'cursor-pointer' : 'cursor-not-allowed'}`}>
@@ -287,7 +299,10 @@ export default function PaymentForm({
                             disabled={loading || isSubmitting}
                             className="w-full sm:w-auto h-14 bg-accent! hover:bg-accent! text-white! font-bold text-lg rounded-full! shadow-lg shadow-accent/10 px-10"
                         >
-                            {localization?.checkout_complete_order}
+                            {isSubscription
+                                ? (localization?.checkout_start_subscription || 'Start Subscription')
+                                : localization?.checkout_complete_order
+                            }
                         </Button>
                     </div>
                 </FaderInAnimation>

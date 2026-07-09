@@ -12,7 +12,7 @@ export default async function CertificatesSection({ localization = {} }) {
   const IMAGE_BASE_URL = API_BASE.replace('/api', '');
 
   return (
-    <section className="certificates-section relative bg-white py-12 sm:py-16 lg:py-20">
+    <section className="certificates-section relative bg-white py-12 sm:py-16 lg:py-20 overflow-hidden">
       {/* Decorative background elements */}
       <div className="absolute -top-24 -right-24 hidden h-96 w-96 rounded-full bg-accent/5 blur-3xl sm:block" />
       <div className="absolute -bottom-24 -left-24 hidden h-96 w-96 rounded-full bg-primary/5 blur-3xl sm:block" />
@@ -52,7 +52,7 @@ export default async function CertificatesSection({ localization = {} }) {
                 </div>
                 
                 {/* Content Container */}
-                <div className="p-8 flex flex-col flex-1 bg-white relative">
+                <div className="p-8 flex flex-col flex-1 bg-white relative overflow-hidden break-words">
                   <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
                   
                   <h3 className="font-accent text-xl font-bold text-primary mb-3 group-hover:text-accent transition-colors duration-300">
@@ -67,7 +67,7 @@ export default async function CertificatesSection({ localization = {} }) {
                   
                   {cert.description && (
                     <div 
-                      className="text-text/70 text-sm leading-relaxed prose prose-sm prose-primary line-clamp-4 mt-auto"
+                      className="text-text/70 text-sm leading-relaxed prose prose-sm prose-primary line-clamp-4 mt-auto overflow-hidden break-words"
                       dangerouslySetInnerHTML={{ __html: cert.description }}
                     />
                   )}

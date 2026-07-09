@@ -172,19 +172,27 @@ export default function SubscriptionsClient({ localization }) {
                     subtitle={localization?.subscriptions_subtitle || "Manage your subscriptions"}
                     action={
                         <div className="flex gap-2">
-                            <div className="relative">
-                                <select
-                                    className="appearance-none bg-white border border-divider rounded-lg px-4 py-2 pr-10 text-sm font-bold text-primary focus:outline-none focus:border-accent cursor-pointer shadow-sm hover:bg-secondary/20 transition-all dark:bg-background-dark dark:text-white"
-                                    value={filterStatus}
-                                    onChange={(e) => {
-                                        setFilterStatus(e.target.value);
-                                        setCurrentPage(1);
-                                    }}
+                            <div className="flex w-full sm:w-auto bg-surface-2 p-1 rounded-lg border border-divider">
+                                <button
+                                    onClick={() => { setFilterStatus("Active"); setCurrentPage(1); }}
+                                    className={`flex-1 sm:flex-none px-4 py-2 text-sm font-bold rounded-md transition-all ${
+                                        filterStatus === "Active"
+                                            ? "bg-white text-primary shadow-sm"
+                                            : "text-text hover:text-primary"
+                                    }`}
                                 >
-                                    <option value="Active">{localization?.subscriptions_filter_active || "Active Subscriptions"}</option>
-                                    <option value="Cancelled">{localization?.subscriptions_filter_cancelled || "Cancelled Subscriptions"}</option>
-                                </select>
-                                <FaFilter className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-text/40 pointer-events-none" />
+                                    {localization?.subscriptions_filter_active || "Active Subscriptions"}
+                                </button>
+                                <button
+                                    onClick={() => { setFilterStatus("Cancelled"); setCurrentPage(1); }}
+                                    className={`flex-1 sm:flex-none px-4 py-2 text-sm font-bold rounded-md transition-all ${
+                                        filterStatus === "Cancelled"
+                                            ? "bg-white text-primary shadow-sm"
+                                            : "text-text hover:text-primary"
+                                    }`}
+                                >
+                                    {localization?.subscriptions_filter_cancelled || "Cancelled Subscriptions"}
+                                </button>
                             </div>
                         </div>
                     }

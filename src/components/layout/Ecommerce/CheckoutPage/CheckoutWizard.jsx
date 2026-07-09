@@ -18,7 +18,7 @@ import { apiService } from "@/lib/api";
 // Converts the cart state + checkout formData into the exact guest-order
 // payload required by the backend API contract.
 // ---------------------------------------------------------------------------
-export function buildGuestOrderPayload(formData, cartItems, currency = "EURO", totals = {}, user = null) {
+export function buildGuestOrderPayload(formData, cartItems, currency = "EURO", totals = {}, user = null, isSubscription = false) {
 
     console.log("payload")
     // Helper: round a number to 2 decimal places
@@ -50,8 +50,8 @@ export function buildGuestOrderPayload(formData, cartItems, currency = "EURO", t
     const customerId = user?.id || null;
     const guestCustomerInfo = customerId ? null : `${formData.fullName}, ${formData.email}, ${formData.phone}`;
 
-    // ── Final payload ───────────────────────────────────────────────────────
-    return {
+    // ── Base payload ────────────────────────────────────────────────────────
+    const payload = {
         shopId: 1,
         customerId,
         guestCustomerInfo,
@@ -79,6 +79,19 @@ export function buildGuestOrderPayload(formData, cartItems, currency = "EURO", t
         affiliateCustomerCode: formData.affiliateCustomerCode || "",
         CustomerAffiliatedAmount: r(totals.walletAmount),
     };
+
+    // ── Subscription-specific fields ────────────────────────────────────────
+    if (isSubscription) {
+        payload.isSubscription = true;
+        // Extract subscription plan metadata from the first cart item
+        const subItem = cartItems[0];
+        if (subItem) {
+            payload.subscriptionPlanId = subItem.variantId || null;
+            payload.subscriptionInterval = "monthly";
+        }
+    }
+
+    return payload;
 }
 
 // ---------------------------------------------------------------------------
@@ -88,7 +101,7 @@ export default function CheckoutWizard({ localization }) {
     const router = useRouter();
     const { cartItems, isInitialized, clearCart } = useCart();
     const { currency, formatPrice } = useCurrency();
-    const { formData, updateFormData, totals, user, isAuthenticated, setOrderCompleted, orderCompleted } = useCheckout();
+    const { formData, updateFormData, totals, user, isAuthenticated, setOrderCompleted, orderCompleted, checkoutItems, isSubscription, checkoutType } = useCheckout();
     const [currentStep, setCurrentStep] = useState(0);
     const [orderData, setOrderData] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -109,12 +122,12 @@ export default function CheckoutWizard({ localization }) {
         setOrderCompleted(false);
     }, [setOrderCompleted]);
 
-    // Redirect to cart if empty (only after initialization and if order is not completed)
+    // Redirect to cart if the filtered checkout items are empty (only after initialization and if order is not completed)
     useEffect(() => {
-        if (isInitialized && cartItems.length === 0 && !orderCompleted) {
+        if (isInitialized && checkoutItems.length === 0 && !orderCompleted) {
             router.push("/cart");
         }
-    }, [isInitialized, cartItems, router, orderCompleted]);
+    }, [isInitialized, checkoutItems, router, orderCompleted]);
 
     // When methods load, auto-select the first one if none selected
     useEffect(() => {
@@ -144,10 +157,11 @@ export default function CheckoutWizard({ localization }) {
         try {
             const payload = buildGuestOrderPayload(
                 { ...formData, paymentMethod: "Cash" },
-                cartItems,
+                checkoutItems,
                 currency,
                 totals,
-                user
+                user,
+                isSubscription
             );
 
             const response = await apiService.post("/Checkout/create-order", payload);
@@ -193,10 +207,12 @@ export default function CheckoutWizard({ localization }) {
         currentStep,
         formData,
         updateFormData,
-        buildGuestOrderPayload: (fd, ci, c) => buildGuestOrderPayload(fd, ci, c, totals, user),
-        cartItems,
+        buildGuestOrderPayload: (fd, ci, c) => buildGuestOrderPayload(fd, ci, c, totals, user, isSubscription),
+        cartItems: checkoutItems,
         user,
         isAuthenticated,
+        isSubscription,
+        checkoutType,
         // New payment-specific props
         paymentMethods,
         methodsLoading,
