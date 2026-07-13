@@ -136,6 +136,7 @@ export default function CheckoutForm({ nextStep, goToStep, formData, updateFormD
                                     type="email"
                                     className="space-y-1.5"
                                     required
+                                    readOnly={isAuthenticated}
                                     {...inputStyles}
                                 />
                             </div>

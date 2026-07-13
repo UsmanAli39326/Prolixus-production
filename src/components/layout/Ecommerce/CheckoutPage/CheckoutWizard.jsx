@@ -34,7 +34,7 @@ export function buildGuestOrderPayload(formData, cartItems, currency = "EURO", t
         const vatDecimal = rawVat >= 1 ? rawVat / 100 : rawVat;
         const itemVatPct = vatDecimal * 100;
         return {
-            itemId: item.id,
+            itemId: item.productId || (typeof item.id === 'string' ? parseInt(item.id.split('-')[0], 10) : item.id),
             quantity: item.quantity,
             unitPrice: r(item.price),
             vatPercentage: r(itemVatPct),

@@ -53,6 +53,7 @@ export const CheckoutProvider = ({ children, checkoutType: initialType }) => {
         paymentToken: null,
         couponCode: "",
         orderNotes: "",
+        gatewayCustomerId: null,
 
         // Optional extras
         affiliateCustomerCode: "",
@@ -83,6 +84,7 @@ export const CheckoutProvider = ({ children, checkoutType: initialType }) => {
                             zip: response.data.shippingPostCode || prev.zip,
                             countryId: response.data.shippingCountryId || prev.countryId,
                             countryCode: response.data.shippingCountryCode || prev.countryCode,
+                            gatewayCustomerId: response.data.gatewayCustomerId || response.data.stripeCustomerId || prev.gatewayCustomerId || null,
                         }));
                     }
 

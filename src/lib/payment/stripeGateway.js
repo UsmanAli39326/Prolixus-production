@@ -17,7 +17,7 @@ import { motion, AnimatePresence } from "framer-motion";
  * Updated to fetch clientSecret immediately and pass it to Elements provider.
  * This is required for automatic payment methods and the Payment Element.
  */
-function StripeGatewayProvider({ publishableKey, amount, currency, children }) {
+function StripeGatewayProvider({ publishableKey, amount, currency, isSubscription, cartItems, children }) {
     const [clientSecret, setClientSecret] = useState(null);
     const [error, setError] = useState(null);
 
@@ -28,6 +28,7 @@ function StripeGatewayProvider({ publishableKey, amount, currency, children }) {
 
     useEffect(() => {
         if (!amount || !currency) return;
+        if (isSubscription) return; // For subscriptions, we don't fetch clientSecret upfront
 
         const fetchIntent = async () => {
             try {
@@ -58,23 +59,6 @@ function StripeGatewayProvider({ publishableKey, amount, currency, children }) {
 
     if (!stripePromise) {
         return <p className="text-red-500 text-sm">Stripe publishable key missing.</p>;
-    }
-
-    // Show a stunning loader while fetching the clientSecret
-    if (!clientSecret) {
-        return (
-            <div className="bg-white dark:bg-white/5 border border-divider rounded-4xl p-16 mb-8 flex flex-col items-center justify-center space-y-6 relative overflow-hidden">
-                <div className="absolute inset-0 bg-linear-to-br from-blue-500/5 to-transparent animate-pulse" />
-                <div className="relative">
-                    <div className="w-12 h-12 border-4 border-blue-100 rounded-full" />
-                    <div className="w-12 h-12 border-4 border-t-blue-500 rounded-full animate-spin absolute top-0" />
-                </div>
-                <div className="text-center relative">
-                    <p className="text-xl font-black text-primary tracking-tight">Initializing Secure Checkout</p>
-                    <p className="text-sm font-medium text-text/40 mt-1">Establishing encrypted connection to Stripe...</p>
-                </div>
-            </div>
-        );
     }
 
     const appearance = {
@@ -123,8 +107,40 @@ function StripeGatewayProvider({ publishableKey, amount, currency, children }) {
         }
     };
 
+    if (isSubscription) {
+        return (
+            <Elements stripe={stripePromise} options={{
+                mode: 'subscription',
+                amount: Math.round(amount * 100) || 100, // Stripe requires at least positive amount
+                currency: (currency || 'eur').toLowerCase(),
+                paymentMethodCreation: 'manual',
+                appearance,
+                locale: 'en',
+            }}>
+                {children}
+            </Elements>
+        );
+    }
+
+    // Show a stunning loader while fetching the clientSecret
+    if (!clientSecret) {
+        return (
+            <div className="bg-white dark:bg-white/5 border border-divider rounded-4xl p-16 mb-8 flex flex-col items-center justify-center space-y-6 relative overflow-hidden">
+                <div className="absolute inset-0 bg-linear-to-br from-blue-500/5 to-transparent animate-pulse" />
+                <div className="relative">
+                    <div className="w-12 h-12 border-4 border-blue-100 rounded-full" />
+                    <div className="w-12 h-12 border-4 border-t-blue-500 rounded-full animate-spin absolute top-0" />
+                </div>
+                <div className="text-center relative">
+                    <p className="text-xl font-black text-primary tracking-tight">Initializing Secure Checkout</p>
+                    <p className="text-sm font-medium text-text/40 mt-1">Establishing encrypted connection to Stripe...</p>
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <Elements stripe={stripePromise} options={{
+        <Elements key={clientSecret} stripe={stripePromise} options={{
             clientSecret,
             appearance,
             locale: 'en',
@@ -142,6 +158,7 @@ function StripeCheckoutForm({
     onSuccess,
     onError,
     setLoading,
+    isSubscription,
 }) {
     const stripe = useStripe();
     const elements = useElements();
@@ -164,58 +181,166 @@ function StripeCheckoutForm({
         const billingCountry = (formData.countryCode || (currency?.toLowerCase() === 'eur' ? 'DE' : 'US')).toUpperCase();
         const stateValue = formData.state ? formData.state.toUpperCase() : (shippingCountry === 'US' ? 'CA' : undefined);
 
-        try {
-            const { error, paymentIntent } = await stripe.confirmPayment({
-                elements,
-                confirmParams: {
-                    shipping: {
-                        name: formData.fullName,
-                        address: {
-                            line1: formData.address,
-                            city: formData.city,
-                            state: stateValue,
-                            postal_code: formData.zip,
-                            country: shippingCountry,
-                        },
-                    },
-                    payment_method_data: {
-                        billing_details: {
-                            name: formData.fullName,
-                            email: formData.email,
-                            phone: formData.phone,
-                            address: {
-                                line1: formData.address,
-                                city: formData.city,
-                                state: stateValue,
-                                postal_code: formData.zip,
-                                country: billingCountry,
-                            }
-                        }
-                    },
-                    return_url: `${window.location.origin}/checkout/status`,
+        const confirmParamsConfig = {
+            shipping: {
+                name: formData.fullName,
+                address: {
+                    line1: formData.address,
+                    city: formData.city,
+                    state: stateValue,
+                    postal_code: formData.zip,
+                    country: shippingCountry,
                 },
-                redirect: "if_required",
-            });
-
-            if (error) {
-                setErrorMessage(error.message);
-                onError(error.message);
-            } else if (paymentIntent) {
-                if (paymentIntent.status === "succeeded") {
-                    payload.paymentToken = paymentIntent.id;
-                    const response = await apiService.post("/Checkout/create-order", payload);
-
-                    if (response.success) {
-                        localStorage.removeItem("pendingOrderPayload");
-                        onSuccess(response.data);
-                    } else {
-                        setErrorMessage(response.message);
-                        onError(response.message);
+            },
+            payment_method_data: {
+                billing_details: {
+                    name: formData.fullName,
+                    email: formData.email,
+                    phone: formData.phone,
+                    address: {
+                        line1: formData.address,
+                        city: formData.city,
+                        state: stateValue,
+                        postal_code: formData.zip,
+                        country: billingCountry,
                     }
-                } else if (paymentIntent.status === "processing") {
-                    // For SEPA/Klarna, it might stay in processing. 
-                    // Redirect to status page so it can monitor the intent.
-                    window.location.href = `${window.location.origin}/checkout/status?payment_intent_client_secret=${paymentIntent.client_secret}`;
+                }
+            },
+            return_url: `${window.location.origin}/checkout/status`,
+        };
+
+        try {
+            if (isSubscription) {
+                // Subscription flow
+
+                // 1. Trigger form validation
+                const { error: submitError } = await elements.submit();
+                if (submitError) {
+                    setErrorMessage(submitError.message);
+                    onError(submitError.message);
+                    setLoading(false);
+                    return;
+                }
+
+                // 2. Create PaymentMethod
+                const { error: pmError, paymentMethod } = await stripe.createPaymentMethod({
+                    elements,
+                    params: {
+                        billing_details: confirmParamsConfig.payment_method_data.billing_details,
+                    }
+                });
+
+                if (pmError) {
+                    setErrorMessage(pmError.message);
+                    onError(pmError.message);
+                    setLoading(false);
+                    return;
+                }
+
+                let finalGatewayCustomerId = formData.gatewayCustomerId || null;
+
+                // Ensure the Customer exists AND the PaymentMethod is attached to it
+                const customerRes = await fetch("/api/stripe/setup-customer", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        email: formData.email,
+                        name: formData.fullName,
+                        paymentMethodId: paymentMethod.id,
+                        customerId: finalGatewayCustomerId // undefined if new customer
+                    }),
+                });
+
+                const customerData = await customerRes.json();
+                if (customerData.customerId) {
+                    finalGatewayCustomerId = customerData.customerId;
+                } else {
+                    throw new Error(customerData.error || "Failed to setup Stripe customer");
+                }
+
+                // 3. Call Subscriptions/create
+                const subPayload = {
+                    productId: cartItems[0]?.productId || parseInt(cartItems[0]?.id?.toString().split('-')[0]),
+                    pricingTierId: cartItems[0]?.variantId,
+                    quantity: cartItems[0]?.quantity || 1,
+                    paymentGateway: "Stripe",
+                    paymentMethodId: paymentMethod.id,
+                };
+
+                if (finalGatewayCustomerId) {
+                    subPayload.gatewayCustomerId = finalGatewayCustomerId;
+                }
+
+                const subRes = await apiService.post("/Subscriptions/create", subPayload);
+                const resData = subRes.data || subRes.result || subRes;
+
+                const clientSecret = resData.clientSecret || resData.payment?.additionalData?.ClientSecret;
+                const paymentIntentId = resData.paymentIntentId || resData.payment?.additionalData?.PaymentIntentId || (clientSecret ? clientSecret.split('_secret_')[0] : null);
+                const subscriptionId = resData.subscriptionId || resData.subscription?.stripeSubscriptionId || resData.subscription?.id;
+
+                if (subRes.success === false || !resData || (!subscriptionId && !clientSecret)) {
+                    setErrorMessage(subRes.message || "Failed to create subscription");
+                    onError(subRes.message || "Failed to create subscription");
+                    setLoading(false);
+                    return;
+                }
+
+                // 4. Confirm Card Payment (for 3D Secure / SCA)
+                if (clientSecret) {
+                    const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(clientSecret);
+
+                    if (confirmError) {
+                        setErrorMessage(confirmError.message);
+                        onError(confirmError.message);
+                        setLoading(false);
+                        return;
+                    }
+
+                    if (paymentIntent && paymentIntent.status === "processing") {
+                        window.location.href = `${window.location.origin}/checkout/status?payment_intent_client_secret=${paymentIntent.client_secret}`;
+                        return;
+                    }
+                }
+
+                // 5. Finalize local order
+                payload.paymentToken = paymentIntentId || subscriptionId;
+                payload.subscriptionId = subscriptionId;
+
+                const finalRes = await apiService.post("/Checkout/create-order", payload);
+                if (finalRes.success) {
+                    localStorage.removeItem("pendingOrderPayload");
+                    onSuccess(finalRes.data);
+                } else {
+                    setErrorMessage(finalRes.message);
+                    onError(finalRes.message);
+                }
+
+            } else {
+                // One-time payment
+                const { error, paymentIntent } = await stripe.confirmPayment({
+                    elements,
+                    confirmParams: confirmParamsConfig,
+                    redirect: "if_required",
+                });
+
+                if (error) {
+                    setErrorMessage(error.message);
+                    onError(error.message);
+                } else if (paymentIntent) {
+                    if (paymentIntent.status === "succeeded") {
+                        payload.paymentToken = paymentIntent.id;
+                        const response = await apiService.post("/Checkout/create-order", payload);
+
+                        if (response.success) {
+                            localStorage.removeItem("pendingOrderPayload");
+                            onSuccess(response.data);
+                        } else {
+                            setErrorMessage(response.message);
+                            onError(response.message);
+                        }
+                    } else if (paymentIntent.status === "processing") {
+                        window.location.href = `${window.location.origin}/checkout/status?payment_intent_client_secret=${paymentIntent.client_secret}`;
+                    }
                 }
             }
         } catch (err) {

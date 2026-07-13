@@ -229,6 +229,8 @@ export default function PaymentForm({
                                 publishableKey={selectedMethod.publishableKey}
                                 amount={totals.total}
                                 currency={currency}
+                                isSubscription={isSubscription}
+                                cartItems={cartItems}
                             >
                                 <RevealInAnimation direction="down">
                                     {GatewayCheckout && (
@@ -244,6 +246,7 @@ export default function PaymentForm({
                                             setLoading={setLoading}
                                             onReady={handleGatewayReady}
                                             methodName={selectedMethod.displayName || selectedMethod.name}
+                                            isSubscription={isSubscription}
                                         />
                                     )}
                                 </RevealInAnimation>

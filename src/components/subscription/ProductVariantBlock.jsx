@@ -91,20 +91,21 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
     setAddStatus("adding");
 
     const variantId = purchaseType === 'one-time' ? selectedVariantId : primarySubscription?.id;
-    
+
     // The system should consider it as 1 item (a single bundle/subscription package).
     // The total price is passed as the item price.
-    const price = purchaseType === 'one-time' 
+    const price = purchaseType === 'one-time'
       ? selectedOneTimeOption?.price
       : primarySubscription?.price;
-      
+
     const label = purchaseType === 'one-time' ? selectedOneTimeOption?.label : primarySubscription?.label;
-    
+
     // The physical number of bottles/items for display purposes
     const bundleQuantity = purchaseType === 'one-time' ? selectedOneTimeOption?.quantity : primarySubscription?.quantity || 1;
 
     const cartProduct = {
       ...product,
+      productId: product.id,
       price,
       variantId,
       variantLabel: label,
@@ -122,7 +123,7 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
   // Compile full list of unique images for the carousel
   const allImgs = [product.image, ...(product.itemImages || [])].filter(Boolean);
   let uniqueImages = Array.from(new Set(allImgs));
-  
+
   // Use fallback if images are missing or it's just the placeholder
   if (uniqueImages.length === 0 || (uniqueImages.length === 1 && uniqueImages[0].includes("placeholder.png"))) {
     uniqueImages = ["/images/new/prolixus-nutrients.jpeg"];
@@ -171,11 +172,10 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
           {primarySubscription && (
             <button
               onClick={() => setPurchaseType("subscribe")}
-              className={`flex-1 flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all relative shadow-sm ${
-                purchaseType === "subscribe"
+              className={`flex-1 flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all relative shadow-sm ${purchaseType === "subscribe"
                   ? "border-(--accent-color) bg-(--accent-color)/5"
                   : "border-(--accent-color)/50 hover:border-(--accent-color) bg-(--white-color)"
-              }`}
+                }`}
             >
               {/* Discount/Best Value Badge */}
               <span className="absolute -top-3 right-4 bg-(--accent-color) text-(--white-color) text-xs font-bold px-3 py-1 rounded-full shadow-sm flex items-center gap-1">
@@ -190,11 +190,10 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
 
           <button
             onClick={() => setPurchaseType("one-time")}
-            className={`flex-1 flex flex-col items-center justify-center p-4 rounded-2xl border transition-all ${
-              purchaseType === "one-time"
+            className={`flex-1 flex flex-col items-center justify-center p-4 rounded-2xl border transition-all ${purchaseType === "one-time"
                 ? "border-(--accent-color) bg-(--secondary-color)"
                 : "border-(--divider-color) hover:border-(--accent-color)/30 bg-transparent opacity-80"
-            }`}
+              }`}
           >
             <span className={`text-base font-semibold ${purchaseType === "one-time" ? "text-(--accent-color)" : "text-(--primary-color)"}`}>
               One-time purchase
@@ -211,16 +210,14 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
                 <button
                   key={opt.id}
                   onClick={() => setSelectedVariantId(opt.id)}
-                  className={`flex items-center justify-between p-4 rounded-2xl border-2 transition-all ${
-                    selectedVariantId === opt.id
+                  className={`flex items-center justify-between p-4 rounded-2xl border-2 transition-all ${selectedVariantId === opt.id
                       ? "border-(--accent-color) bg-(--secondary-color)"
                       : "border-(--divider-color) hover:border-(--accent-color)/30"
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                      selectedVariantId === opt.id ? "border-(--accent-color)" : "border-gray-300"
-                    }`}>
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedVariantId === opt.id ? "border-(--accent-color)" : "border-gray-300"
+                      }`}>
                       {selectedVariantId === opt.id && <div className="w-2.5 h-2.5 rounded-full bg-(--accent-color)" />}
                     </div>
                     <span className="font-semibold text-(--primary-color)">{opt.label}</span>
@@ -245,7 +242,7 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
                 {formatPrice(primarySubscription?.price)}<span className="text-sm font-normal text-(--primary-color)/70">/mo</span>
               </span>
             </div>
-            
+
             {subscriptionBenefits && subscriptionBenefits.length > 0 && (
               <ul className="space-y-3">
                 {subscriptionBenefits.map((benefit, idx) => (
@@ -267,7 +264,7 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
             onClick={handleAddToCart}
             className="w-full btn-default rounded-full bg-(--accent-color) py-4 text-center text-lg font-semibold text-(--white-color) hover:bg-(--primary-color) transition-colors"
           >
-            {purchaseType === "one-time" 
+            {purchaseType === "one-time"
               ? `Add to cart — $${selectedOneTimeOption?.price.toFixed(2) || '0.00'}`
               : `Subscribe — $${primarySubscription?.price.toFixed(2) || '0.00'}/mo`
             }
