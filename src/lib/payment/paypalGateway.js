@@ -4,19 +4,23 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { apiService } from "@/lib/api";
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
-function PayPalGatewayProvider({ publishableKey, currency, children }) {
+function PayPalGatewayProvider({ publishableKey, currency, isSubscription, children }) {
     if (!publishableKey) {
         return <p className="text-red-500 text-sm">PayPal configuration is missing.</p>;
     }
 
+    const options = {
+        clientId: publishableKey,
+        currency: currency || "EUR",
+        intent: isSubscription ? "subscription" : "capture",
+    };
+
+    if (isSubscription) {
+        options.vault = true;
+    }
+
     return (
-        <PayPalScriptProvider
-            options={{
-                clientId: publishableKey,
-                currency: currency || "EUR",
-                intent: "capture",
-            }}
-        >
+        <PayPalScriptProvider options={options}>
             {children}
         </PayPalScriptProvider>
     );
@@ -30,13 +34,14 @@ function PayPalCheckoutComponent({
     currency,
     onSuccess,
     onError,
+    isSubscription,
 }) {
     return (
         <div className="bg-surface border border-divider rounded-2xl p-6 my-6">
             <p className="text-primary font-bold mb-4">Pay with PayPal</p>
             <PayPalButtons
                 style={{ layout: "vertical" }}
-                createOrder={(data, actions) => {
+                createOrder={!isSubscription ? (data, actions) => {
                     const payload = buildGuestOrderPayload(formData, cartItems, currency);
                     return actions.order.create({
                         purchase_units: [
@@ -47,19 +52,99 @@ function PayPalCheckoutComponent({
                             },
                         ],
                     });
-                }}
+                } : undefined}
+                createSubscription={isSubscription ? async (data, actions) => {
+                    try {
+                        // 1. Generate PayPal Plan ID dynamically
+                        const planPayload = {
+                            name: cartItems[0]?.name || cartItems[0]?.title || "Subscription",
+                            price: cartItems[0]?.price || formData?.grossAmount || 0,
+                            currency: currency || "EUR",
+                            interval: cartItems[0]?.interval || "MONTH",
+                            intervalCount: cartItems[0]?.intervalCount || 1,
+                        };
+
+                        const planRes = await fetch("/api/paypal/create-plan", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(planPayload),
+                        });
+
+                        if (!planRes.ok) {
+                            const errorData = await planRes.json().catch(() => ({}));
+                            throw new Error(errorData.error || "Failed to generate PayPal Plan ID");
+                        }
+
+                        const planData = await planRes.json();
+
+                        // 2. Call backend /Subscriptions/create
+                        const subPayload = {
+                            pricingTierId: cartItems[0]?.variantId,
+                            paymentGateway: "PayPal",
+                            payPalPlanId: planData.planId
+                        };
+
+                        if (formData.gatewayCustomerId) {
+                            subPayload.gatewayCustomerId = formData.gatewayCustomerId;
+                        }
+
+                        const subRes = await apiService.post("/Subscriptions/create", subPayload);
+                        const resData = subRes.data || subRes.result || subRes;
+
+                        // Retrieve the subscription ID returned from the backend API
+                        const subscriptionId = resData?.subscriptionId || resData?.paypalSubscriptionId || resData?.id;
+
+                        console.log("PAYPAL subRes:", subRes);
+                        console.log("PAYPAL subscriptionId extracted:", subscriptionId);
+
+                        const isSuccess = subRes.success !== false && subRes.isSuccess !== false;
+
+                        if (!isSuccess) {
+                            throw new Error(subRes.message || "Failed to create subscription on server");
+                        }
+
+                        if (subscriptionId) {
+                            return subscriptionId;
+                        }
+
+                        // If backend doesn't return a PayPal subscription ID, fallback to creating it on the client
+                        return actions.subscription.create({
+                            plan_id: planData.planId
+                        });
+                    } catch (err) {
+                        console.error("PayPal createSubscription error:", err);
+                        onError(err.message || "Failed to initialize PayPal subscription.");
+                        throw err; // Re-throw to inform PayPal buttons
+                    }
+                } : undefined}
                 onApprove={async (data, actions) => {
-                    const details = await actions.order.capture();
-                    const payload = buildGuestOrderPayload(formData, cartItems, currency);
-                    payload.paymentMethod = "PayPal";
-                    payload.paymentToken = details.id;
+                    try {
+                        let details;
+                        const payload = buildGuestOrderPayload(formData, cartItems, currency);
+                        payload.paymentMethod = "PayPal";
 
-                    const response = await apiService.post("/Checkout/create-order", payload);
+                        if (isSubscription) {
+                            // For subscriptions, the backend has a bug where it attempts to capture the PayPal order.
+                            // Since subscription setup tokens cannot be captured, it fails with PAYER_CANNOT_PAY.
+                            // We set paymentToken to null to bypass the backend capture step.
+                            payload.paymentToken = null;
+                            payload.subscriptionId = data.subscriptionID;
+                        } else {
+                            // For one-time payments, capture the order.
+                            details = await actions.order.capture();
+                            payload.paymentToken = details.id;
+                        }
 
-                    if (response.success) {
-                        onSuccess(response.data);
-                    } else {
-                        onError(response.message || "Order creation failed.");
+                        const response = await apiService.post("/Checkout/create-order", payload);
+
+                        if (response.success) {
+                            onSuccess(response.data);
+                        } else {
+                            onError(response.message || "Order creation failed.");
+                        }
+                    } catch (err) {
+                        console.error("PayPal onApprove error:", err);
+                        onError("PayPal payment approval failed.");
                     }
                 }}
                 onError={(err) => {

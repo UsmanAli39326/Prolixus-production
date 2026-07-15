@@ -116,7 +116,7 @@ export default function CtaBox({ data = {} }) {
               {/* Button */}
               <FaderInAnimation direction="up" delay={0.4}>
                 <div className="mt-8 flex justify-center lg:justify-center">
-                  <Link href="/products">
+                  <Link href="/subscribe">
                     <Button
                       variant="accent"
                       size="lg"

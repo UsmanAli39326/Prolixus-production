@@ -9,11 +9,17 @@ export async function getShopMenus() {
     const menus = response.data
       .filter((m) => m.isActive) // only active
       .sort((a, b) => a.priority - b.priority) // priority wise
-      .map((m) => ({
-        id: m.id,
-        label: m.name,
-        url: m.url,
-      }));
+      .map((m) => {
+        let finalUrl = m.url;
+        if (finalUrl === "/products" || finalUrl === "/product") {
+          finalUrl = "/subscribe";
+        }
+        return {
+          id: m.id,
+          label: m.name,
+          url: finalUrl,
+        };
+      });
 
     return menus;
 

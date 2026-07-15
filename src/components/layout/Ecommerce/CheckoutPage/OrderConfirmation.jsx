@@ -80,7 +80,7 @@ export default function OrderConfirmation({ orderData, formatPrice, isLoggedIn, 
                                 </Link>
                             </div>
                         ) : (
-                            <Link href="/products" className="block">
+                            <Link href="/subscribe" className="block">
                                 <Button variant="accent" size="lg" className="rounded-full! px-12 w-full">
                                     {localization?.checkout_confirm_continue}
                                 </Button>

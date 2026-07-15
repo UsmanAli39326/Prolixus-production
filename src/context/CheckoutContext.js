@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useMemo, useEffect } from "react";
+import React, { createContext, useContext, useState, useMemo, useEffect, useCallback } from "react";
 import useCart from "@/Hooks/useCart";
 import { calcCartTotals } from "@/lib/cart";
 import { getProfile } from "@/lib/ProfileService";
@@ -110,9 +110,9 @@ export const CheckoutProvider = ({ children, checkoutType: initialType }) => {
         fetchUserProfile();
     }, [token]);
 
-    const updateFormData = (newData) => {
+    const updateFormData = useCallback((newData) => {
         setFormData((prev) => ({ ...prev, ...newData }));
-    };
+    }, []);
 
     // Calculate totals from FILTERED checkout items (not all cart items)
     const totals = useMemo(() => {

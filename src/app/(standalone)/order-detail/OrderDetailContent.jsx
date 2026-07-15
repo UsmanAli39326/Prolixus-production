@@ -160,7 +160,7 @@ export default function OrderDetailContent({ localization }) {
                 <p className="text-lg sm:text-xl text-red-500 font-medium wrap-break-word">
                     {error || localization?.order_detail_not_found}
                 </p>
-                <Link href="/products" className="w-full sm:w-auto">
+                <Link href="/subscribe" className="w-full sm:w-auto">
                     <Button variant="accent" size="lg" className="w-full sm:w-auto rounded-full px-8 sm:px-10 py-4 sm:py-6 text-lg sm:text-xl">
                         {localization?.order_detail_go_to_shop}
                     </Button>
@@ -197,7 +197,7 @@ export default function OrderDetailContent({ localization }) {
                             >
                                 {localization?.order_detail_print_button}
                             </Button>
-                            <Link href="/products" className="w-full sm:w-auto">
+                            <Link href="/subscribe" className="w-full sm:w-auto">
                                 <Button
                                     variant="primary"
                                     size="sm"

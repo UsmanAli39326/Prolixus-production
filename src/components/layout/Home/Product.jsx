@@ -125,7 +125,7 @@ export default function ProductsSection({ products = [], data = {} }) {
 
           <div className="section-btn flex lg:justify-end">
             <a
-              href="/products"
+              href="/subscribe"
               className="btn-default inline-block rounded-full bg-(--accent-color) px-6 py-2 text-sm font-semibold text-(--white-color)"
             >
               {data?.view_all_button}

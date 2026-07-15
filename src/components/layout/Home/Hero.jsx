@@ -220,7 +220,7 @@ export default function Hero({ data = {} }) {
 
                   {/* CTA row — stacks on mobile, side-by-side on desktop */}
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-8">
-                    <Link href="/products">
+                    <Link href="/subscribe">
                       <Button
                         variant="accent"
                         size="lg"

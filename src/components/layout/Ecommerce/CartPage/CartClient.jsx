@@ -50,7 +50,7 @@ export default function CartClient({ localization }) {
                     {cartItems.length} {cartItems.length === 1 ? localization?.cart_item_singular : localization?.cart_item_plural} in your cart
                   </p>
                 </div>
-                <Link href="/products" className="group inline-flex items-center gap-2 text-primary hover:text-accent transition-colors duration-300">
+                <Link href="/subscribe" className="group inline-flex items-center gap-2 text-primary hover:text-accent transition-colors duration-300">
                   <FiArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />
                   <span className="font-medium text-sm sm:text-base">{localization?.cart_continue_shopping}</span>
                 </Link>
@@ -71,7 +71,7 @@ export default function CartClient({ localization }) {
                 <p className="text-text mb-8">
                   {localization?.cart_empty_desc}
                 </p>
-                <Link href="/products">
+                <Link href="/subscribe">
                   <Button variant="accent" size="lg">
                     {localization?.cart_start_shopping}
                   </Button>

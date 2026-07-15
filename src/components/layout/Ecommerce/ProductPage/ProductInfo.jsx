@@ -59,13 +59,13 @@ export default function ProductInfo({
             <nav aria-label="Breadcrumb" className="text-sm text-(--text-color)/70">
                 <ol className="flex items-center gap-2">
                     <li>
-                        <Link href="/products" className="hover:text-(--accent-color) transition-colors">
+                        <Link href="/subscribe" className="hover:text-(--accent-color) transition-colors">
                             {localization?.product_breadcrumb_home}
                         </Link>
                     </li>
                     <li className="text-(--divider-color)">/</li>
                     <li>
-                        <Link href="/products" className="hover:text-(--accent-color) transition-colors">
+                        <Link href="/subscribe" className="hover:text-(--accent-color) transition-colors">
                             {category}
                         </Link>
                     </li>

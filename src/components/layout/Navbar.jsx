@@ -449,7 +449,7 @@ export default function Header({ menus = [] }) {
   //           {/* Right Side */}
   //           <div className="flex items-center gap-6 pl-6 border-l border-divider">
   //             {/* Shop Now (ARROW REMOVED) */}
-  //             <Link href="/products" className="flex items-center">
+  //             <Link href="/subscribe" className="flex items-center">
   //               <Button variant="accent" className="rounded-full!">
   //                 Shop Now
   //               </Button>
@@ -638,7 +638,7 @@ export default function Header({ menus = [] }) {
   //               <li className="mt-3 border-t border-white/20 pt-4">
   //                 <div className="flex items-center justify-between gap-3">
   //                   {/* Shop */}
-  //                   <Link href="/products" className="shrink-0">
+  //                   <Link href="/subscribe" className="shrink-0">
   //                     <Button variant="primary" className="rounded-full">
   //                       Shop Now
   //                     </Button>

@@ -234,7 +234,7 @@ export default async function BlogDetail({ post, localization }) {
                                         Erleben Sie, wie gezielte Mikronährstoffe Ihre Vitalität unterstützen können.
                                     </p>
                                     <Link
-                                        href="/products"
+                                        href="/subscribe"
                                         className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-(--accent-color) text-(--white-color) text-sm font-semibold hover:opacity-90 transition"
                                     >
                                         Produkte entdecken

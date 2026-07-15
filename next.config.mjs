@@ -16,5 +16,19 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/products',
+        destination: '/subscribe',
+        permanent: true,
+      },
+      {
+        source: '/product',
+        destination: '/subscribe',
+        permanent: true,
+      },
+    ];
+  },
 };
 export default nextConfig;
