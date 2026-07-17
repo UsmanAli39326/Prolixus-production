@@ -7,7 +7,7 @@ import Badge from "@/components/ui/Badge";
 import DataTable from "@/components/ui/DataTable";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
-import { getSubscriptions, getSubscriptionOrders } from "@/lib/SubscriptionService";
+import { getSubscriptions, getSubscriptionOrders, cancelSubscription } from "@/lib/SubscriptionService";
 import { useCurrency } from "@/context/CurrencyContext";
 import { formatDate } from "@/utitlis/formatters";
 import Modal from "@/components/ui/Modal";
@@ -20,6 +20,81 @@ export default function SubscriptionsClient({ localization }) {
     const [filterStatus, setFilterStatus] = useState("Active");
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
+
+    const [cancellingId, setCancellingId] = useState(null);
+    const [cancelModalOpen, setCancelModalOpen] = useState(false);
+    const [subscriptionToCancel, setSubscriptionToCancel] = useState(null);
+    const [cancelError, setCancelError] = useState(null);
+    const [isCancelling, setIsCancelling] = useState(false);
+    const [cancelSuccess, setCancelSuccess] = useState(false);
+    const [cancelProgress, setCancelProgress] = useState(0);
+    const [cancelActionText, setCancelActionText] = useState("");
+
+    const handleCancelClick = (row) => {
+        setSubscriptionToCancel(row);
+        setCancelError(null);
+        setCancelSuccess(false);
+        setCancelProgress(0);
+        setCancelActionText("");
+        setCancelModalOpen(true);
+    };
+
+    const confirmCancelSubscription = async () => {
+        if (!subscriptionToCancel) return;
+        setIsCancelling(true);
+        setCancelError(null);
+        setCancelProgress(0);
+        setCancelActionText("Initiating cancellation...");
+
+        const actions = [
+            "Contacting provider...",
+            "Updating subscription status...",
+            "Revoking access benefits...",
+            "Finalizing cancellation..."
+        ];
+
+        let actionIndex = 0;
+
+        const progressInterval = setInterval(() => {
+            setCancelProgress(prev => {
+                const nextProgress = prev + Math.random() * 15;
+                return nextProgress >= 90 ? 90 : nextProgress;
+            });
+
+            actionIndex = (actionIndex + 1) % actions.length;
+            setCancelActionText(actions[actionIndex]);
+        }, 1200);
+
+        let isSuccess = false;
+        try {
+            const idToCancel = subscriptionToCancel.id || subscriptionToCancel.productId;
+            await cancelSubscription(idToCancel);
+
+            const isCancelled = filterStatus === "Cancelled";
+            const response = await getSubscriptions(isCancelled);
+            const data = response?.data || response || [];
+
+            clearInterval(progressInterval);
+            setCancelProgress(100);
+            setCancelActionText("Cancellation successful.");
+
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            setSubscriptions(Array.isArray(data) ? data : []);
+            setCancelSuccess(true);
+            isSuccess = true;
+            setTimeout(() => {
+                setCancelModalOpen(false);
+                setSubscriptionToCancel(null);
+            }, 2000);
+        } catch (err) {
+            clearInterval(progressInterval);
+            setCancelError(err.message || localization?.subscriptions_cancel_error || "Failed to cancel subscription.");
+        } finally {
+            if (!isSuccess) clearInterval(progressInterval);
+            setIsCancelling(false);
+        }
+    };
 
     // Modal state
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -35,7 +110,7 @@ export default function SubscriptionsClient({ localization }) {
                 setError(null);
                 const isCancelled = filterStatus === "Cancelled";
                 const response = await getSubscriptions(isCancelled);
-                
+
                 const data = response?.data || response || [];
                 // Data can be null according to edge cases
                 if (isMounted) {
@@ -113,13 +188,23 @@ export default function SubscriptionsClient({ localization }) {
             className: "text-right pr-8",
             cellClassName: "text-right pr-8",
             cell: (row) => (
-                <button
-                    onClick={() => handleViewOrders(row.productId || row.id)}
-                    className="inline-flex items-center gap-1 text-accent hover:text-accent/80 text-sm font-bold tracking-wide transition-colors group-hover:underline decoration-2 underline-offset-4 bg-transparent border-none cursor-pointer"
-                >
-                    {localization?.subscriptions_view_orders || "View Orders"}
-                    <FaArrowRight className="text-[10px]" />
-                </button>
+                <div className="flex items-center justify-end gap-4">
+                    {filterStatus === "Active" && (
+                        <button
+                            onClick={() => handleCancelClick(row)}
+                            className="inline-flex items-center gap-1 text-red-500 hover:text-red-600 text-sm font-bold tracking-wide transition-colors bg-transparent border-none cursor-pointer"
+                        >
+                            {localization?.subscriptions_cancel || "Cancel"}
+                        </button>
+                    )}
+                    <button
+                        onClick={() => handleViewOrders(row.productId || row.id)}
+                        className="inline-flex items-center gap-1 text-accent hover:text-accent/80 text-sm font-bold tracking-wide transition-colors group-hover:underline decoration-2 underline-offset-4 bg-transparent border-none cursor-pointer"
+                    >
+                        {localization?.subscriptions_view_orders || "View Orders"}
+                        <FaArrowRight className="text-[10px]" />
+                    </button>
+                </div>
             )
         }
     ];
@@ -175,21 +260,19 @@ export default function SubscriptionsClient({ localization }) {
                             <div className="flex w-full sm:w-auto bg-surface-2 p-1 rounded-lg border border-divider">
                                 <button
                                     onClick={() => { setFilterStatus("Active"); setCurrentPage(1); }}
-                                    className={`flex-1 sm:flex-none px-4 py-2 text-sm font-bold rounded-md transition-all ${
-                                        filterStatus === "Active"
-                                            ? "bg-white text-primary shadow-sm"
-                                            : "text-text hover:text-primary"
-                                    }`}
+                                    className={`flex-1 sm:flex-none px-4 py-2 text-sm font-bold rounded-md transition-all ${filterStatus === "Active"
+                                        ? "bg-white text-primary shadow-sm"
+                                        : "text-text hover:text-primary"
+                                        }`}
                                 >
                                     {localization?.subscriptions_filter_active || "Active Subscriptions"}
                                 </button>
                                 <button
                                     onClick={() => { setFilterStatus("Cancelled"); setCurrentPage(1); }}
-                                    className={`flex-1 sm:flex-none px-4 py-2 text-sm font-bold rounded-md transition-all ${
-                                        filterStatus === "Cancelled"
-                                            ? "bg-white text-primary shadow-sm"
-                                            : "text-text hover:text-primary"
-                                    }`}
+                                    className={`flex-1 sm:flex-none px-4 py-2 text-sm font-bold rounded-md transition-all ${filterStatus === "Cancelled"
+                                        ? "bg-white text-primary shadow-sm"
+                                        : "text-text hover:text-primary"
+                                        }`}
                                 >
                                     {localization?.subscriptions_filter_cancelled || "Cancelled Subscriptions"}
                                 </button>
@@ -217,9 +300,9 @@ export default function SubscriptionsClient({ localization }) {
                 </div>
             </FaderInAnimation>
 
-            <Modal 
-                isOpen={isModalOpen} 
-                onClose={() => setIsModalOpen(false)} 
+            <Modal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
                 title={localization?.subscriptions_orders_title || "Subscription Orders"}
                 size="lg"
             >
@@ -240,6 +323,79 @@ export default function SubscriptionsClient({ localization }) {
                         />
                     </div>
                 )}
+            </Modal>
+
+            {/* Sleek Cancel Confirmation Modal */}
+            <Modal
+                isOpen={cancelModalOpen}
+                onClose={() => !isCancelling && setCancelModalOpen(false)}
+                title=""
+                size="sm"
+            >
+                <div className="flex flex-col items-center text-center gap-3 pb-2 pt-4 px-2">
+                    {cancelSuccess ? (
+                        <>
+                            <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center text-green-500 text-2xl mb-2">
+                                ✓
+                            </div>
+                            <h3 className="text-xl font-bold text-text dark:text-white">
+                                {localization?.subscriptions_cancel_success || "Cancelled Successfully"}
+                            </h3>
+                            <p className="text-text/70 dark:text-white/70 text-sm">
+                                Your subscription has been revoked.
+                            </p>
+                        </>
+                    ) : isCancelling ? (
+                        <>
+                            <div className="w-12 h-12 border-4 border-surface-2 border-t-primary rounded-full animate-spin mb-2"></div>
+                            <h3 className="text-lg font-bold text-text dark:text-white">
+                                {localization?.cancelling || "Cancelling Subscription"}
+                            </h3>
+                            <p className="text-text/70 dark:text-white/70 text-sm animate-pulse min-h-[20px]">
+                                {cancelActionText}
+                            </p>
+                            <div className="w-full h-1.5 bg-surface-2 dark:bg-surface-dark rounded-full overflow-hidden mt-4">
+                                <div
+                                    className="h-full bg-primary transition-all duration-500 ease-out"
+                                    style={{ width: `${cancelProgress}%` }}
+                                ></div>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div className="w-14 h-14 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center text-red-500 text-2xl mb-1">
+                                !
+                            </div>
+                            <h3 className="text-xl font-bold text-text dark:text-white">
+                                {localization?.subscriptions_cancel_title || "Cancel Subscription?"}
+                            </h3>
+                            <p className="text-text/70 dark:text-white/70 text-sm mb-2">
+                                You are about to cancel <strong className="text-text dark:text-white">{subscriptionToCancel?.productName || subscriptionToCancel?.name || "this plan"}</strong>. You will immediately lose access to all its benefits.
+                            </p>
+
+                            {cancelError && (
+                                <div className="text-red-500 text-sm font-medium w-full p-2 bg-red-50 dark:bg-red-900/10 rounded">
+                                    {cancelError}
+                                </div>
+                            )}
+
+                            <div className="flex w-full gap-3 mt-4">
+                                <button
+                                    onClick={() => setCancelModalOpen(false)}
+                                    className="flex-1 py-2.5 text-sm font-semibold rounded-lg bg-surface-2 dark:bg-surface-dark text-text dark:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-colors border-none cursor-pointer"
+                                >
+                                    {localization?.keep_subscription || "Keep It"}
+                                </button>
+                                <button
+                                    onClick={confirmCancelSubscription}
+                                    className="flex-1 py-2.5 text-sm font-semibold rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors shadow-sm shadow-red-500/20 border-none cursor-pointer"
+                                >
+                                    {localization?.confirm_cancel || "Yes, Cancel"}
+                                </button>
+                            </div>
+                        </>
+                    )}
+                </div>
             </Modal>
         </div>
     );

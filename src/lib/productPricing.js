@@ -78,6 +78,7 @@ export function normalizeProductPricing(raw) {
     oneTimeOptions: data.oneTimeOptions || [],
     subscriptionPlans,
     subscriptionBenefits: data.subscriptionBenefits || [],
+    productFile: data.productFile || null,
   };
 }
 

@@ -20,3 +20,12 @@ export async function getSubscriptions(cancelledOnly = false) {
 export async function getSubscriptionOrders(productId) {
     return apiService.get(`${SUBSCRIPTIONS_ENDPOINT}/${productId}/orders`);
 }
+
+/**
+ * Cancel a specific subscription.
+ * POST /Subscriptions/my/{id}/cancel
+ * @param {string|number} subscriptionId - The ID of the subscription.
+ */
+export async function cancelSubscription(subscriptionId) {
+    return apiService.post(`${SUBSCRIPTIONS_ENDPOINT}/${subscriptionId}/cancel`);
+}

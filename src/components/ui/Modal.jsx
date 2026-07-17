@@ -16,9 +16,10 @@ import { createPortal } from "react-dom";
  */
 
 const SIZES = {
-    sm: "max-width: 420px;",
-    md: "max-width: 720px;",
-    lg: "max-width: 980px;",
+    xs: "max-width: 340px",
+    sm: "max-width: 420px",
+    md: "max-width: 720px",
+    lg: "max-width: 980px",
 };
 
 export default function Modal({

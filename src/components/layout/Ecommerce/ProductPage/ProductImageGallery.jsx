@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 
 /**
@@ -11,6 +11,10 @@ import Image from "next/image";
  */
 export default function ProductImageGallery({ images = [], productTitle = "" }) {
     const [selectedIndex, setSelectedIndex] = useState(0);
+
+    useEffect(() => {
+        setSelectedIndex(0);
+    }, [images[0]]);
 
     // Fallback if no images provided
     const displayImages = images.length > 0 ? images : ["/images/product-image-1.png"];

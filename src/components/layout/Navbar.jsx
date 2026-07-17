@@ -73,13 +73,13 @@ export default function Header({ menus = [] }) {
         </div>
 
         {/* Desktop Menu */}
-        <div className="hidden lg:flex flex-1 items-center justify-between ml-6">
+        <div className="hidden lg:flex flex-1 items-center justify-between ml-6 gap-6 xl:gap-8">
           <ul className="flex items-center gap-1">
             {mainMenus.map((menu) => (
               <li key={menu.id}>
                 <Link
                   href={menu.url}
-                  className="px-4 py-3 text-white font-semibold text-[16px] transition hover:text-accent no-underline"
+                  className="px-2 lg:px-3 xl:px-4 py-3 text-white font-semibold text-[14px] xl:text-[16px] transition hover:text-accent no-underline whitespace-nowrap"
                 >
                   {menu.label}
                 </Link>
@@ -297,37 +297,35 @@ export default function Header({ menus = [] }) {
         </div>
       </nav>
 
-      {/* Mobile Menu (Top-Down Dropdown - Half Screen) */}
+      {/* Mobile Menu (Top-Down Dropdown - Auto Height) */}
       {mobileOpen && (
         <>
           <div
-            className="fixed inset-0 z-40 bg-black lg:hidden mt-16"
+            className="fixed inset-0 z-40 bg-black/50 lg:hidden top-[80px]"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="fixed top-16 left-0 right-0 h-1/2 z-50 bg-primary shadow-2xl lg:hidden font-sans border-b border-white">
-            <div className="flex flex-col h-full">
-              <nav className="flex-1 overflow-y-auto px-6 py-8">
-                <ul className="flex flex-col gap-6">
-                  {mainMenus.map((menu) => (
-                    <li key={menu.id}>
-                      <Link
-                        href={menu.url}
-                        onClick={() => setMobileOpen(false)}
-                        className="block text-xl font-bold text-white hover:text-accent no-underline transition-colors"
-                      >
-                        {menu.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
+          <div className="absolute top-full left-0 right-0 max-h-[calc(100vh-80px)] z-50 bg-primary shadow-2xl lg:hidden font-sans border-b border-white flex flex-col">
+            <nav className="overflow-y-auto px-6 py-8 shrink">
+              <ul className="flex flex-col gap-6">
+                {mainMenus.map((menu) => (
+                  <li key={menu.id}>
+                    <Link
+                      href={menu.url}
+                      onClick={() => setMobileOpen(false)}
+                      className="block text-xl font-bold text-white hover:text-accent no-underline transition-colors"
+                    >
+                      {menu.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
 
-              {/* Drawer Footer */}
-              <div className="p-6 border-t border-white/10 bg-white/5">
-                <div className="flex items-center">
-                  <div className="scale-90 origin-left">
-                    <LanguageSwitcher />
-                  </div>
+            {/* Drawer Footer */}
+            <div className="p-6 border-t border-white/10 bg-white/5 shrink-0 mt-auto">
+              <div className="flex items-center">
+                <div className="scale-90 origin-left">
+                  <LanguageSwitcher />
                 </div>
               </div>
             </div>

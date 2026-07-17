@@ -18,6 +18,8 @@ import { motion, AnimatePresence } from "framer-motion";
  * This is required for automatic payment methods and the Payment Element.
  */
 function StripeGatewayProvider({ publishableKey, amount, currency, isSubscription, cartItems, children }) {
+    console.log("[StripeGatewayProvider] Initialized with amount:", amount, "isSubscription:", isSubscription);
+
     const [clientSecret, setClientSecret] = useState(null);
     const [error, setError] = useState(null);
 
@@ -32,6 +34,7 @@ function StripeGatewayProvider({ publishableKey, amount, currency, isSubscriptio
 
         const fetchIntent = async () => {
             try {
+                console.log("[StripeGatewayProvider] Fetching payment intent with amount:", amount);
                 const res = await fetch("/api/stripe/create-payment-intent", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -175,6 +178,7 @@ function StripeCheckoutForm({
         // 1. Build and store payload for redirect return
         const payload = buildGuestOrderPayload(formData, cartItems, currency);
         payload.paymentMethod = "Stripe";
+        console.log("[StripeCheckoutForm] Payload generated:", JSON.stringify(payload, null, 2));
         localStorage.setItem("pendingOrderPayload", JSON.stringify(payload));
 
         const shippingCountry = (formData.countryCode || (currency?.toLowerCase() === 'eur' ? 'DE' : 'US')).toUpperCase();

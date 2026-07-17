@@ -14,25 +14,33 @@ export default function PageHeader({ title, subtitle, breadcrumbs, bgImage, mobi
     },
     "blog": {
       bg: "/images/new/blog page banner.webp",
-      mobile: "/images/new/blog page banner.webp"
+      mobile: "/images/new/Blog listing mobile view.webp"
     },
     "privacy": {
       bg: "/images/new/blog page banner.webp",
-      mobile: "/images/new/blog page banner.webp"
+      mobile: "/images/new/Blog listing mobile view.webp"
     },
     "terms": {
       bg: "/images/new/blog page banner.webp",
-      mobile: "/images/new/blog page banner.webp"
+      mobile: "/images/new/Blog listing mobile view.webp"
     },
     "refund": {
       bg: "/images/new/blog page banner.webp",
-      mobile: "/images/new/blog page banner.webp"
+      mobile: "/images/new/Blog listing mobile view.webp"
     },
     "faq": {
       bg: "/images/new/blog detail page banner.webp",
       mobile: "/images/new/blog detail page banner.webp"
     },
     "blog-detail": {
+      bg: "/images/new/blog detail page banner.webp",
+      mobile: "/images/new/Blog details mobile view.webp"
+    },
+    "certificates": {
+      bg: "/images/new/blog page banner.webp",
+      mobile: "/images/new/Blog listing mobile view.webp"
+    },
+    "certificate-detail": {
       bg: "/images/new/blog detail page banner.webp",
       mobile: "/images/new/Blog details mobile view.webp"
     },

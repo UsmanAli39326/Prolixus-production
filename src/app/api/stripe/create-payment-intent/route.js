@@ -52,6 +52,11 @@ export async function POST(req) {
   try {
     const parsedAmount = Number(amount);
 
+    console.log("[Stripe API] create-payment-intent called.");
+    console.log("[Stripe API] Raw amount received:", amount);
+    console.log("[Stripe API] Parsed amount:", parsedAmount);
+    console.log("[Stripe API] Stripe intent amount (cents):", Math.round(parsedAmount * 100));
+
     if (!parsedAmount || parsedAmount <= 0) {
       return Response.json({ error: "Invalid amount" }, { status: 400 });
     }

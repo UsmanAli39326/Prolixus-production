@@ -6,6 +6,7 @@ import { getProductPricing } from "@/lib/productPricing";
 import useCart from "@/Hooks/useCart";
 import { useCurrency } from "@/context/CurrencyContext";
 import { ProductImageGallery, ProductAccordion } from "@/components/layout/Ecommerce/ProductPage";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function ProductVariantBlock({ product, isGrid = false }) {
   const [pricingData, setPricingData] = useState(null);
@@ -81,7 +82,7 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
     );
   }
 
-  const { oneTimeOptions, subscriptionPlans, subscriptionBenefits, saveAmount, discountPercentage } = pricingData;
+  const { oneTimeOptions, subscriptionPlans, subscriptionBenefits, saveAmount, discountPercentage, productFile } = pricingData;
 
   const selectedOneTimeOption = oneTimeOptions.find((opt) => opt.id === selectedVariantId) || oneTimeOptions[0];
   const primarySubscription = subscriptionPlans[0];
@@ -120,8 +121,18 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
     setTimeout(() => setAddStatus("idle"), 2000);
   };
 
+  const getImageUrl = (url) => {
+    if (!url) return null;
+    if (url.startsWith('http')) return url;
+    return `${process.env.NEXT_PUBLIC_BASE_URL || 'https://prolixus.aa-consultants.de'}${url}`;
+  };
+
+  const productImageUrl = productFile?.url ? getImageUrl(productFile.url) : null;
+  const selectedOptionFile = purchaseType === 'one-time' ? selectedOneTimeOption?.file : primarySubscription?.file;
+  const activeImageUrl = selectedOptionFile?.url ? getImageUrl(selectedOptionFile.url) : null;
+
   // Compile full list of unique images for the carousel
-  const allImgs = [product.image, ...(product.itemImages || [])].filter(Boolean);
+  const allImgs = [activeImageUrl, productImageUrl, product.image, ...(product.itemImages || [])].filter(Boolean);
   let uniqueImages = Array.from(new Set(allImgs));
 
   // Use fallback if images are missing or it's just the placeholder
@@ -173,8 +184,8 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
             <button
               onClick={() => setPurchaseType("subscribe")}
               className={`flex-1 flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all relative shadow-sm ${purchaseType === "subscribe"
-                  ? "border-(--accent-color) bg-(--accent-color)/5"
-                  : "border-(--accent-color)/50 hover:border-(--accent-color) bg-(--white-color)"
+                ? "border-(--accent-color) bg-(--accent-color)/5"
+                : "border-(--accent-color)/50 hover:border-(--accent-color) bg-(--white-color)"
                 }`}
             >
               {/* Discount/Best Value Badge */}
@@ -191,8 +202,8 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
           <button
             onClick={() => setPurchaseType("one-time")}
             className={`flex-1 flex flex-col items-center justify-center p-4 rounded-2xl border transition-all ${purchaseType === "one-time"
-                ? "border-(--accent-color) bg-(--secondary-color)"
-                : "border-(--divider-color) hover:border-(--accent-color)/30 bg-transparent opacity-80"
+              ? "border-(--accent-color) bg-(--secondary-color)"
+              : "border-(--divider-color) hover:border-(--accent-color)/30 bg-transparent opacity-80"
               }`}
           >
             <span className={`text-base font-semibold ${purchaseType === "one-time" ? "text-(--accent-color)" : "text-(--primary-color)"}`}>
@@ -202,39 +213,62 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
         </div>
 
         {/* Options based on purchase type */}
-        {purchaseType === "one-time" ? (
-          <div className="mb-8">
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-(--primary-color) mb-4">Select Quantity</h4>
-            <div className="flex flex-col gap-3">
-              {oneTimeOptions.map((opt) => (
-                <button
-                  key={opt.id}
-                  onClick={() => setSelectedVariantId(opt.id)}
-                  className={`flex items-center justify-between p-4 rounded-2xl border-2 transition-all ${selectedVariantId === opt.id
-                      ? "border-(--accent-color) bg-(--secondary-color)"
-                      : "border-(--divider-color) hover:border-(--accent-color)/30"
-                    }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedVariantId === opt.id ? "border-(--accent-color)" : "border-gray-300"
-                      }`}>
-                      {selectedVariantId === opt.id && <div className="w-2.5 h-2.5 rounded-full bg-(--accent-color)" />}
-                    </div>
-                    <span className="font-semibold text-(--primary-color)">{opt.label}</span>
-                  </div>
-                  <div className="flex flex-col items-end">
-                    <span className="font-bold text-(--primary-color)">{formatPrice(opt.price)}</span>
-                    {opt.quantity > 1 && (
-                      <span className="text-xs text-gray-500">{formatPrice(opt.price / opt.quantity)} / each</span>
-                    )}
-                  </div>
-                </button>
-              ))}
-            </div>
+        <div className="relative mb-6">
+          <AnimatePresence mode="wait">
+            {purchaseType === "one-time" ? (
+              <motion.div
+                key="one-time"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3 }}
+                className="w-full"
+              >
+          <div className="mb-2">
+            {(oneTimeOptions.length > 1 || (oneTimeOptions.length === 1 && !isGrid)) && (
+              <>
+                <h4 className="text-sm font-semibold uppercase tracking-wider text-(--primary-color) mb-3">Select Quantity</h4>
+                <div className="flex flex-col gap-2">
+                  {oneTimeOptions.map((opt) => (
+                    <button
+                      key={opt.id}
+                      onClick={() => setSelectedVariantId(opt.id)}
+                      className={`flex items-center justify-between min-h-[64px] p-2.5 px-3 rounded-xl border-2 transition-all ${selectedVariantId === opt.id
+                        ? "border-(--accent-color) bg-(--secondary-color)"
+                        : "border-(--divider-color) hover:border-(--accent-color)/30"
+                        }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`w-5 h-5 shrink-0 rounded-full border-2 flex items-center justify-center ${selectedVariantId === opt.id ? "border-(--accent-color)" : "border-gray-300"
+                          }`}>
+                          {selectedVariantId === opt.id && <div className="w-2.5 h-2.5 rounded-full bg-(--accent-color)" />}
+                        </div>
+                        <span className="font-semibold text-(--primary-color)">{opt.label}</span>
+                      </div>
+                      <div className="flex flex-col items-end">
+                        <span className="font-bold text-(--primary-color)">{formatPrice(opt.price)}</span>
+                        {opt.quantity > 1 && (
+                          <span className="text-xs text-gray-500">{formatPrice(opt.price / opt.quantity)} / each</span>
+                        )}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
+          </motion.div>
         ) : (
-          <div className="mb-8 p-6 rounded-2xl bg-(--secondary-color) border border-(--divider-color)">
-            <div className="flex justify-between items-center mb-6">
+          <motion.div
+            key="subscribe"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+            className="w-full"
+          >
+            <div className="p-5 rounded-2xl bg-(--secondary-color) border border-(--divider-color)">
+            <div className="flex justify-between items-center mb-4">
               <h4 className="text-lg font-bold text-(--primary-color)">
                 {primarySubscription?.label || "Subscription Plan"}
               </h4>
@@ -255,19 +289,67 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
                 ))}
               </ul>
             )}
-          </div>
+            </div>
+          </motion.div>
         )}
+        </AnimatePresence>
+        </div>
 
         {/* CTA Button */}
         <div className="mt-auto pt-6 border-t border-(--divider-color)">
           <button
             onClick={handleAddToCart}
-            className="w-full btn-default rounded-full bg-(--accent-color) py-4 text-center text-lg font-semibold text-(--white-color) hover:bg-(--primary-color) transition-colors"
+            disabled={addStatus !== "idle"}
+            className={`w-full btn-default rounded-full py-4 text-center text-lg font-semibold transition-all active:scale-[0.98] flex items-center justify-center gap-2 overflow-hidden ${addStatus === "added"
+              ? "bg-green-500 text-white hover:bg-green-600 shadow-lg shadow-green-500/20"
+              : "bg-(--accent-color) text-(--white-color) hover:bg-(--primary-color) shadow-md hover:shadow-lg hover:shadow-(--primary-color)/10"
+              }`}
           >
-            {purchaseType === "one-time"
-              ? `Add to cart — $${selectedOneTimeOption?.price.toFixed(2) || '0.00'}`
-              : `Subscribe — $${primarySubscription?.price.toFixed(2) || '0.00'}/mo`
-            }
+            <AnimatePresence mode="wait">
+              {addStatus === "adding" ? (
+                <motion.span
+                  key="adding"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex items-center gap-2"
+                >
+                  <i className="fa-solid fa-spinner fa-spin"></i> Adding...
+                </motion.span>
+              ) : addStatus === "added" ? (
+                <motion.span
+                  key="added"
+                  initial={{ opacity: 0, y: 15, scale: 0.9 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.3, type: "spring", stiffness: 300 }}
+                  className="flex items-center gap-2"
+                >
+                  <i className="fa-solid fa-check"></i> Added to Cart
+                </motion.span>
+              ) : purchaseType === "one-time" ? (
+                <motion.span
+                  key="one-time"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  Add to cart — ${selectedOneTimeOption?.price.toFixed(2) || '0.00'}
+                </motion.span>
+              ) : (
+                <motion.span
+                  key="subscribe"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  Subscribe — ${primarySubscription?.price.toFixed(2) || '0.00'}/mo
+                </motion.span>
+              )}
+            </AnimatePresence>
           </button>
         </div>
       </div>

@@ -65,7 +65,7 @@ export function calcCartTotals(cartItems = []) {
     const shipping = 0; // Shipping is always free
     const total = r(subtotal + shipping);
 
-    return {
+    const result = {
         subtotal,
         vatAmount,
         shipping,
@@ -75,4 +75,6 @@ export function calcCartTotals(cartItems = []) {
         combinedVatPercentage,
         vatDetails,
     };
+    console.log("[calcCartTotals] Calculated totals:", result, "for cartItems:", cartItems);
+    return result;
 }

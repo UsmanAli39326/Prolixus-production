@@ -20,6 +20,7 @@ export default async function CertificatesPage() {
         title={data?.certificates_header_title || "Certificates"}
         subtitle={data?.certificates_header_subtitle || "Our commitment to quality"}
         pageKey="certificates"
+        className="min-h-[240px] pt-16 lg:min-h-[160px] lg:pt-0"
         breadcrumbs={[
             { label: data?.product_breadcrumb_home || "Home", href: "/" },
             { label: data?.certificates_breadcrumb || "Certificates", href: null }
