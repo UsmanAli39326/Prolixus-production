@@ -25,7 +25,6 @@ export default async function CertificateDetailPage({ params }) {
         <>
             <PageHeader
                 title={certificate.title || "Certificate"}
-                subtitle={certificate.shortDescription || ""}
                 pageKey="certificate-detail"
                 breadcrumbs={[
                     { label: localization?.product_breadcrumb_home || "Home", href: "/" },

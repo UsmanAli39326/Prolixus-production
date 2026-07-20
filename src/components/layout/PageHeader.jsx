@@ -72,7 +72,7 @@ export default function PageHeader({ title, subtitle, breadcrumbs, bgImage, mobi
         <div className="container mx-auto px-4">
           <div className="page-header-box">
             {/* Title */}
-            <h1 className="text-4xl md:text-5xl font-default font-bold text-(--white-color)">
+            <h1 className="text-4xl md:text-5xl font-default font-bold text-(--white-color) break-words break-all sm:break-words">
               {title}{" "}
               <span className="font-accent italic font-light">
                 {subtitle}
