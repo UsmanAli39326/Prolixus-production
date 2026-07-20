@@ -93,20 +93,21 @@ export default function Header({ menus = [] }) {
               href="https://share.google/kgDhjqnMrkgLLtv8m"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 hover:opacity-80 transition-opacity no-underline"
+              className="flex flex-col items-center justify-center gap-0.5 hover:opacity-80 transition-opacity no-underline shrink-0"
             >
               <Image
                 src="/images/new/Google.svg"
                 alt="Google Rating"
                 width={70}
                 height={30}
+                className="h-5 w-auto object-contain"
               />
               <Image
                 src="/images/new/Stars-01.svg"
                 alt="5 Stars"
                 width={80}
                 height={18}
-                className="h-auto w-auto"
+                className="h-3 w-auto object-contain"
               />
             </a>
 

@@ -4,6 +4,8 @@ export async function getCertificates() {
   try {
     const response = await apiService.get("/Certificates", {}, { next: { revalidate: 30 } });
     
+    console.log("getCertificates API Response:", response);
+    
     if (!response?.success || !response?.data) return [];
     
     return response.data;

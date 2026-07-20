@@ -3,13 +3,12 @@ import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import { getCertificates } from "@/app/api/certificates/certificates";
 
-export default async function CertificatesSection({ localization = {} }) {
+export default async function ({ localization = {} }) {
   const certificates = await getCertificates();
-  
+
   if (!certificates || certificates.length === 0) return null;
 
-  const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "";
-  const IMAGE_BASE_URL = API_BASE.replace('/api', '');
+  const IMAGE_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
   return (
     <section className="certificates-section relative bg-white py-12 sm:py-16 lg:py-20 overflow-hidden">
@@ -32,11 +31,11 @@ export default async function CertificatesSection({ localization = {} }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-12">
           {certificates.map((cert, index) => (
             <FaderInAnimation key={cert.id} direction="up" delay={0.2 + (index * 0.1)}>
-              <Link 
-                href={`/certificate/${cert.id}`} 
+              <Link
+                href={`/certificate/${cert.id}`}
                 className="group h-full flex flex-col bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] transition-all duration-500 overflow-hidden border border-gray-100"
               >
-                
+
                 {/* Image Container */}
                 <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-gray-50/50 p-6 flex items-center justify-center">
                   <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -50,23 +49,23 @@ export default async function CertificatesSection({ localization = {} }) {
                     <div className="text-gray-300 font-medium">No Image Available</div>
                   )}
                 </div>
-                
+
                 {/* Content Container */}
                 <div className="p-8 flex flex-col flex-1 bg-white relative overflow-hidden break-words">
                   <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
-                  
+
                   <h3 className="font-accent text-xl font-bold text-primary mb-3 group-hover:text-accent transition-colors duration-300">
                     {cert.title}
                   </h3>
-                  
+
                   {cert.shortDescription && (
                     <p className="text-sm font-semibold text-text/80 mb-4 uppercase tracking-wider">
                       {cert.shortDescription}
                     </p>
                   )}
-                  
+
                   {cert.description && (
-                    <div 
+                    <div
                       className="text-text/70 text-sm leading-relaxed prose prose-sm prose-primary line-clamp-4 mt-auto overflow-hidden break-words"
                       dangerouslySetInnerHTML={{ __html: cert.description }}
                     />

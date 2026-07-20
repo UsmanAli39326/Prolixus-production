@@ -2,6 +2,7 @@
 
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { apiService } from "@/lib/api";
+import { useRef } from "react";
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
 function PayPalGatewayProvider({ publishableKey, currency, isSubscription, children }) {
@@ -36,6 +37,8 @@ function PayPalCheckoutComponent({
     onError,
     isSubscription,
 }) {
+    const baTokenRef = useRef(null);
+
     return (
         <div className="bg-surface border border-divider rounded-2xl p-6 my-6">
             <p className="text-primary font-bold mb-4">Pay with PayPal</p>
@@ -94,6 +97,20 @@ function PayPalCheckoutComponent({
                         // Retrieve the subscription ID returned from the backend API
                         const subscriptionId = resData?.subscriptionId || resData?.paypalSubscriptionId || resData?.id;
 
+                        // Extract ba_token from the approve link if present
+                        if (resData?.links) {
+                            const approveLink = resData.links.find(link => link.rel === "approve");
+                            if (approveLink) {
+                                try {
+                                    const url = new URL(approveLink.href);
+                                    baTokenRef.current = url.searchParams.get("ba_token");
+                                    console.log("PAYPAL ba_token extracted:", baTokenRef.current);
+                                } catch (e) {
+                                    console.error("Failed to parse ba_token from approve link", e);
+                                }
+                            }
+                        }
+
                         console.log("PAYPAL subRes:", subRes);
                         console.log("PAYPAL subscriptionId extracted:", subscriptionId);
 
@@ -124,11 +141,11 @@ function PayPalCheckoutComponent({
                         payload.paymentMethod = "PayPal";
 
                         if (isSubscription) {
-                            // For subscriptions, the backend has a bug where it attempts to capture the PayPal order.
-                            // Since subscription setup tokens cannot be captured, it fails with PAYER_CANNOT_PAY.
-                            // We set paymentToken to null to bypass the backend capture step.
-                            payload.paymentToken = null;
+                            // Send the approved subscription ID as the paymentToken
+                            // This fulfills the "token is required" backend validation
+                            payload.paymentToken = data.subscriptionID;
                             payload.subscriptionId = data.subscriptionID;
+                            console.log("PAYPAL SUBSCRIPTION PAYLOAD:", payload);
                         } else {
                             // For one-time payments, capture the order.
                             details = await actions.order.capture();
