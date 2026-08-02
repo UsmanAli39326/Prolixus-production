@@ -82,38 +82,27 @@ export function normalizeProductPricing(raw) {
   };
 }
 
+import { apiService } from "@/lib/api";
+
 /**
- * Fetches product pricing data by ID from the external API.
+ * Fetches product pricing data by ID from the external API using apiService.
  * 
  * @param {number|string} productId
  * @returns {Promise<NormalizedProductPricing | null>}
  */
 export async function getProductPricing(productId) {
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-  if (!baseUrl) {
-    console.error("NEXT_PUBLIC_API_BASE_URL is not defined.");
-    return null;
-  }
+  if (!productId) return null;
 
   try {
-    const url = `${baseUrl}/ProductPricing/${productId}?culture=de`;
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      // Using cache: 'no-store' assuming pricing might be dynamic, or 'force-cache' based on Next.js setup.
-      cache: 'no-store'
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch pricing for product ${productId}. Status: ${response.status}`);
-    }
-
-    const rawData = await response.json();
+    const rawData = await apiService.get(
+      `/ProductPricing/${productId}?culture=de`,
+      {},
+      { cache: 'no-store' }
+    );
     return normalizeProductPricing(rawData);
   } catch (error) {
     console.error(`Error fetching product pricing for ID ${productId}:`, error);
     return null;
   }
 }
+

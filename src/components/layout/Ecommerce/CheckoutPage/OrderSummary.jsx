@@ -200,6 +200,24 @@ export default function OrderSummary() {
                             <span>Shipping</span>
                             <span className="font-semibold text-accent">Free</span>
                         </div>
+                        {isSubscription && (
+                            <>
+                                <div className="flex justify-between text-text/70 font-accent">
+                                    <span>Delivery Interval</span>
+                                    <span className="font-semibold text-primary">Every 30 Days</span>
+                                </div>
+                                <div className="flex justify-between text-text/70 font-accent">
+                                    <span>Next Billing Date</span>
+                                    <span className="font-semibold text-primary">
+                                        {new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between text-text/70 font-accent">
+                                    <span>Cancellation Terms</span>
+                                    <span className="font-semibold text-accent">Cancel or pause anytime</span>
+                                </div>
+                            </>
+                        )}
                         {totals.vatDetails?.map((vat) => (
                             <div key={vat.percentage} className="flex justify-between text-text/70 font-accent">
                                 <span>VAT ({vat.percentage}%)</span>

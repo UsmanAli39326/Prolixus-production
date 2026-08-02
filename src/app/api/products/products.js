@@ -112,7 +112,7 @@ export async function getAllProducts(page = 1, size = 20) {
 
       image: item.thumbnailUrl
         ? `https://admin.aa-consultants.de${item.thumbnailUrl}`
-        : "/images/placeholder.png",
+        : null,
     }));
 
     return {
@@ -159,7 +159,7 @@ export async function getProductById(id) {
       image:
         item.fileUrl
           ? `https://admin.aa-consultants.de${item.fileUrl}`
-          : "/images/placeholder.png",
+          : null,
       itemImages: item.itemImages
         ? item.itemImages.map(img => `https://admin.aa-consultants.de${img.fileUrl}`)
         : []

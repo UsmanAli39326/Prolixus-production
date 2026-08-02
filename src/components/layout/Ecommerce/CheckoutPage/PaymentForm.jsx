@@ -13,6 +13,7 @@ import { useCheckout } from "@/context/CheckoutContext";
 import PaymentMethodSelector from "./PaymentMethodSelector";
 import OrderConfirmation from "./OrderConfirmation";
 import { useRouter } from "next/navigation";
+import { SUBSCRIPTION_COPY } from "@/constants/subscriptionCopy";
 
 export default function PaymentForm({
     prevStep,
@@ -290,6 +291,19 @@ export default function PaymentForm({
 
                 {/* Actions */}
                 <FaderInAnimation direction="up" delay={0.4}>
+                    {isSubscription && (
+                        <div className="mb-6 p-4 rounded-2xl bg-accent/10 border border-accent/20 text-left text-xs sm:text-sm text-primary font-default leading-relaxed">
+                            <p className="font-bold text-accent mb-1 flex items-center gap-1.5">
+                                <i className="fa-solid fa-circle-info" /> Mandatory Subscription Notice:
+                            </p>
+                            <p className="text-primary/90">
+                                {SUBSCRIPTION_COPY.disclosure.prefix}
+                                <span className="font-bold text-accent px-1">{formatPrice(totals.total)} / month</span>
+                                {SUBSCRIPTION_COPY.disclosure.suffix}
+                            </p>
+                        </div>
+                    )}
+
                     <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-6 pt-6 border-t border-divider">
                         <button onClick={prevStep} className="flex items-center gap-1 text-sm font-medium text-primary hover:text-accent transition-colors group">
                             <HiChevronLeft className="text-lg transition-transform group-hover:-translate-x-1" />

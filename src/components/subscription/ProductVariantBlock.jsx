@@ -73,16 +73,15 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
   }
 
   if (error || !pricingData) {
-    return (
-      <div className="w-full p-8 bg-(--white-color) rounded-3xl shadow-sm border border-(--divider-color) text-center">
-        <i className="fa-solid fa-triangle-exclamation text-4xl text-red-400 mb-4"></i>
-        <h3 className="text-xl font-semibold text-(--primary-color) mb-2">Pricing Unavailable</h3>
-        <p className="text-sm text-(--primary-color)/80">We couldn't load the pricing options for {product.title}.</p>
-      </div>
-    );
+    return null;
   }
 
-  const { oneTimeOptions, subscriptionPlans, subscriptionBenefits, saveAmount, discountPercentage, productFile } = pricingData;
+  const { oneTimeOptions = [], subscriptionPlans = [], subscriptionBenefits, saveAmount, discountPercentage, productFile } = pricingData;
+
+  // Hide product completely if neither one-time nor subscription tier exists
+  if (oneTimeOptions.length === 0 && subscriptionPlans.length === 0) {
+    return null;
+  }
 
   const selectedOneTimeOption = oneTimeOptions.find((opt) => opt.id === selectedVariantId) || oneTimeOptions[0];
   const primarySubscription = subscriptionPlans[0];

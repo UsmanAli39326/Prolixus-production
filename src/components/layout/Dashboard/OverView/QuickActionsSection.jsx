@@ -40,4 +40,4 @@ export default function QuickActionsSection({ stats, loading, localization }) {
             </div>
         </section>
     );
-}
+}

@@ -9,9 +9,9 @@ export async function generateMetadata() {
 }
 
 export default async function RewardsPage() {
-  const data = await getLocalization();
+    const data = await getLocalization();
 
-  return (
-    <RewardsClient localization={data} />
-  );
+    return (
+        <RewardsClient localization={data} />
+    );
 }
