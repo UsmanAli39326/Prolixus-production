@@ -1,108 +1,184 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PageHeader from "@/components/layout/PageHeader";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
+import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import Button from "@/components/ui/Button";
+import Badge from "@/components/ui/Badge";
+import SubscriptionFAQ from "@/components/subscription/SubscriptionFAQ";
 import Link from "next/link";
-import { FaUserPlus, FaLink, FaShareAlt, FaWallet, FaShoppingCart, FaTags } from "react-icons/fa";
+import Image from "next/image";
+import { useAuth } from "@/context/AuthContext";
+import { getWalletData } from "@/lib/PartnerService";
+import { getConductCopy } from "@/constants/conductCopy";
+import {
+    FaShoppingBag,
+    FaShareAlt,
+    FaGift,
+    FaCopy,
+    FaCheckCircle,
+    FaLock,
+    FaHeart,
+    FaAward,
+    FaChartLine
+} from "react-icons/fa";
 
 export default function RewardsClient({ localization }) {
-    const steps = [
-        {
-            title: "Join the Partner Program",
-            description: "First, you need to sign up for an account. Once logged in, navigate to your Dashboard and click on the 'Partner Program' section.",
-            image: "/images/rewards/step-4.png",
-            icon: <FaUserPlus className="text-4xl text-accent mb-4" />,
-            direction: "left"
-        },
-        {
-            title: "Get Your Unique Referral Code",
-            description: "In your Partner dashboard, you will find your unique referral code. Copy this code to your clipboard.",
-            image: "/images/rewards/step-2.png",
-            icon: <FaLink className="text-4xl text-accent mb-4" />,
-            direction: "right"
-        },
-        {
-            title: "Share with Friends",
-            description: "Share your referral code with your friends, family, or social media followers. Spread the word about our premium products!",
-            image: "/images/rewards/step-3.png",
-            icon: <FaShareAlt className="text-4xl text-accent mb-4" />,
-            direction: "left"
-        },
-        {
-            title: "Friends Apply Your Code",
-            description: "When your friends shop, they simply enter your referral code in the 'Promo Code' or 'Referral Code' box during checkout to receive an instant affiliate discount on their order.",
-            image: "/images/rewards/step-6.png",
-            icon: <FaTags className="text-4xl text-accent mb-4" />,
-            direction: "right"
-        },
-        {
-            title: "Earn Wallet Balance",
-            description: "Whenever someone makes a purchase using your referral code, you automatically earn a commission directly into your Wallet Balance!",
-            image: "/images/rewards/step-1.png",
-            icon: <FaWallet className="text-4xl text-accent mb-4" />,
-            direction: "left"
-        },
-        {
-            title: "Enjoy Affiliate Discounts",
-            description: "On your next purchase, simply apply your available Wallet Balance at checkout to enjoy massive discounts on your own orders.",
-            image: "/images/rewards/step-5.png",
-            icon: <FaShoppingCart className="text-4xl text-accent mb-4" />,
-            direction: "right"
+    const copy = getConductCopy(localization);
+    const { isLoggedIn, loading: authLoading } = useAuth();
+
+    const [referralCode, setReferralCode] = useState("");
+    const [isFetchingCode, setIsFetchingCode] = useState(false);
+    const [copied, setCopied] = useState(false);
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            setIsFetchingCode(true);
+            getWalletData()
+                .then((res) => {
+                    if (res && res.success && res.data) {
+                        setReferralCode(res.data.affiliateCode || "");
+                    }
+                })
+                .catch((err) => {
+                    console.error("Error fetching referral code for CONDUCT page:", err);
+                })
+                .finally(() => {
+                    setIsFetchingCode(false);
+                });
         }
+    }, [isLoggedIn]);
+
+    const handleCopy = () => {
+        if (!referralCode) return;
+        navigator.clipboard.writeText(referralCode);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2500);
+    };
+
+    // Step icons mapping for the 3 steps
+    const stepIcons = [
+        <FaShoppingBag key="step1" />,
+        <FaShareAlt key="step2" />,
+        <FaGift key="step3" />
     ];
 
     return (
-        <main>
+        <main className="bg-(--secondary-color) min-h-screen font-default">
+            {/* Page Header */}
             <PageHeader
-                title="Rewards &"
-                subtitle="Affiliate Program"
-                pageKey="about"
+                title="CONDUCT –"
+                subtitle="Empfehlungsprogramm"
+                pageKey="conduct"
                 breadcrumbs={[
-                    { label: "Home", href: "/" },
-                    { label: "Rewards Tutorial", href: null }
+                    { label: "Startseite", href: "/" },
+                    { label: "CONDUCT", href: null }
                 ]}
             />
 
-            <section className="py-16 md:py-24 bg-secondary">
-                <div className="container mx-auto px-4">
-                    <div className="text-center max-w-3xl mx-auto mb-16">
+            {/* SECTION 1: HERO */}
+            <section className="relative py-8 md:py-12 bg-(--white-color) border-b border-(--divider-color) overflow-hidden">
+                <div className="container mx-auto px-4 max-w-5xl relative z-10">
+                    <RevealInAnimation direction="up">
+                        <div className="text-center max-w-3xl mx-auto space-y-4">
+                            <Badge variant="info" className="uppercase tracking-widest font-default">
+                                {copy.hero.eyebrow}
+                            </Badge>
+                            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-(--primary-color) leading-tight">
+                                5 erfolgreiche Empfehlungen.
+                                <span className="block font-light italic font-accent text-(--accent-color) mt-1">
+                                    Deine nächste Monatsration geht auf uns.
+                                </span>
+                            </h1>
+                            <p className="text-sm sm:text-base text-(--text-color)/80 max-w-2xl mx-auto leading-relaxed">
+                                {copy.hero.subtext}
+                            </p>
+
+                            <div className="pt-2 flex flex-col items-center justify-center gap-2.5">
+                                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full">
+                                    {isLoggedIn ? (
+                                        <a href="#share-section" className="w-full sm:w-auto">
+                                            <Button variant="accent" size="lg" className="w-full sm:w-auto px-7 py-3 rounded-full font-bold shadow-md hover:shadow-lg transition-all">
+                                                {copy.hero.ctaLoggedin}
+                                            </Button>
+                                        </a>
+                                    ) : (
+                                        <Link href="/login?redirect=/rewards" className="w-full sm:w-auto">
+                                            <Button variant="accent" size="lg" className="w-full sm:w-auto px-7 py-3 rounded-full font-bold shadow-md hover:shadow-lg transition-all">
+                                                {copy.hero.ctaLoggedout}
+                                            </Button>
+                                        </Link>
+                                    )}
+
+                                    <a href="#how-it-works" className="w-full sm:w-auto">
+                                        <Button variant="outline" size="lg" className="w-full sm:w-auto px-7 py-3 rounded-full font-semibold border-(--primary-color)/20 hover:border-(--accent-color)">
+                                            {copy.hero.secondaryCta}
+                                        </Button>
+                                    </a>
+                                </div>
+
+                                {!isLoggedIn && (
+                                    <span className="text-xs text-(--text-color)/60 italic max-w-md text-center block pt-0.5">
+                                        {copy.hero.ctaSubtext}
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+                    </RevealInAnimation>
+                </div>
+            </section>
+
+            {/* SECTION 2: SO FUNKTIONIERT ES (3 STEPS WITH PRODUCT IMAGERY & BADGES) */}
+            <section id="how-it-works" className="py-8 md:py-12 bg-(--secondary-color)">
+                <div className="container mx-auto px-4 max-w-5xl">
+                    <div className="text-left max-w-2xl mb-8">
                         <RevealInAnimation direction="up">
-                            <h2 className="text-3xl md:text-5xl font-accent font-bold text-primary mb-6">
-                                How It Works
+                            <Badge variant="info" className="uppercase tracking-widest font-default mb-2">
+                                {copy.stepsHeader.tag}
+                            </Badge>
+                            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-(--primary-color) mb-1.5">
+                                So funktioniert <span className="font-thin font-accent text-(--accent-color) italic">CONDUCT</span>
                             </h2>
-                            <p className="text-text/70 text-lg">
-                                Follow these simple steps to start earning and redeeming your affiliate rewards.
+                            <p className="text-xs sm:text-sm text-(--primary-color)/75">
+                                {copy.stepsHeader.subtitle}
                             </p>
                         </RevealInAnimation>
                     </div>
 
-                    <div className="space-y-16 md:space-y-24">
-                        {steps.map((step, index) => (
+                    <div className="space-y-5 md:space-y-6">
+                        {copy.steps.map((step, index) => (
                             <RevealInAnimation key={index} direction={step.direction}>
-                                <div className={`flex flex-col ${index % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-8 md:gap-12 lg:gap-24`}>
+                                <div className={`flex flex-col ${index % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-5 md:gap-8 bg-(--white-color) rounded-2xl p-4 sm:p-6 border border-(--divider-color) shadow-xs hover:shadow-md transition-all duration-300`}>
 
-                                    {/* Image Side */}
-                                    <div className="w-full md:w-1/2">
-                                        <div className="relative rounded-2xl overflow-hidden shadow-2xl group">
-                                            <div className="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors duration-500 z-10" />
-                                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                                            <img
+                                    {/* Image Side - Product Imagery */}
+                                    <div className="w-full md:w-5/12">
+                                        <div className="relative rounded-xl overflow-hidden bg-(--secondary-color) p-3 group aspect-[4/3] flex items-center justify-center">
+                                            <Image
                                                 src={step.image}
                                                 alt={step.title}
-                                                className="w-full h-auto max-h-[250px] sm:max-h-[300px] md:max-h-[400px] object-contain transform group-hover:scale-105 transition-transform duration-700 p-4"
+                                                fill
+                                                className="object-contain p-2 rounded-lg transform group-hover:scale-105 transition-transform duration-700"
+                                                sizes="(max-width: 768px) 100vw, 400px"
                                             />
                                         </div>
                                     </div>
 
                                     {/* Content Side */}
-                                    <div className="w-full md:w-1/2">
-                                        <div className="flex flex-col text-center md:text-left items-center md:items-start">
-                                            <span className="text-accent font-bold text-xl mb-2 block">Step {index + 1}</span>
-                                            {step.icon}
-                                            <h3 className="text-3xl font-accent font-bold text-primary mb-4">{step.title}</h3>
-                                            <p className="text-text/80 text-lg leading-relaxed">
+                                    <div className="w-full md:w-7/12">
+                                        <div className="flex flex-col text-left items-start">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <Badge variant="primary" className="uppercase tracking-widest font-default">
+                                                    Schritt {step.stepNumber}
+                                                </Badge>
+                                                <div className="icon-box flex h-7 w-7 items-center justify-center rounded-full bg-(--accent-color) text-(--white-color) text-xs shadow-xs">
+                                                    {stepIcons[index]}
+                                                </div>
+                                            </div>
+                                            <h3 className="text-lg sm:text-xl font-bold text-(--primary-color) mb-1">
+                                                {step.title}
+                                            </h3>
+                                            <p className="text-xs sm:text-sm text-(--primary-color)/80 leading-relaxed">
                                                 {step.description}
                                             </p>
                                         </div>
@@ -112,25 +188,203 @@ export default function RewardsClient({ localization }) {
                             </RevealInAnimation>
                         ))}
                     </div>
+                </div>
+            </section>
 
-                    <div className="mt-16 md:mt-24 text-center">
+            {/* SECTION 3: PROGRESS TABLE (WITH STATSCARD STYLE HIGHLIGHT TIER) */}
+            <section className="py-8 md:py-12 bg-(--white-color)">
+                <div className="container mx-auto px-4 max-w-4xl">
+                    <div className="text-left max-w-2xl mb-6">
                         <RevealInAnimation direction="up">
-                            <div className="bg-primary text-white rounded-3xl p-8 md:p-12 relative overflow-hidden">
-                                <h3 className="text-3xl md:text-4xl font-accent font-bold mb-6 relative z-10">Ready to start earning?</h3>
-                                <p className="text-white/80 max-w-2xl mx-auto mb-8 text-lg relative z-10">
-                                    Join our partner program today and turn your recommendations into real rewards.
-                                </p>
-                                <div className="relative z-10">
-                                    <Link href="/dashboard/partner" className="block sm:inline-block">
-                                        <Button variant="accent" size="lg" className="w-full sm:w-auto px-8 md:px-12 rounded-full font-bold">
-                                            Go to Partner Dashboard
-                                        </Button>
-                                    </Link>
-                                </div>
-                            </div>
+                            <Badge variant="info" className="uppercase tracking-widest font-default mb-2">
+                                {copy.table.tag}
+                            </Badge>
+                            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-(--primary-color) mb-1">
+                                Dein Weg zur <span className="font-thin font-accent text-(--accent-color) italic">kostenlosen Monatsration</span>
+                            </h2>
+                            <p className="text-xs sm:text-sm text-(--primary-color)/75">
+                                {copy.table.subtitle}
+                            </p>
                         </RevealInAnimation>
                     </div>
 
+                    <FaderInAnimation direction="up" delay={0.2}>
+                        <div className="overflow-hidden rounded-xl border border-(--divider-color) bg-(--white-color) shadow-xs">
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr className="bg-(--primary-color) text-(--white-color) text-xs font-semibold tracking-wider border-b border-(--primary-color)/20">
+                                            <th className="py-3 px-5">{copy.table.cols.referrals}</th>
+                                            <th className="py-3 px-5">{copy.table.cols.reward}</th>
+                                            <th className="py-3 px-5 text-right">{copy.table.cols.value}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-(--divider-color) text-xs sm:text-sm font-default">
+                                        {copy.table.rows.map((row, idx) => (
+                                            <tr
+                                                key={idx}
+                                                className={`transition-colors ${
+                                                    row.isHighlight
+                                                        ? "bg-(--primary-color) text-white font-bold"
+                                                        : idx % 2 === 0
+                                                        ? "bg-(--white-color) hover:bg-(--secondary-color)/50"
+                                                        : "bg-(--secondary-color)/40 hover:bg-(--secondary-color)/70"
+                                                }`}
+                                            >
+                                                <td className="py-3.5 px-5 flex items-center gap-2.5">
+                                                    <span className={`h-2 w-2 rounded-full ${row.isHighlight ? "bg-(--accent-color)" : "bg-(--accent-color)"}`}></span>
+                                                    <span className={`font-medium ${row.isHighlight ? "text-white" : "text-(--primary-color)"}`}>{row.referrals}</span>
+                                                </td>
+                                                <td className={`py-3.5 px-5 font-bold ${row.isHighlight ? "text-(--accent-color) text-base" : "text-(--accent-color)"}`}>
+                                                    {row.reward}
+                                                </td>
+                                                <td className="py-3.5 px-5 text-right font-medium">
+                                                    {row.isHighlight ? (
+                                                        <Badge variant="primary" className="bg-(--accent-color) text-(--primary-color) border-none font-bold text-xs">
+                                                            <FaAward /> {row.value}
+                                                        </Badge>
+                                                    ) : (
+                                                        <span className="text-(--primary-color)/80">{row.value}</span>
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </FaderInAnimation>
+                </div>
+            </section>
+
+            {/* SECTION 4: WARUM WIR EMPFEHLUNGEN BELOHNEN (STATSCARD STYLE CARD) */}
+            <section className="py-8 md:py-12 bg-(--secondary-color)">
+                <div className="container mx-auto px-4 max-w-4xl">
+                    <div className="group relative overflow-hidden rounded-2xl bg-(--primary-color) text-(--white-color) p-6 sm:p-8 lg:p-10 shadow-xl transition-all">
+                        <div className="absolute -right-6 -top-6 h-32 w-32 rounded-full bg-white/5 blur-2xl transition-all group-hover:bg-(--accent-color)/10 pointer-events-none" />
+                        <div className="relative z-10 text-left space-y-3">
+                            <Badge variant="info" className="bg-white/10 text-(--accent-color) border-white/20 uppercase tracking-widest font-default mb-1">
+                                <FaHeart className="text-(--accent-color)" /> {copy.brand.tag}
+                            </Badge>
+                            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-(--white-color)">
+                                Warum wir <span className="font-thin font-accent text-(--accent-color) italic">Empfehlungen belohnen</span>
+                            </h2>
+                            <div className="space-y-2.5 text-white/85 text-xs sm:text-sm leading-relaxed text-left">
+                                <p>{copy.brand.text1}</p>
+                                <p>{copy.brand.text2}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* SECTION 5: SHARING SECTION */}
+            <section id="share-section" className="py-8 md:py-12 bg-(--secondary-color)">
+                <div className="container mx-auto px-4 max-w-4xl">
+                    <FaderInAnimation direction="up">
+                        <div className="bg-(--white-color) rounded-2xl p-6 sm:p-8 border border-(--divider-color) shadow-xs text-left space-y-4">
+                            {isLoggedIn ? (
+                                <>
+                                    <div className="space-y-1">
+                                        <h3 className="text-xl sm:text-2xl font-bold text-(--primary-color)">
+                                            {copy.share.title}
+                                        </h3>
+                                        <p className="text-xs sm:text-sm text-(--primary-color)/75">
+                                            {copy.share.desc}
+                                        </p>
+                                    </div>
+
+                                    <div className="pt-1 max-w-lg">
+                                        <label className="block text-[11px] font-bold uppercase tracking-wider text-(--primary-color)/60 mb-1.5 text-left font-default">
+                                            {copy.share.label}
+                                        </label>
+                                        <div className="flex flex-col sm:flex-row items-center gap-2.5">
+                                            <div className="relative w-full">
+                                                <input
+                                                    type="text"
+                                                    readOnly
+                                                    value={isFetchingCode ? "Wird geladen..." : (referralCode || "Code nicht verfügbar")}
+                                                    className="w-full rounded-lg border border-(--divider-color) bg-(--secondary-color)/50 py-2.5 px-3.5 font-mono font-bold text-(--primary-color) text-xs sm:text-sm text-left focus:outline-none focus:border-(--accent-color)"
+                                                />
+                                            </div>
+                                            <Button
+                                                variant="accent"
+                                                className="w-full sm:w-auto px-5 py-2.5 rounded-lg whitespace-nowrap font-bold text-xs sm:text-sm"
+                                                leftIcon={copied ? <FaCheckCircle /> : <FaCopy />}
+                                                onClick={handleCopy}
+                                                disabled={!referralCode || isFetchingCode}
+                                            >
+                                                {copied ? copy.share.copied : copy.share.copy}
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <div className="flex items-center gap-3">
+                                        <div className="h-10 w-10 shrink-0 rounded-full bg-(--accent-color)/15 flex items-center justify-center text-(--accent-color) text-lg">
+                                            <FaLock />
+                                        </div>
+                                        <h3 className="text-xl sm:text-2xl font-bold text-(--primary-color)">
+                                            {copy.share.loggedoutTitle}
+                                        </h3>
+                                    </div>
+                                    <p className="text-xs sm:text-sm text-(--primary-color)/75">
+                                        {copy.share.loggedoutDesc}
+                                    </p>
+                                    <div className="pt-1">
+                                        <Link href="/login?redirect=/rewards">
+                                            <Button variant="accent" size="lg" className="px-6 py-2.5 rounded-full font-bold text-xs sm:text-sm shadow-xs">
+                                                {copy.hero.ctaLoggedout}
+                                            </Button>
+                                        </Link>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    </FaderInAnimation>
+                </div>
+            </section>
+
+            {/* SECTION 6: FAQ ACCORDION (REUSING REUSABLE SubscriptionFAQ COMPONENT) */}
+            <SubscriptionFAQ copy={copy.faqs} faqHeader={copy.faqHeader} />
+
+            {/* BOTTOM CALLOUT CTA (STATSCARD STYLE CARD WITH LEFT ALIGNMENT) */}
+            <section className="py-8 bg-(--secondary-color) border-t border-(--divider-color)">
+                <div className="container mx-auto px-4 max-w-4xl">
+                    <RevealInAnimation direction="up">
+                        <div className="group relative overflow-hidden rounded-2xl bg-(--primary-color) text-(--white-color) p-6 sm:p-8 lg:p-10 shadow-xl text-left">
+                            <div className="absolute -right-6 -top-6 h-32 w-32 rounded-full bg-white/5 blur-2xl transition-all group-hover:bg-(--accent-color)/10 pointer-events-none" />
+                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+                                <div>
+                                    <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-(--white-color) mb-1.5">
+                                        Bereit für deine{" "}
+                                        <span className="inline font-accent font-light italic text-(--accent-color)">
+                                            erste Belohnung?
+                                        </span>
+                                    </h3>
+                                    <p className="text-white/80 max-w-xl text-xs sm:text-sm">
+                                        {copy.bottom.desc}
+                                    </p>
+                                </div>
+                                <div className="shrink-0">
+                                    {isLoggedIn ? (
+                                        <Link href="/dashboard/partner" className="inline-block w-full sm:w-auto">
+                                            <Button variant="accent" size="lg" className="w-full sm:w-auto px-8 py-3 rounded-full font-bold uppercase tracking-wide text-xs sm:text-sm whitespace-nowrap">
+                                                {copy.bottom.btnLoggedin}
+                                            </Button>
+                                        </Link>
+                                    ) : (
+                                        <Link href="/login?redirect=/rewards" className="inline-block w-full sm:w-auto">
+                                            <Button variant="accent" size="lg" className="w-full sm:w-auto px-8 py-3 rounded-full font-bold uppercase tracking-wide text-xs sm:text-sm whitespace-nowrap">
+                                                {copy.bottom.btnLoggedout}
+                                            </Button>
+                                        </Link>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </RevealInAnimation>
                 </div>
             </section>
         </main>

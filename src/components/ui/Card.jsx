@@ -15,7 +15,7 @@ export default function Card({ img, title, price, delay }) {
               alt={title}
               width={220}
               height={500}
-              className="mx-auto aspect-[1/2.273] max-w-[110px] object-contain"
+              className="mx-auto aspect-[1/2.273] max-w-27.5 object-contain"
             />
           </figure>
         </div>

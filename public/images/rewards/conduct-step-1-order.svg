@@ -1,0 +1,52 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg1" cx="50%" cy="42%" r="65%">
+      <stop offset="0%" stop-color="#141b30"/>
+      <stop offset="100%" stop-color="#0B1020"/>
+    </radialGradient>
+  </defs>
+
+  <!-- base circle -->
+  <circle cx="120" cy="120" r="108" fill="url(#bg1)"/>
+  <circle cx="120" cy="120" r="108" fill="none" stroke="#00C2FF" stroke-opacity="0.18" stroke-width="1.5"/>
+
+  <!-- subtle connection dots (brand motif) -->
+  <circle cx="40" cy="60" r="3" fill="#00C2FF" fill-opacity="0.35"/>
+  <circle cx="204" cy="176" r="3" fill="#00C2FF" fill-opacity="0.35"/>
+  <circle cx="196" cy="52" r="2.5" fill="#00C2FF" fill-opacity="0.25"/>
+  <line x1="40" y1="60" x2="70" y2="82" stroke="#00C2FF" stroke-opacity="0.2" stroke-width="1"/>
+  <line x1="204" y1="176" x2="176" y2="156" stroke="#00C2FF" stroke-opacity="0.2" stroke-width="1"/>
+
+  <!-- bottle icon -->
+  <g transform="translate(120,128)">
+    <!-- bottle neck -->
+    <rect x="-10" y="-58" width="20" height="16" rx="3" fill="none" stroke="#FFFFFF" stroke-width="5"/>
+    <!-- cap -->
+    <rect x="-13" y="-68" width="26" height="12" rx="3" fill="#00C2FF"/>
+    <!-- bottle body -->
+    <path d="M -28,-42 
+             C -28,-46 -22,-46 -20,-46
+             L 20,-46
+             C 22,-46 28,-46 28,-42
+             L 34,44
+             C 34,54 24,60 0,60
+             C -24,60 -34,54 -34,44
+             Z"
+          fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linejoin="round"/>
+    <!-- fill level -->
+    <path d="M -30,20 C -30,30 -22,34 0,34 C 22,34 30,30 30,20 L 33,44 C 33,52 22,58 0,58 C -22,58 -33,52 -33,44 Z"
+          fill="#00C2FF" fill-opacity="0.18"/>
+    <!-- label band -->
+    <rect x="-24" y="-8" width="48" height="20" rx="4" fill="#00C2FF" fill-opacity="0.9"/>
+  </g>
+
+  <!-- recurring / subscription loop arrows, top right of bottle -->
+  <g transform="translate(168,70)">
+    <path d="M -14,-2 A 16,16 0 1 1 -14,10" fill="none" stroke="#00C2FF" stroke-width="4.5" stroke-linecap="round"/>
+    <path d="M -14,-2 L -20,-8 M -14,-2 L -8,-6" fill="none" stroke="#00C2FF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- step number badge -->
+  <circle cx="196" cy="196" r="20" fill="#00C2FF"/>
+  <text x="196" y="203" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#0B1020">1</text>
+</svg>
