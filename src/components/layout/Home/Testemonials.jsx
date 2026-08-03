@@ -7,6 +7,22 @@ import { useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { getTestimonialsCopy } from "@/constants/testimonialsCopy";
 import { useLanguage } from "@/context/LanguageContext";
+import { FaDroplet, FaFlask, FaLeaf, FaAward } from "react-icons/fa6";
+
+function TestimonialThemeIcon({ iconKey, cardIndex }) {
+  const defaultIcons = [FaDroplet, FaFlask, FaLeaf, FaAward];
+  let IconComponent = FaDroplet;
+
+  if (iconKey === "flask") IconComponent = FaFlask;
+  else if (iconKey === "leaf") IconComponent = FaLeaf;
+  else if (iconKey === "award") IconComponent = FaAward;
+  else if (iconKey === "droplet") IconComponent = FaDroplet;
+  else if (typeof cardIndex === "number") {
+    IconComponent = defaultIcons[cardIndex % defaultIcons.length];
+  }
+
+  return <IconComponent className="h-5 w-5 text-(--accent-color)" />;
+}
 
 function StarRow() {
   return (
@@ -50,7 +66,7 @@ function ArrowBtn({ dir = "left", onClick }) {
   );
 }
 
-function TestimonialCard({ t }) {
+function TestimonialCard({ t, cardIndex }) {
   return (
     <article className="flex flex-col justify-between h-full text-(--white-color)">
       <div>
@@ -61,8 +77,8 @@ function TestimonialCard({ t }) {
         <div className="mt-6 h-px w-full bg-(--white-color)/12" />
         <div className="mt-5 flex items-center justify-between gap-6">
           <div className="flex items-center gap-3">
-            <div className="h-11 w-11 shrink-0 overflow-hidden rounded-lg bg-(--white-color)/10">
-              <Image src={t.avatar} alt={t.name} width={44} height={44} className="h-full w-full object-cover" />
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-(--accent-color)/15 border border-(--accent-color)/30 shadow-xs transition-transform duration-300 hover:scale-105">
+              <TestimonialThemeIcon iconKey={t.icon} cardIndex={cardIndex} />
             </div>
             <div>
               <h3 className="text-[16px] font-semibold text-(--white-color) leading-tight font-default">{t.name}</h3>
@@ -179,7 +195,7 @@ export default function OurTestimonials({ data = {} }) {
                     >
                       <div className="grid gap-10 md:grid-cols-2">
                         {page.map((t, i) => (
-                          <TestimonialCard key={i} t={t} />
+                          <TestimonialCard key={i} t={t} cardIndex={pIdx * perPage + i} />
                         ))}
                       </div>
                     </div>

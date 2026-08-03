@@ -61,25 +61,25 @@ export function getTestimonialsCopy(loc = {}, lang) {
       {
         name: get("testimonials_item1_name"),
         role: get("testimonials_item1_role"),
-        avatar: "/images/author-3.jpg",
+        icon: "droplet",
         text: item1Text
       },
       {
         name: get("testimonials_item2_name"),
         role: get("testimonials_item2_role"),
-        avatar: "/images/author-1.jpg",
+        icon: "flask",
         text: item2Text
       },
       {
         name: get("testimonials_item3_name"),
         role: get("testimonials_item3_role"),
-        avatar: "/images/author-2.jpg",
+        icon: "leaf",
         text: item3Text
       },
       {
         name: get("testimonials_item4_name"),
         role: get("testimonials_item4_role"),
-        avatar: "/images/author-4.jpg",
+        icon: "award",
         text: item4Text
       }
     ]

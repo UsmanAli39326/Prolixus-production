@@ -1,8 +1,27 @@
 import { apiService } from "@/lib/api";
 
+async function getLang() {
+  let lang = "en";
+  try {
+    const { cookies } = require("next/headers");
+    const cookieStore = await cookies();
+    lang = cookieStore.get("appLanguage")?.value || "en";
+  } catch (e) {
+    if (typeof window !== "undefined") {
+      lang = localStorage.getItem("appLanguage") || "en";
+    }
+  }
+  return lang;
+}
+
 export async function getAboutPayload() {
   try {
-    const response = await apiService.get("/Configuration/about", {}, { next: { revalidate: 30 } });
+    const lang = await getLang();
+    const response = await apiService.get(
+      `/Configuration/about?culture=${lang}&lang=${lang}&language=${lang}`,
+      {},
+      { next: { revalidate: 0 }, cache: 'no-store' }
+    );
 
     if (!response?.success || !response?.data) return null;
 
@@ -39,7 +58,12 @@ export async function getAboutPayload() {
 
 export async function getTeamMembers() {
   try {
-    const response = await apiService.get("/Configuration/team-members", {}, { next: { revalidate: 30 } });
+    const lang = await getLang();
+    const response = await apiService.get(
+      `/Configuration/team-members?culture=${lang}&lang=${lang}&language=${lang}`,
+      {},
+      { next: { revalidate: 0 }, cache: 'no-store' }
+    );
     if (!response?.success || !response?.data) return [];
     return response.data;
   } catch (error) {

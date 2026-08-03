@@ -17,8 +17,14 @@ const INITIAL_FORM = {
 };
 
 export default function ContactSection({ localization }) {
-  const about = getAboutPayload();
+  const [about, setAbout] = useState(null);
   const [formData, setFormData] = useState(INITIAL_FORM);
+
+  React.useEffect(() => {
+    getAboutPayload().then((res) => {
+      if (res) setAbout(res);
+    });
+  }, []);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [toast, setToast] = useState({
     show: false,
