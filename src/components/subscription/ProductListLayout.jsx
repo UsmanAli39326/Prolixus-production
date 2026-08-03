@@ -23,7 +23,7 @@ function resolveBackendImageUrl(fileObjOrUrl, fallbackProduct) {
   return null;
 }
 
-function ProductPackageGroup({ product, onSelectPackage, selectedPackage }) {
+function ProductPackageGroup({ product, onSelectPackage, selectedPackage, copy }) {
   const [pricingData, setPricingData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -138,13 +138,14 @@ function ProductPackageGroup({ product, onSelectPackage, selectedPackage }) {
           onSelect={onSelectPackage}
           mobileOrderClass={pkg.mobileOrderClass}
           desktopOrderClass={pkg.desktopOrderClass}
+          copy={copy}
         />
       ))}
     </div>
   );
 }
 
-export default function ProductListLayout({ products = [] }) {
+export default function ProductListLayout({ products = [], copy }) {
   const router = useRouter();
   const [selectedPackage, setSelectedPackage] = useState(null);
 
@@ -170,6 +171,7 @@ export default function ProductListLayout({ products = [] }) {
           product={product}
           selectedPackage={selectedPackage}
           onSelectPackage={handleSelectPackage}
+          copy={copy}
         />
       ))}
 

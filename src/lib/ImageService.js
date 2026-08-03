@@ -12,15 +12,20 @@ export async function getImageUrlByName(name) {
 }
 
 export function getImageUrl(path) {
-  if (!path) return '';
+  if (!path || typeof path !== 'string') return '';
   if (path.startsWith('http://') || path.startsWith('https://')) {
     return path;
   }
 
-  const baseUrl = BASE_URL
-    ? BASE_URL.replace(/\/api\/?$/, '')
-    : 'https://prolixus.aa-consultants.de';
+  let baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  if (!baseUrl && BASE_URL) {
+    baseUrl = BASE_URL.replace(/\/api\/?$/, '');
+  }
+  if (!baseUrl) {
+    baseUrl = 'https://admin.aa-consultants.de';
+  }
 
+  baseUrl = baseUrl.replace(/\/$/, '');
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
 
   return `${baseUrl}${normalizedPath}`;

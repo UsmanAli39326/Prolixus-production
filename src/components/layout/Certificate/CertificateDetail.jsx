@@ -3,9 +3,9 @@ import Image from "next/image";
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import { formatDate } from "@/utitlis/formatters";
+import { getImageUrl } from "@/lib/ImageService";
 
 export default function CertificateDetail({ certificate, localization }) {
-    const IMAGE_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
     return (
         <div className="certificate-detail-page pt-16 pb-24 overflow-x-hidden">
             <div className="container mx-auto px-4">
@@ -52,7 +52,7 @@ export default function CertificateDetail({ certificate, localization }) {
                                 <FaderInAnimation direction="up" delay={0.2} duration={0.8}>
                                     <figure className="relative mb-10 overflow-hidden rounded-2xl shadow-lg w-full">
                                         <Image
-                                            src={`${IMAGE_BASE_URL}/${certificate.imageUrl}`}
+                                            src={getImageUrl(certificate.imageUrl)}
                                             alt={certificate.title || "Certificate"}
                                             width={1200}
                                             height={800}

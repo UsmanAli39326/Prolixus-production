@@ -28,6 +28,11 @@ const nextConfig = {
         destination: '/subscribe',
         permanent: true,
       },
+      {
+        source: '/rewards',
+        destination: '/conduct',
+        permanent: true,
+      },
     ];
   },
 };

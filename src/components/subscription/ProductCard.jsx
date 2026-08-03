@@ -10,7 +10,8 @@ export default function ProductCard({
   isSelected,
   onSelect,
   desktopOrderClass,
-  mobileOrderClass
+  mobileOrderClass,
+  copy
 }) {
   const { formatPrice } = useCurrency();
   const { addToCart } = useCart();
@@ -79,12 +80,12 @@ export default function ProductCard({
           {isSubscription ? (
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-(--accent-color)/15 text-(--accent-color) text-xs font-bold uppercase tracking-wider border border-(--accent-color)/30">
               <i className="fa-solid fa-arrows-rotate text-[11px] animate-spin-slowly" />
-              <span>Subscription Service</span>
+              <span>{copy?.badges?.subscription || "Subscription Service"}</span>
             </span>
           ) : (
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 text-(--primary-color)/80 text-xs font-bold uppercase tracking-wider border border-gray-200">
               <i className="fa-solid fa-bag-shopping text-[11px]" />
-              <span>One-Time Purchase</span>
+              <span>{copy?.badges?.onetime || "One-Time Purchase"}</span>
             </span>
           )}
         </div>
@@ -134,7 +135,7 @@ export default function ProductCard({
             </div>
 
             <span className={`text-xs font-bold mt-1 ${isSubscription ? "text-(--accent-color)" : "text-gray-500"}`}>
-              {isSubscription ? "Billed monthly • Cancel anytime" : "Single payment • Non-recurring"}
+              {isSubscription ? (copy?.terms?.subscription || "Billed monthly • Cancel anytime") : (copy?.terms?.onetime || "Single payment • Non-recurring")}
             </span>
           </div>
 
@@ -180,11 +181,11 @@ export default function ProductCard({
             </span>
           ) : isSubscription ? (
             <span className="flex items-center gap-2">
-              <i className="fa-solid fa-arrows-rotate text-xs" /> Subscribe — {formatPrice(price)}/mo
+              <i className="fa-solid fa-arrows-rotate text-xs" /> {copy?.cta?.subscribe || "Subscribe"} — {formatPrice(price)}/mo
             </span>
           ) : (
             <span className="flex items-center gap-2">
-              <i className="fa-solid fa-cart-shopping text-xs" /> Buy Once — {formatPrice(price)}
+              <i className="fa-solid fa-cart-shopping text-xs" /> {copy?.cta?.onetime || "Buy Once"} — {formatPrice(price)}
             </span>
           )}
         </button>

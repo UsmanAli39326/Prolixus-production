@@ -68,11 +68,11 @@ export default function RewardsClient({ localization }) {
         <main className="bg-(--secondary-color) min-h-screen font-default">
             {/* Page Header */}
             <PageHeader
-                title="CONDUCT –"
-                subtitle="Empfehlungsprogramm"
+                title={localization?.conduct_header_title || "CONDUCT –"}
+                subtitle={localization?.conduct_header_subtitle || "Empfehlungsprogramm"}
                 pageKey="conduct"
                 breadcrumbs={[
-                    { label: "Startseite", href: "/" },
+                    { label: localization?.product_breadcrumb_home || "Startseite", href: "/" },
                     { label: "CONDUCT", href: null }
                 ]}
             />
@@ -86,10 +86,7 @@ export default function RewardsClient({ localization }) {
                                 {copy.hero.eyebrow}
                             </Badge>
                             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-(--primary-color) leading-tight">
-                                5 erfolgreiche Empfehlungen.
-                                <span className="block font-light italic font-accent text-(--accent-color) mt-1">
-                                    Deine nächste Monatsration geht auf uns.
-                                </span>
+                                {copy.hero.headline}
                             </h1>
                             <p className="text-sm sm:text-base text-(--text-color)/80 max-w-2xl mx-auto leading-relaxed">
                                 {copy.hero.subtext}
@@ -104,7 +101,7 @@ export default function RewardsClient({ localization }) {
                                             </Button>
                                         </a>
                                     ) : (
-                                        <Link href="/login?redirect=/rewards" className="w-full sm:w-auto">
+                                        <Link href="/login?redirect=/conduct" className="w-full sm:w-auto">
                                             <Button variant="accent" size="lg" className="w-full sm:w-auto px-7 py-3 rounded-full font-bold shadow-md hover:shadow-lg transition-all">
                                                 {copy.hero.ctaLoggedout}
                                             </Button>
@@ -138,7 +135,7 @@ export default function RewardsClient({ localization }) {
                                 {copy.stepsHeader.tag}
                             </Badge>
                             <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-(--primary-color) mb-1.5">
-                                So funktioniert <span className="font-thin font-accent text-(--accent-color) italic">CONDUCT</span>
+                                {copy.stepsHeader.title}
                             </h2>
                             <p className="text-xs sm:text-sm text-(--primary-color)/75">
                                 {copy.stepsHeader.subtitle}
@@ -200,7 +197,7 @@ export default function RewardsClient({ localization }) {
                                 {copy.table.tag}
                             </Badge>
                             <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-(--primary-color) mb-1">
-                                Dein Weg zur <span className="font-thin font-accent text-(--accent-color) italic">kostenlosen Monatsration</span>
+                                {copy.table.title}
                             </h2>
                             <p className="text-xs sm:text-sm text-(--primary-color)/75">
                                 {copy.table.subtitle}
@@ -267,7 +264,7 @@ export default function RewardsClient({ localization }) {
                                 <FaHeart className="text-(--accent-color)" /> {copy.brand.tag}
                             </Badge>
                             <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-(--white-color)">
-                                Warum wir <span className="font-thin font-accent text-(--accent-color) italic">Empfehlungen belohnen</span>
+                                {copy.brand.title}
                             </h2>
                             <div className="space-y-2.5 text-white/85 text-xs sm:text-sm leading-relaxed text-left">
                                 <p>{copy.brand.text1}</p>
@@ -333,7 +330,7 @@ export default function RewardsClient({ localization }) {
                                         {copy.share.loggedoutDesc}
                                     </p>
                                     <div className="pt-1">
-                                        <Link href="/login?redirect=/rewards">
+                                        <Link href="/login?redirect=/conduct">
                                             <Button variant="accent" size="lg" className="px-6 py-2.5 rounded-full font-bold text-xs sm:text-sm shadow-xs">
                                                 {copy.hero.ctaLoggedout}
                                             </Button>
@@ -358,10 +355,7 @@ export default function RewardsClient({ localization }) {
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
                                 <div>
                                     <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-(--white-color) mb-1.5">
-                                        Bereit für deine{" "}
-                                        <span className="inline font-accent font-light italic text-(--accent-color)">
-                                            erste Belohnung?
-                                        </span>
+                                        {copy.bottom.title}
                                     </h3>
                                     <p className="text-white/80 max-w-xl text-xs sm:text-sm">
                                         {copy.bottom.desc}
@@ -375,7 +369,7 @@ export default function RewardsClient({ localization }) {
                                             </Button>
                                         </Link>
                                     ) : (
-                                        <Link href="/login?redirect=/rewards" className="inline-block w-full sm:w-auto">
+                                        <Link href="/login?redirect=/conduct" className="inline-block w-full sm:w-auto">
                                             <Button variant="accent" size="lg" className="w-full sm:w-auto px-8 py-3 rounded-full font-bold uppercase tracking-wide text-xs sm:text-sm whitespace-nowrap">
                                                 {copy.bottom.btnLoggedout}
                                             </Button>

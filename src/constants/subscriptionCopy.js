@@ -7,7 +7,11 @@ import subscribeLocalization from "./subscribeLocalization.json";
  * @param {Object} [loc] - Flattened localization object returned by getLocalization()
  */
 export function getSubscribeCopy(loc = {}) {
-  const get = (key) => loc[key?.toLowerCase()] || loc[key] || subscribeLocalization[key] || "";
+  const get = (key) => {
+    const k = key?.toLowerCase();
+    const val = loc?.[k] ?? loc?.[key];
+    return (val && typeof val === "string" && val.trim() !== "") ? val : (subscribeLocalization[key] || "");
+  };
 
   return {
     header: {
