@@ -78,7 +78,7 @@ export default function RewardsClient({ localization }) {
             />
 
             {/* SECTION 1: HERO */}
-            <section className="relative py-8 md:py-12 bg-(--white-color) border-b border-(--divider-color) overflow-hidden">
+            <section className="relative py-8 md:py-12 bg-(--white-color) bg-no-repeat bg-bottom-right border-b border-(--divider-color) overflow-hidden" style={{ backgroundImage: "url(/images/section-bg-shape-1.png)" }}>
                 <div className="container mx-auto px-4 max-w-5xl relative z-10">
                     <RevealInAnimation direction="up">
                         <div className="text-center max-w-3xl mx-auto space-y-4">

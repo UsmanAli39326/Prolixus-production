@@ -40,7 +40,8 @@ function sanitizePaymentMethods(rawMethods) {
  * Returns sanitized methods with secret keys stripped.
  * Keys exist only in React state — never in localStorage, sessionStorage, or cookies.
  */
-export default function usePaymentMethods() {
+export default function usePaymentMethods(options = {}) {
+    const isSubscription = typeof options === "boolean" ? options : (options?.isSubscription ?? false);
     const [paymentMethods, setPaymentMethods] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -63,8 +64,17 @@ export default function usePaymentMethods() {
                     ? response
                     : response?.data ?? response?.result ?? [];
 
-                const sanitized = sanitizePaymentMethods(rawMethods)
+                let sanitized = sanitizePaymentMethods(rawMethods)
                     .filter((m) => getAdapter(m.name).name !== "Unsupported");
+
+                // =========================================================================
+                // TEMPORARY FIX: HIDE PAYPAL FOR SUBSCRIPTIONS
+                // To re-enable PayPal for subscription checkouts in the future (once fixed):
+                // Simply remove or comment out the `if (isSubscription)` block below.
+                // =========================================================================
+                if (isSubscription) {
+                    sanitized = sanitized.filter((m) => m.name?.toLowerCase() !== "paypal");
+                }
 
                 if (sanitized.length === 0) {
                     setError("No active payment methods available.");
@@ -80,7 +90,7 @@ export default function usePaymentMethods() {
         };
 
         fetchMethods();
-    }, []);
+    }, [isSubscription]);
 
     return { paymentMethods, loading, error };
 }

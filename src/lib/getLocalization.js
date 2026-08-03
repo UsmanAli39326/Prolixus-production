@@ -7,8 +7,19 @@ import { apiService } from '@/lib/api';
  */
 export const getLocalization = cache(async () => {
   try {
-    // Using apiService.get which handles baseUrl and headers
-    const response = await apiService.get('/StaticLocalization');
+    let lang = 'en';
+    try {
+      const { cookies } = require("next/headers");
+      const cookieStore = await cookies();
+      lang = cookieStore.get("appLanguage")?.value || "en";
+    } catch (e) {
+      if (typeof window !== "undefined") {
+        lang = localStorage.getItem("appLanguage") || "en";
+      }
+    }
+
+    // Pass lang, culture, and language query parameters to ensure API receives current selection
+    const response = await apiService.get(`/StaticLocalization?culture=${lang}&lang=${lang}&language=${lang}`);
     console.log('Localization response:', response);
 
     // Handle new API format: { success: true, data: [{ key: '...', value: '...' }, ...] }

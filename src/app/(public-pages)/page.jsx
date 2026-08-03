@@ -12,6 +12,8 @@ import { getLocalization } from "@/lib/getLocalization";
 import { getAboutPayload } from "@/app/api/about/about";
 import { getImageUrls } from "@/lib/getImageUrls";
 
+import { getTestimonialsCopy } from "@/constants/testimonialsCopy";
+
 export const metadata = {
   title: "Prolixus - Premium Organic Products",
   description: "Shop nature's finest organic ingredients, curated for your holistic well-being.",
@@ -111,10 +113,7 @@ export default async function Home() {
       }
     },
     testimonials: {
-      label: data?.testimonials_label,
-      title_main: data?.testimonials_title_main,
-      title_accent: data?.testimonials_title_accent,
-      happy_customers_text: data?.testimonials_happy_customers_text,
+      ...getTestimonialsCopy(data),
       links: {
         testimonial: imageUrls['Testimonials_copy_12'] || '/blog',
       }

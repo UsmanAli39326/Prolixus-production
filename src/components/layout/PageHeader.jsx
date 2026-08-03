@@ -44,6 +44,10 @@ export default function PageHeader({ title, subtitle, breadcrumbs, bgImage, mobi
       bg: "/images/new/blog detail page banner.webp",
       mobile: "/images/new/Blog details mobile view.webp"
     },
+    "conduct": {
+      bg: "/images/new/about us header banner copy.webp",
+      mobile: "/images/new/about us mobile view banner.webp"
+    },
   };
 
   const defaultMapping = bgMapping[pageKey?.toLowerCase()] || {};

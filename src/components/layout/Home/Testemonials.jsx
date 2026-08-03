@@ -5,37 +5,8 @@ import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import Image from "next/image";
 import { useMemo, useRef, useState } from "react";
 import Link from "next/link";
-
-const testimonials = [
-  {
-    name: "Michael Carter",
-    role: "Aromatherapist",
-    avatar: "/images/author-3.jpg",
-    text:
-      "These oil droppers are perfect for my essential oil blends! The precision and outstanding of Highly recommend many dropper bottles, but these are by far the best. No leaks, no waste—just pure convenience!",
-  },
-  {
-    name: "Jenny Wilson",
-    role: "Aromatherapist",
-    avatar: "/images/author-1.jpg",
-    text:
-      "These oil droppers are perfect for my essential oil blends! The precision and outstanding of Highly recommend many dropper bottles, but these are by far the best. No leaks, no waste—just pure convenience!",
-  },
-  {
-    name: "Sophia Reynolds",
-    role: "Herbalist",
-    avatar: "/images/author-2.jpg",
-    text:
-      "These oil droppers are perfect for my essential oil blends! The precision and outstanding of Highly recommend many dropper bottles, but these are by far the best. No leaks, no waste—just pure convenience!",
-  },
-  {
-    name: "Olivia Brooks",
-    role: "Wellness Coach",
-    avatar: "/images/author-4.jpg",
-    text:
-      "These oil droppers are perfect for my essential oil blends! The precision and outstanding of Highly recommend many dropper bottles, but these are by far the best. No leaks, no waste—just pure convenience!",
-  },
-];
+import { getTestimonialsCopy } from "@/constants/testimonialsCopy";
+import { useLanguage } from "@/context/LanguageContext";
 
 function StarRow() {
   return (
@@ -81,28 +52,36 @@ function ArrowBtn({ dir = "left", onClick }) {
 
 function TestimonialCard({ t }) {
   return (
-    <article className="text-(--white-color)">
-      <StarRow />
-      <p className="mt-4 text-[15px] leading-7 text-(--white-color)/90 font-default">“{t.text}”</p>
-      <div className="mt-6 h-px w-full bg-(--white-color)/12" />
-      <div className="mt-5 flex items-center justify-between gap-6">
-        <div className="flex items-center gap-3">
-          <div className="h-11 w-11 overflow-hidden rounded-lg bg-(--white-color)/10">
-            <Image src={t.avatar} alt={t.name} width={44} height={44} className="h-full w-full object-cover" />
+    <article className="flex flex-col justify-between h-full text-(--white-color)">
+      <div>
+        <StarRow />
+        <p className="mt-4 text-[15px] leading-7 text-(--white-color)/90 font-default min-h-[80px]">“{t.text}”</p>
+      </div>
+      <div>
+        <div className="mt-6 h-px w-full bg-(--white-color)/12" />
+        <div className="mt-5 flex items-center justify-between gap-6">
+          <div className="flex items-center gap-3">
+            <div className="h-11 w-11 shrink-0 overflow-hidden rounded-lg bg-(--white-color)/10">
+              <Image src={t.avatar} alt={t.name} width={44} height={44} className="h-full w-full object-cover" />
+            </div>
+            <div>
+              <h3 className="text-[16px] font-semibold text-(--white-color) leading-tight font-default">{t.name}</h3>
+              <p className="mt-0.5 text-[13px] text-(--white-color)/70 font-accent">{t.role}</p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-[16px] font-semibold text-(--white-color) leading-tight font-default">{t.name}</h3>
-            <p className="mt-0.5 text-[13px] text-(--white-color)/70 font-accent">{t.role}</p>
-          </div>
+          <span className="text-3xl leading-none text-(--white-color)/90">”</span>
         </div>
-        <span className="text-3xl leading-none text-(--white-color)/90">”</span>
       </div>
     </article>
   );
 }
 
 export default function OurTestimonials({ data = {} }) {
+  const { language } = useLanguage();
   const perPage = 2;
+
+  const copy = useMemo(() => getTestimonialsCopy(data, language), [data, language]);
+  const testimonials = copy.items;
 
   const pages = useMemo(() => {
     const out = [];
@@ -110,7 +89,7 @@ export default function OurTestimonials({ data = {} }) {
       out.push(testimonials.slice(i, i + perPage));
     }
     return out;
-  }, []);
+  }, [testimonials]);
 
   const total = pages.length;
   const [index, setIndex] = useState(0);
@@ -139,12 +118,12 @@ export default function OurTestimonials({ data = {} }) {
           <div>
             <div className="mb-3 flex items-center gap-3">
               <span className="h-2 w-2 rounded-full bg-(--accent-color)" />
-              <p className="font-serif text-sm italic text-(--white-color)/90">{data?.label}</p>
+              <p className="font-serif text-sm italic text-(--white-color)/90">{copy.label}</p>
             </div>
             <RevealInAnimation >
               <h2 className="text-3xl font-semibold leading-tight tracking-tight text-(--white-color) sm:text-4xl lg:text-5xl font-default">
-                {data?.title_main}{" "}
-                <span className="block font-accent font-light italic">{data?.title_accent}</span>
+                {copy.title_main}{" "}
+                <span className="block font-accent font-light italic">{copy.title_accent}</span>
               </h2>
             </RevealInAnimation>
           </div>
@@ -154,7 +133,7 @@ export default function OurTestimonials({ data = {} }) {
             <span className="h-10 w-px bg-(--white-color)/15" />
             <div>
               <StarRow />
-              <p className="mt-2 text-sm text-(--white-color)/70">{data?.happy_customers_text}</p>
+              <p className="mt-2 text-sm text-(--white-color)/70">{copy.happy_customers_text}</p>
             </div>
           </div>
         </div>

@@ -104,8 +104,12 @@ export default function CheckoutForm({ nextStep, goToStep, formData, updateFormD
                             <svg className="size-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
                         </div>
                         <div>
-                            <p className="text-sm font-bold text-primary">You're setting up a subscription</p>
-                            <p className="text-xs text-text/60 font-accent">You'll be billed monthly. Cancel anytime from your dashboard.</p>
+                            <p className="text-sm font-bold text-primary">
+                                {localization?.checkout_subscription_notice_title || "You're setting up a subscription"}
+                            </p>
+                            <p className="text-xs text-text/60 font-accent">
+                                {localization?.checkout_subscription_notice_desc || "You'll be billed monthly. Cancel anytime from your dashboard."}
+                            </p>
                         </div>
                     </div>
                 </RevealInAnimation>

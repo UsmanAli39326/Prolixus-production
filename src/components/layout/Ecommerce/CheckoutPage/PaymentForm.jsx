@@ -164,10 +164,10 @@ export default function PaymentForm({
                         {isSubscription && (
                             <div className="p-5 flex items-baseline justify-between gap-4 border-t border-divider bg-accent/5">
                                 <div className="flex gap-6">
-                                    <span className="text-gray-400 font-accent w-12 text-left">Type</span>
+                                    <span className="text-gray-400 font-accent w-12 text-left">{localization?.checkout_summary_type || "Type"}</span>
                                     <span className="font-bold text-accent flex items-center gap-2">
                                         <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
-                                        Monthly Subscription
+                                        {localization?.checkout_summary_monthly_subscription || "Monthly Subscription"}
                                     </span>
                                 </div>
                             </div>
@@ -175,8 +175,8 @@ export default function PaymentForm({
                     </div>
                 </FaderInAnimation>
 
-                {/* Wallet Balance — hidden for subscriptions (require payment method on file for recurring) */}
-                {isAuthenticated && !isSubscription && (
+                {/* Wallet Balance */}
+                {isAuthenticated && (
                     <FaderInAnimation direction="up" delay={0.15}>
                         <div className={`border rounded-2xl p-6 mb-2 transition-all ${walletBalance > 0 ? 'bg-accent/5 border-accent/20' : 'bg-gray-50 dark:bg-white/[0.02] border-divider opacity-60'}`}>
                             <label className={`flex items-center gap-4 group ${walletBalance > 0 ? 'cursor-pointer' : 'cursor-not-allowed'}`}>
@@ -222,6 +222,7 @@ export default function PaymentForm({
                             onSelect={onMethodSelect}
                             loading={methodsLoading}
                             error={methodsError}
+                            isSubscription={isSubscription}
                         />
 
                         {/* Gateway-specific checkout UI */}
@@ -294,12 +295,12 @@ export default function PaymentForm({
                     {isSubscription && (
                         <div className="mb-6 p-4 rounded-2xl bg-accent/10 border border-accent/20 text-left text-xs sm:text-sm text-primary font-default leading-relaxed">
                             <p className="font-bold text-accent mb-1 flex items-center gap-1.5">
-                                <i className="fa-solid fa-circle-info" /> Mandatory Subscription Notice:
+                                <i className="fa-solid fa-circle-info" /> {localization?.subscribe_disclosure_title || localization?.checkout_mandatory_notice_title || "Mandatory Subscription Notice:"}
                             </p>
                             <p className="text-primary/90">
-                                {SUBSCRIPTION_COPY.disclosure.prefix}
+                                {localization?.subscribe_disclosure_prefix || SUBSCRIPTION_COPY.disclosure.prefix}
                                 <span className="font-bold text-accent px-1">{formatPrice(totals.total)} / month</span>
-                                {SUBSCRIPTION_COPY.disclosure.suffix}
+                                {localization?.subscribe_disclosure_suffix || SUBSCRIPTION_COPY.disclosure.suffix}
                             </p>
                         </div>
                     )}

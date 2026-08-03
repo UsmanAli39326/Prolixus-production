@@ -28,7 +28,9 @@ function CheckoutLayoutWrapper({ children }) {
 }
 
 function CheckoutLayoutInner({ children }) {
-    const { orderCompleted } = useCheckout();
+    const { orderCompleted, isSubscription, checkoutType } = useCheckout();
+    const searchParams = useSearchParams();
+    const isSubscribe = searchParams.get("type") === "subscribe" || isSubscription || checkoutType === "subscribe";
     const pathname = usePathname();
     const isStatusPage = pathname.includes("/status");
 
@@ -51,7 +53,7 @@ function CheckoutLayoutInner({ children }) {
                 }
             `}} />
 
-            <main className="grow flex justify-center w-full px-4 py-8 lg:px-8">
+            <main className={`grow flex justify-center w-full px-4 py-8 lg:px-8 ${isSubscribe ? 'mt-6 lg:mt-10' : ''}`}>
                 <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">
                     <div className={`order-2 xl:order-1 lg:col-span-12 ${(orderCompleted || isStatusPage) ? '' : 'xl:col-span-7'} flex flex-col gap-8`}>
                         <FaderInAnimation direction="up" distance={20}>

@@ -19,12 +19,22 @@ import FaderInAnimation from "@/Hooks/FaderInAnimation";
  *  - error: string | null
  */
 export default function PaymentMethodSelector({
-    paymentMethods,
+    paymentMethods = [],
     selectedMethod,
     onSelect,
     loading,
     error,
+    isSubscription = false,
 }) {
+    // =========================================================================
+    // TEMPORARY FIX: HIDE PAYPAL FOR SUBSCRIPTIONS
+    // To re-enable PayPal for subscription checkouts in the future (once fixed):
+    // Change `activeMethods` to: `const activeMethods = paymentMethods;`
+    // =========================================================================
+    const activeMethods = isSubscription
+        ? paymentMethods.filter((m) => m.name?.toLowerCase() !== "paypal")
+        : paymentMethods;
+
     // ─── Loading skeleton ─────────────────────────────────────────────────
     if (loading) {
         return (
@@ -43,7 +53,7 @@ export default function PaymentMethodSelector({
     }
 
     // ─── Error state ──────────────────────────────────────────────────────
-    if (error && paymentMethods.length === 0) {
+    if (error && activeMethods.length === 0) {
         return (
             <div className="p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
                 <p className="text-red-600 dark:text-red-400 text-sm font-bold">{error}</p>
@@ -69,10 +79,18 @@ export default function PaymentMethodSelector({
         return FaCreditCard;
     };
 
+    // ─── Dynamic grid columns based on number of active methods ───────────
+    const gridColsClass =
+        activeMethods.length === 1
+            ? "grid-cols-1"
+            : activeMethods.length === 2
+            ? "grid-cols-1 md:grid-cols-2"
+            : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3";
+
     // ─── Method cards ─────────────────────────────────────────────────────
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {paymentMethods.map((method) => {
+        <div className={`grid ${gridColsClass} gap-4`}>
+            {activeMethods.map((method) => {
                 const isSelected =
                     selectedMethod?.toLowerCase() === method.name?.toLowerCase();
                 const IconComponent = getPaymentIcon(method.name);

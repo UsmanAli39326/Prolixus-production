@@ -51,7 +51,7 @@ export default function Header({ menus = [] }) {
         {/* Mobile Google Rating Ribbon - Only on mobile */}
         <div className="absolute lg:hidden right-4 top-full bg-primary border-x border-b border-divider rounded-b-xl px-3 py-2 shadow-xl flex items-center justify-center -mt-px z-40">
           <a
-            href="https://share.google/kgDhjqnMrkgLLtv8m"
+            href="https://www.google.com/search?sca_esv=c6b7077b8ab86951&rlz=1C1ONGR_enDE1204DE1204&sxsrf=APpeQnurCfikLS9oLVQhJBRDc0fnoiITvQ:1785787031260&si=APenkKm7iecQ4G6P-TsbSMFKIQtv3EFIqRAFw-i8uEbk55Z-_1ZFmLJaom0GPH0-z1SqDoogD3LGPqb32wDEmmxEwO5ShbHrm5X5lwWTfOIzWKOr9g3lwUuIZDr_GftE5XCQWhc536Jv&q=Prolixus+GmbH+Reviews&sa=X&ved=2ahUKEwj61JGNn4WWAxVAzQIHHTgMLEwQ0bkNegQILBAH&biw=1366&bih=641&dpr=1"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 hover:opacity-80 transition-opacity no-underline"
@@ -90,7 +90,7 @@ export default function Header({ menus = [] }) {
           <div className="flex items-center gap-6">
             {/* Google Rating Badge */}
             <a
-              href="https://share.google/kgDhjqnMrkgLLtv8m"
+              href="https://www.google.com/search?sca_esv=c6b7077b8ab86951&rlz=1C1ONGR_enDE1204DE1204&sxsrf=APpeQnurCfikLS9oLVQhJBRDc0fnoiITvQ:1785787031260&si=APenkKm7iecQ4G6P-TsbSMFKIQtv3EFIqRAFw-i8uEbk55Z-_1ZFmLJaom0GPH0-z1SqDoogD3LGPqb32wDEmmxEwO5ShbHrm5X5lwWTfOIzWKOr9g3lwUuIZDr_GftE5XCQWhc536Jv&q=Prolixus+GmbH+Reviews&sa=X&ved=2ahUKEwj61JGNn4WWAxVAzQIHHTgMLEwQ0bkNegQILBAH&biw=1366&bih=641&dpr=1"
               target="_blank"
               rel="noopener noreferrer"
               className="flex flex-col items-center justify-center gap-0.5 hover:opacity-80 transition-opacity no-underline shrink-0"

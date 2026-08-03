@@ -106,12 +106,12 @@ export default function CheckoutWizard({ localization }) {
     const [orderData, setOrderData] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Fetch payment methods from the API (sanitized, active-only)
+    // Fetch payment methods from the API (sanitized, active-only, filtered for subscription)
     const {
         paymentMethods,
         loading: methodsLoading,
         error: methodsError,
-    } = usePaymentMethods();
+    } = usePaymentMethods({ isSubscription });
 
     // Track selected payment method object (contains publishableKey)
     const [selectedMethod, setSelectedMethod] = useState(null);
@@ -129,13 +129,16 @@ export default function CheckoutWizard({ localization }) {
         }
     }, [isInitialized, checkoutItems, router, orderCompleted]);
 
-    // When methods load, auto-select the first one if none selected
+    // When methods load, auto-select the first valid one if none selected or if selected is unavailable
     useEffect(() => {
-        if (!hasAutoSelected.current && paymentMethods.length > 0 && !selectedMethod) {
-            const defaultMethod = paymentMethods[0];
-            setSelectedMethod(defaultMethod);
-            updateFormData({ paymentMethod: defaultMethod.name });
-            hasAutoSelected.current = true;
+        if (paymentMethods.length > 0) {
+            const isCurrentValid = selectedMethod && paymentMethods.some((m) => m.name?.toLowerCase() === selectedMethod.name?.toLowerCase());
+            if (!hasAutoSelected.current || !isCurrentValid) {
+                const defaultMethod = paymentMethods[0];
+                setSelectedMethod(defaultMethod);
+                updateFormData({ paymentMethod: defaultMethod.name });
+                hasAutoSelected.current = true;
+            }
         }
     }, [paymentMethods, selectedMethod, updateFormData]);
 
