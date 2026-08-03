@@ -7,6 +7,7 @@ import useCart from "@/Hooks/useCart";
 import { useCurrency } from "@/context/CurrencyContext";
 import { ProductImageGallery, ProductAccordion } from "@/components/layout/Ecommerce/ProductPage";
 import { motion, AnimatePresence } from "framer-motion";
+import { getImageUrl } from "@/lib/ImageService";
 
 export default function ProductVariantBlock({ product, isGrid = false }) {
   const [pricingData, setPricingData] = useState(null);
@@ -118,12 +119,6 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
 
     setTimeout(() => setAddStatus("added"), 600);
     setTimeout(() => setAddStatus("idle"), 2000);
-  };
-
-  const getImageUrl = (url) => {
-    if (!url) return null;
-    if (url.startsWith('http')) return url;
-    return `${process.env.NEXT_PUBLIC_BASE_URL || 'https://prolixus.aa-consultants.de'}${url}`;
   };
 
   const productImageUrl = productFile?.url ? getImageUrl(productFile.url) : null;

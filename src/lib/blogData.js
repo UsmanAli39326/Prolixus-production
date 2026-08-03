@@ -1,6 +1,6 @@
 import { apiService } from "@/lib/api";
-
 import { formatDate } from "@/utitlis/formatters";
+import { getImageUrl } from "@/lib/ImageService";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -9,10 +9,10 @@ function mapBlogPost(blog) {
     id: blog.id ?? 0,
     slug: blog.slug ?? "",
     thumbnailImg: blog.file?.thumbnailUrl
-      ? `${process.env.NEXT_PUBLIC_BASE_URL}${blog.file.thumbnailUrl}`
+      ? getImageUrl(blog.file.thumbnailUrl)
       : "",
     img: blog.file?.url
-      ? `${process.env.NEXT_PUBLIC_BASE_URL}${blog.file.url}`
+      ? getImageUrl(blog.file.url)
       : "",
     href: `/blog/${blog.id}`,
     title: blog.title ?? "",

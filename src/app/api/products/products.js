@@ -76,6 +76,7 @@ export const dynamic = 'force-dynamic'
 export const fetchCache = 'default-no-store'
 
 import { apiService } from "@/lib/api";
+import { getImageUrl } from "@/lib/ImageService";
 
 
 // fetch all products
@@ -111,7 +112,7 @@ export async function getAllProducts(page = 1, size = 20) {
       vatPercentage: item.vatPercentage ?? 0,
 
       image: item.thumbnailUrl
-        ? `https://admin.aa-consultants.de${item.thumbnailUrl}`
+        ? getImageUrl(item.thumbnailUrl)
         : null,
     }));
 
@@ -158,10 +159,10 @@ export async function getProductById(id) {
       vatPercentage: item.vatPercentage ?? 0,
       image:
         item.fileUrl
-          ? `https://admin.aa-consultants.de${item.fileUrl}`
+          ? getImageUrl(item.fileUrl)
           : null,
       itemImages: item.itemImages
-        ? item.itemImages.map(img => `https://admin.aa-consultants.de${img.fileUrl}`)
+        ? item.itemImages.map(img => getImageUrl(img.fileUrl))
         : []
     };
   } catch (error) {

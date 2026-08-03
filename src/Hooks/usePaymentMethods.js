@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { apiService } from "@/lib/api";
 import { getAdapter } from "@/lib/payment/gatewayRegistry";
+import { getImageUrl } from "@/lib/ImageService";
 
 /**
  * Sanitizes the raw API response by:
@@ -26,7 +27,7 @@ function sanitizePaymentMethods(rawMethods) {
                 id: method.id,
                 name: method.name,
                 displayName: method.displayName,
-                imageUrl: "https://admin.aa-consultants.de/" + method.imageUrl,
+                imageUrl: getImageUrl(method.imageUrl),
                 publishableKey: publishableKey || null,
                 isTestingEnvironment: method.isTestingEnvironment ?? false,
             };

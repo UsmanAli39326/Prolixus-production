@@ -5,20 +5,19 @@ import ProductCard from "./ProductCard";
 import MobileStickySelectionBar from "./MobileStickySelectionBar";
 import { getProductPricing } from "@/lib/productPricing";
 import { useRouter } from "next/navigation";
+import { getImageUrl } from "@/lib/ImageService";
 
 function resolveBackendImageUrl(fileObjOrUrl, fallbackProduct) {
   const rawUrl = typeof fileObjOrUrl === "string" ? fileObjOrUrl : fileObjOrUrl?.url;
   if (rawUrl) {
-    if (rawUrl.startsWith("http")) return rawUrl;
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://admin.aa-consultants.de";
-    return `${baseUrl}${rawUrl.startsWith("/") ? "" : "/"}${rawUrl}`;
+    return getImageUrl(rawUrl);
   }
 
   if (fallbackProduct?.image) {
-    return fallbackProduct.image;
+    return getImageUrl(fallbackProduct.image);
   }
   if (fallbackProduct?.itemImages?.length > 0) {
-    return fallbackProduct.itemImages[0];
+    return getImageUrl(fallbackProduct.itemImages[0]);
   }
   return null;
 }
