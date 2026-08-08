@@ -151,7 +151,7 @@ export default function DashboardOverviewPage({ localization }) {
                                         className="w-full rounded-xl border border-divider bg-secondary/30 dark:bg-white/5 py-2.5 pl-4 pr-10 text-sm font-bold text-primary focus:border-accent outline-none transition-all"
                                         readOnly
                                         type="text"
-                                        value={loading ? "..." : (walletData?.affiliateCode || "No code")}
+                                        value={loading ? "..." : (walletData?.affiliateCode || localization?.dashboard_affiliate_no_code || "No code")}
                                     />
                                     <button
                                         onClick={handleCopy}

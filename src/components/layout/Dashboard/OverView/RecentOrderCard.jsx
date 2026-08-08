@@ -4,7 +4,7 @@ import Badge from "@/components/ui/Badge";
 import { useCurrency } from "@/context/CurrencyContext";
 import { formatDate } from "@/utitlis/formatters";
 
-export default function RecentOrderCard({ order }) {
+export default function RecentOrderCard({ order, localization }) {
     const { formatPrice } = useCurrency();
 
     return (
@@ -16,7 +16,7 @@ export default function RecentOrderCard({ order }) {
                         <FaTruck className="text-xl sm:text-2xl" />
                     </div>
                     <div className="min-w-0 flex-1">
-                        <p className="text-[10px] sm:text-xs uppercase tracking-wider text-text/50 font-bold mb-1 sm:mb-1.5">Invoice</p>
+                        <p className="text-[10px] sm:text-xs uppercase tracking-wider text-text/50 font-bold mb-1 sm:mb-1.5">{localization?.dashboard_order_invoice || "Invoice"}</p>
                         <p className="text-sm sm:text-[15px] font-extrabold text-primary truncate leading-tight">
                             {order.invoiceNumber}
                         </p>
@@ -29,7 +29,7 @@ export default function RecentOrderCard({ order }) {
                         <FaCalendarAlt className="text-lg sm:text-xl" />
                     </div>
                     <div className="min-w-0 flex-1">
-                        <p className="text-[10px] sm:text-xs uppercase tracking-wider text-text/50 font-bold mb-1 sm:mb-1.5">Order Date</p>
+                        <p className="text-[10px] sm:text-xs uppercase tracking-wider text-text/50 font-bold mb-1 sm:mb-1.5">{localization?.dashboard_order_date || "Order Date"}</p>
                         <p className="text-sm sm:text-[15px] font-extrabold text-primary leading-tight">
                             {formatDate(order.transactionDate, 'date')}
                         </p>
@@ -38,13 +38,13 @@ export default function RecentOrderCard({ order }) {
 
                 {/* Status & Payment */}
                 <div className="p-5 sm:p-6 lg:p-7 flex flex-col justify-center gap-2 sm:gap-2.5">
-                    <p className="text-[10px] sm:text-xs uppercase tracking-wider text-text/50 font-bold">Status</p>
+                    <p className="text-[10px] sm:text-xs uppercase tracking-wider text-text/50 font-bold">{localization?.dashboard_order_status || "Status"}</p>
                     <div className="flex items-center gap-2 flex-wrap">
                         <Badge variant="info" dot className="text-[9px] sm:text-[11px] py-0.5 sm:py-1 px-2 sm:px-2.5 font-bold">
-                            {order.orderStatus || "Processing"}
+                            {order.orderStatus || localization?.dashboard_order_processing || "Processing"}
                         </Badge>
                         <Badge variant={order.isPaid ? "success" : "warning"} dot className="text-[9px] sm:text-[11px] py-0.5 sm:py-1 px-2 sm:px-2.5 font-bold">
-                            {order.isPaid ? "Paid" : "Unpaid"}
+                            {order.isPaid ? (localization?.dashboard_order_paid || "Paid") : (localization?.dashboard_order_unpaid || "Unpaid")}
                         </Badge>
                     </div>
                 </div>
@@ -52,7 +52,7 @@ export default function RecentOrderCard({ order }) {
                 {/* Total & Action */}
                 <div className="p-5 sm:p-6 lg:p-7 flex items-center justify-between gap-4">
                     <div className="min-w-0">
-                        <p className="text-[10px] sm:text-xs uppercase tracking-wider text-text/50 font-bold mb-1 sm:mb-1.5">Total</p>
+                        <p className="text-[10px] sm:text-xs uppercase tracking-wider text-text/50 font-bold mb-1 sm:mb-1.5">{localization?.dashboard_order_total || "Total"}</p>
                         <p className="text-lg sm:text-xl font-extrabold text-primary">
                             {formatPrice(order.paidAmount ?? order.totalNetAmount ?? 0)}
                         </p>

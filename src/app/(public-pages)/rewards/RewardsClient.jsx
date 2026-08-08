@@ -10,6 +10,7 @@ import SubscriptionFAQ from "@/components/subscription/SubscriptionFAQ";
 import Link from "next/link";
 import Image from "next/image";
 import { useAuth } from "@/context/AuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { getWalletData } from "@/lib/PartnerService";
 import { getConductCopy } from "@/constants/conductCopy";
 import {
@@ -25,6 +26,7 @@ import {
 } from "react-icons/fa";
 
 export default function RewardsClient({ localization }) {
+    const { t } = useLanguage();
     const copy = getConductCopy(localization);
     const { isLoggedIn, loading: authLoading } = useAuth();
 
@@ -68,11 +70,11 @@ export default function RewardsClient({ localization }) {
         <main className="bg-(--secondary-color) min-h-screen font-default">
             {/* Page Header */}
             <PageHeader
-                title={localization?.conduct_header_title || "CONDUCT –"}
-                subtitle={localization?.conduct_header_subtitle || "Empfehlungsprogramm"}
+                title={localization?.conduct_header_title || t("conduct_header_title", "CONDUCT –")}
+                subtitle={localization?.conduct_header_subtitle || t("conduct_header_subtitle", "Referral Program")}
                 pageKey="conduct"
                 breadcrumbs={[
-                    { label: localization?.product_breadcrumb_home || "Startseite", href: "/" },
+                    { label: localization?.product_breadcrumb_home || t("product_breadcrumb_home", "Home"), href: "/" },
                     { label: "CONDUCT", href: null }
                 ]}
             />
@@ -126,53 +128,51 @@ export default function RewardsClient({ localization }) {
                 </div>
             </section>
 
-            {/* SECTION 2: SO FUNKTIONIERT ES (3 STEPS WITH PRODUCT IMAGERY & BADGES) */}
-            <section id="how-it-works" className="py-8 md:py-12 bg-(--secondary-color)">
-                <div className="container mx-auto px-4 max-w-5xl">
-                    <div className="text-left max-w-2xl mb-8">
+            {/* SECTION 2: HOW IT WORKS / STEPS */}
+            <section id="how-it-works" className="py-12 md:py-16 bg-(--secondary-color)">
+                <div className="container mx-auto px-4 max-w-6xl">
+                    <div className="text-center max-w-2xl mx-auto mb-10 md:mb-12">
                         <RevealInAnimation direction="up">
-                            <Badge variant="info" className="uppercase tracking-widest font-default mb-2">
+                            <Badge variant="info" className="uppercase tracking-widest font-default mb-3">
                                 {copy.stepsHeader.tag}
                             </Badge>
-                            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-(--primary-color) mb-1.5">
+                            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-(--primary-color) mb-2 font-accent">
                                 {copy.stepsHeader.title}
                             </h2>
-                            <p className="text-xs sm:text-sm text-(--primary-color)/75">
+                            <p className="text-sm sm:text-base text-(--primary-color)/75">
                                 {copy.stepsHeader.subtitle}
                             </p>
                         </RevealInAnimation>
                     </div>
 
-                    <div className="space-y-5 md:space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch">
                         {copy.steps.map((step, index) => (
-                            <RevealInAnimation key={index} direction={step.direction}>
-                                <div className={`flex flex-col ${index % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-5 md:gap-8 bg-(--white-color) rounded-2xl p-4 sm:p-6 border border-(--divider-color) shadow-xs hover:shadow-md transition-all duration-300`}>
+                            <RevealInAnimation key={index} direction="up" delay={index * 0.15}>
+                                <div className="flex flex-col h-full bg-(--white-color) rounded-3xl p-6 sm:p-7 border border-(--divider-color) shadow-sm hover:shadow-md transition-all duration-300 group">
 
-                                    {/* Image Side - Product Imagery */}
-                                    <div className="w-full md:w-5/12">
-                                        <div className="relative rounded-xl overflow-hidden bg-(--secondary-color) p-3 group aspect-[4/3] flex items-center justify-center">
-                                            <Image
-                                                src={step.image}
-                                                alt={step.title}
-                                                fill
-                                                className="object-contain p-2 rounded-lg transform group-hover:scale-105 transition-transform duration-700"
-                                                sizes="(max-width: 768px) 100vw, 400px"
-                                            />
-                                        </div>
+                                    {/* Image Side */}
+                                    <div className="relative w-full rounded-2xl overflow-hidden bg-(--secondary-color) p-4 mb-6 aspect-[4/3] flex items-center justify-center border border-(--divider-color)/50">
+                                        <Image
+                                            src={step.image}
+                                            alt={step.title}
+                                            fill
+                                            className="object-contain p-2 transform group-hover:scale-105 transition-transform duration-500"
+                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 400px"
+                                        />
                                     </div>
 
                                     {/* Content Side */}
-                                    <div className="w-full md:w-7/12">
-                                        <div className="flex flex-col text-left items-start">
-                                            <div className="flex items-center gap-2 mb-2">
+                                    <div className="flex flex-col text-left flex-1 justify-between">
+                                        <div>
+                                            <div className="flex items-center gap-2 mb-3">
                                                 <Badge variant="primary" className="uppercase tracking-widest font-default">
-                                                    Schritt {step.stepNumber}
+                                                    {t("conduct_step_label", "Step")} {step.stepNumber}
                                                 </Badge>
                                                 <div className="icon-box flex h-7 w-7 items-center justify-center rounded-full bg-(--accent-color) text-(--white-color) text-xs shadow-xs">
                                                     {stepIcons[index]}
                                                 </div>
                                             </div>
-                                            <h3 className="text-lg sm:text-xl font-bold text-(--primary-color) mb-1">
+                                            <h3 className="text-lg sm:text-xl font-bold text-(--primary-color) mb-2 font-accent">
                                                 {step.title}
                                             </h3>
                                             <p className="text-xs sm:text-sm text-(--primary-color)/80 leading-relaxed">

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useCurrency } from "@/context/CurrencyContext";
 import useCart from "@/Hooks/useCart";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function ProductCard({
   packageData,
@@ -13,6 +14,7 @@ export default function ProductCard({
   mobileOrderClass,
   copy
 }) {
+  const { t } = useLanguage();
   const { formatPrice } = useCurrency();
   const { addToCart } = useCart();
   const [addStatus, setAddStatus] = useState("idle");
@@ -42,7 +44,8 @@ export default function ProductCard({
     const cartProduct = {
       ...productRaw,
       productId: productRaw?.id || id,
-      title: `${title} (${bottleCount} ${bottleCount === 1 ? "Bottle" : "Bottles"})`,
+      title: `${title} (${bottleCount} ${bottleCount === 1 ? t("product_bottle_singular", "Bottle") : t("product_bottle_plural", "Bottles")})`,
+      name: productRaw?.name || productRaw?.title || title,
       price: price,
       variantId: id,
       variantLabel: title,
@@ -80,12 +83,12 @@ export default function ProductCard({
           {isSubscription ? (
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-(--accent-color)/15 text-(--accent-color) text-xs font-bold uppercase tracking-wider border border-(--accent-color)/30">
               <i className="fa-solid fa-arrows-rotate text-[11px] animate-spin-slowly" />
-              <span>{copy?.badges?.subscription || "Subscription Service"}</span>
+              <span>{t("subscribe_badge_subscription", copy?.badges?.subscription || "Subscription Service")}</span>
             </span>
           ) : (
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 text-(--primary-color)/80 text-xs font-bold uppercase tracking-wider border border-gray-200">
               <i className="fa-solid fa-bag-shopping text-[11px]" />
-              <span>{copy?.badges?.onetime || "One-Time Purchase"}</span>
+              <span>{t("subscribe_badge_onetime", copy?.badges?.onetime || "One-Time Purchase")}</span>
             </span>
           )}
         </div>
@@ -96,7 +99,7 @@ export default function ProductCard({
             {title}
           </h3>
           <p className="text-xs sm:text-sm text-(--text-color)/70 font-default font-medium">
-            {bottleCount} {bottleCount === 1 ? "Bottle" : "Bottles"}
+            {bottleCount} {bottleCount === 1 ? t("product_bottle_singular", "Bottle") : t("product_bottle_plural", "Bottles")}
           </p>
         </div>
 
@@ -129,13 +132,16 @@ export default function ProductCard({
               </span>
               {isSubscription && (
                 <span className="text-sm font-semibold text-(--primary-color)/70">
-                  / mo
+                  / {t("product_per_month", "mo")}
                 </span>
               )}
             </div>
 
             <span className={`text-xs font-bold mt-1 ${isSubscription ? "text-(--accent-color)" : "text-gray-500"}`}>
-              {isSubscription ? (copy?.terms?.subscription || "Billed monthly • Cancel anytime") : (copy?.terms?.onetime || "Single payment • Non-recurring")}
+              {isSubscription
+                ? t("subscribe_terms_subscription", copy?.terms?.subscription || "Billed monthly • Cancel anytime")
+                : t("subscribe_terms_onetime", copy?.terms?.onetime || "Single payment • Non-recurring")
+              }
             </span>
           </div>
 
@@ -144,7 +150,7 @@ export default function ProductCard({
               <span className="font-semibold text-(--primary-color)">
                 {formatPrice(pricePerBottle)}
               </span>{" "}
-              per bottle
+              {t("subscribe_per_bottle", "per bottle")}
             </div>
           )}
 
@@ -152,7 +158,10 @@ export default function ProductCard({
           <p className="mt-2.5 text-xs font-medium text-(--primary-color)/85 flex items-center justify-center gap-1.5 border-t border-(--divider-color)/50 pt-2">
             <i className={`fa-solid ${isSubscription ? "fa-arrows-rotate text-(--accent-color)" : "fa-shield-check text-green-600"} text-[11px]`} />
             <span>
-              {termsLine || (isSubscription ? "Auto-delivery every 30 days • Cancel anytime" : "One-time payment • Single shipment")}
+              {isSubscription
+                ? `${t("subscribe_auto_delivery", "Automatic monthly delivery")} • ${t("subscribe_cancel_anytime", "Cancel anytime")}`
+                : t("subscribe_terms_onetime_shipment", "One-time payment • Single shipment")
+              }
             </span>
           </p>
         </div>
@@ -173,19 +182,19 @@ export default function ProductCard({
         >
           {addStatus === "adding" ? (
             <span className="flex items-center gap-2">
-              <i className="fa-solid fa-spinner fa-spin" /> Adding...
+              <i className="fa-solid fa-spinner fa-spin" /> {t("product_adding", "Adding...")}
             </span>
           ) : addStatus === "added" ? (
             <span className="flex items-center gap-2">
-              <i className="fa-solid fa-check" /> Added to Cart
+              <i className="fa-solid fa-check" /> {t("product_added_to_cart", "Added to Cart")}
             </span>
           ) : isSubscription ? (
             <span className="flex items-center gap-2">
-              <i className="fa-solid fa-arrows-rotate text-xs" /> {copy?.cta?.subscribe || "Subscribe"} — {formatPrice(price)}/mo
+              <i className="fa-solid fa-arrows-rotate text-xs" /> {t("subscribe_cta_subscribe", copy?.cta?.subscribe || "Subscribe")} — {formatPrice(price)}/{t("product_per_month", "mo")}
             </span>
           ) : (
             <span className="flex items-center gap-2">
-              <i className="fa-solid fa-cart-shopping text-xs" /> {copy?.cta?.onetime || "Buy Once"} — {formatPrice(price)}
+              <i className="fa-solid fa-cart-shopping text-xs" /> {t("subscribe_cta_onetime", copy?.cta?.onetime || "Buy Once")} — {formatPrice(price)}
             </span>
           )}
         </button>

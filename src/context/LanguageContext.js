@@ -9,6 +9,7 @@ const LanguageContext = createContext();
 export const LanguageProvider = ({ children }) => {
     const [language, setLanguage] = useState("en"); // Default to English
     const [translations, setTranslations] = useState({});
+    const [apiTranslations, setApiTranslations] = useState({});
     const [availableLanguages, setAvailableLanguages] = useState([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
@@ -16,9 +17,26 @@ export const LanguageProvider = ({ children }) => {
     const loadTranslations = async (lang) => {
         try {
             const common = await import(`@/i18n/${lang}/common.json`);
-            setTranslations(common.default);
+            setTranslations(common.default || {});
         } catch (error) {
-            console.error("Failed to load translations:", error);
+            console.error("Failed to load local translations:", error);
+        }
+
+        try {
+            const response = await apiService.get(`/StaticLocalization?culture=${lang}&lang=${lang}&language=${lang}`);
+            if (response && response.success && Array.isArray(response.data)) {
+                const map = response.data.reduce((acc, item) => {
+                    if (item.key) {
+                        acc[item.key.toLowerCase()] = item.value;
+                    }
+                    return acc;
+                }, {});
+                setApiTranslations(map);
+            } else if (response?.data && typeof response.data === 'object') {
+                setApiTranslations(response.data);
+            }
+        } catch (error) {
+            console.error("Failed to fetch static localization API:", error);
         }
     };
 
@@ -81,23 +99,39 @@ export const LanguageProvider = ({ children }) => {
 
     /**
      * Translate function
-     * Usage: t('navbar.shop_now')
+     * Usage: t('navbar_welcome', 'Welcome') or t('navbar.shop_now')
      */
-    const t = (path) => {
+    const t = (path, fallback) => {
+        if (!path) return fallback || "";
+
+        // 1. Direct lookup in static localization API map (lowercased key)
+        const lowerKey = path.toLowerCase();
+        if (apiTranslations && apiTranslations[lowerKey] !== undefined && apiTranslations[lowerKey] !== "") {
+            return apiTranslations[lowerKey];
+        }
+
+        // 2. Nested lookup in local common.json
         const keys = path.split('.');
         let result = translations;
+        let found = true;
         for (const key of keys) {
-            if (result && result[key]) {
+            if (result && result[key] !== undefined) {
                 result = result[key];
             } else {
-                return path; // Fallback to path name
+                found = false;
+                break;
             }
         }
-        return result;
+        if (found && typeof result === "string" && result !== "") {
+            return result;
+        }
+
+        // 3. Return explicit fallback string if provided, otherwise path key
+        return fallback !== undefined ? fallback : path;
     };
 
     return (
-        <LanguageContext.Provider value={{ language, availableLanguages, switchLanguage, t, loading }}>
+        <LanguageContext.Provider value={{ language, availableLanguages, switchLanguage, t, loc: apiTranslations, loading }}>
             {children}
         </LanguageContext.Provider>
     );

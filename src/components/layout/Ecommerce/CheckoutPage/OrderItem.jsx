@@ -14,7 +14,7 @@ export default function OrderItem({ item }) {
                 {item.image ? (
                     <Image
                         src={item.image}
-                        alt={item.name || "Product image"}
+                        alt={item.name || item.title || "Product image"}
                         width={48}
                         height={48}
                         unoptimized={true}
@@ -35,7 +35,7 @@ export default function OrderItem({ item }) {
 
             {/* Details */}
             <div className="flex-1 min-w-0 flex flex-col justify-center gap-0.5">
-                <h4 className="font-semibold text-primary text-base leading-snug font-accent truncate">{item.name}</h4>
+                <h4 className="font-semibold text-primary text-base leading-snug font-accent truncate">{item.name || item.title || item.variantLabel}</h4>
                 <div className="flex items-center gap-3 text-sm text-text/50 font-default">
                     <span className="truncate max-w-[140px]">
                         {item.variant || stripHtmlTags(item.description) || "Product"}

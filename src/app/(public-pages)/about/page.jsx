@@ -4,6 +4,9 @@ import About from '@/components/layout/About Us/About';
 import TeamMembers from '@/components/layout/About Us/TeamMembers';
 import React from 'react';
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function generateMetadata() {
     const data = await getLocalization();
     return {

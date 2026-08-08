@@ -178,7 +178,7 @@ export default function PaymentForm({
                 {/* Wallet Balance */}
                 {isAuthenticated && (
                     <FaderInAnimation direction="up" delay={0.15}>
-                        <div className={`border rounded-2xl p-6 mb-2 transition-all ${walletBalance > 0 ? 'bg-accent/5 border-accent/20' : 'bg-gray-50 dark:bg-white/[0.02] border-divider opacity-60'}`}>
+                        <div className={`border rounded-2xl p-6 mb-2 transition-all ${walletBalance > 0 ? 'bg-accent/5 border-accent/20' : 'bg-gray-50 dark:bg-white/2 border-divider opacity-60'}`}>
                             <label className={`flex items-center gap-4 group ${walletBalance > 0 ? 'cursor-pointer' : 'cursor-not-allowed'}`}>
                                 <input
                                     type="checkbox"

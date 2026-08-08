@@ -125,8 +125,8 @@ export default function Header({ menus = [] }) {
                         {profile?.name?.charAt(0).toUpperCase() || <FaUser size={14} />}
                       </div>
                       <div className="hidden lg:flex flex-col items-start leading-none">
-                        <span className="text-[10px] text-white/40 uppercase tracking-widest font-bold mb-0.5">Welcome</span>
-                        <span className="font-bold text-sm">{profile?.name || "User"}</span>
+                        <span className="text-[10px] text-white/40 uppercase tracking-widest font-bold mb-0.5">{t("navbar_welcome", "Welcome")}</span>
+                        <span className="font-bold text-sm">{profile?.name || t("navbar_user", "User")}</span>
                       </div>
                       <FaChevronDown className={`text-[10px] text-white/40 transition-transform duration-300 ${userMenuOpen ? "rotate-180" : ""}`} />
                     </button>
@@ -136,7 +136,7 @@ export default function Header({ menus = [] }) {
                         <div className="fixed inset-0 z-40" onClick={() => setUserMenuOpen(false)} />
                         <div className="absolute right-0 mt-3 w-64 bg-primary/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200 origin-top-right">
                           <div className="p-4 border-b border-white bg-primary">
-                            <p className="text-[10px] text-accent font-bold uppercase tracking-[0.2em] mb-1">Account Member</p>
+                            <p className="text-[10px] text-accent font-bold uppercase tracking-[0.2em] mb-1">{t("navbar_account_member", "Account Member")}</p>
                             <div className="flex items-center gap-3">
                               <div className="h-10 w-10 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold border border-accent/20">
                                 {profile?.name?.charAt(0).toUpperCase()}
@@ -159,8 +159,8 @@ export default function Header({ menus = [] }) {
                                 <FaColumns size={14} />
                               </div>
                               <div className="flex flex-col">
-                                <span className="font-semibold text-white">Dashboard</span>
-                                <span className="text-[10px] text-white/40">Manage your account</span>
+                                <span className="font-semibold text-white">{t("navbar_dashboard", "Dashboard")}</span>
+                                <span className="text-[10px] text-white/40">{t("navbar_dashboard_desc", "Manage your account")}</span>
                               </div>
                             </Link>
                             <Link
@@ -172,8 +172,8 @@ export default function Header({ menus = [] }) {
                                 <FaUser size={14} />
                               </div>
                               <div className="flex flex-col">
-                                <span className="font-semibold text-white">Profile Settings</span>
-                                <span className="text-[10px] text-white/40">Update your information</span>
+                                <span className="font-semibold text-white">{t("navbar_profile_settings", "Profile Settings")}</span>
+                                <span className="text-[10px] text-white/40">{t("navbar_profile_desc", "Update your information")}</span>
                               </div>
                             </Link>
                             <div className="my-1 border-t border-white/5 mx-2" />
@@ -184,7 +184,7 @@ export default function Header({ menus = [] }) {
                               <div className="w-8 h-8 rounded-lg bg-error/10 flex items-center justify-center group-hover:bg-error group-hover:text-white transition-all">
                                 <FaSignOutAlt size={14} />
                               </div>
-                              <span className="font-bold">Logout</span>
+                              <span className="font-bold">{t("navbar_logout", "Logout")}</span>
                             </button>
                           </div>
                         </div>
@@ -222,7 +222,7 @@ export default function Header({ menus = [] }) {
                     <div className="fixed inset-0 z-40" onClick={() => setUserMenuOpen(false)} />
                     <div className="absolute right-0 mt-3 w-64 bg-primary/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200 origin-top-right">
                       <div className="p-4 border-b border-white bg-gray-900">
-                        <p className="text-[10px] text-accent font-bold uppercase tracking-[0.2em] mb-1">Account Member</p>
+                        <p className="text-[10px] text-accent font-bold uppercase tracking-[0.2em] mb-1">{t("navbar_account_member", "Account Member")}</p>
                         <div className="flex items-center gap-3">
                           <div className="h-10 w-10 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold border border-accent/20">
                             {profile?.name?.charAt(0).toUpperCase()}
@@ -243,8 +243,8 @@ export default function Header({ menus = [] }) {
                             <FaColumns size={14} />
                           </div>
                           <div className="flex flex-col">
-                            <span className="font-semibold text-white">Dashboard</span>
-                            <span className="text-[10px] text-white/40">Manage your account</span>
+                            <span className="font-semibold text-white">{t("navbar_dashboard", "Dashboard")}</span>
+                            <span className="text-[10px] text-white/40">{t("navbar_dashboard_desc", "Manage your account")}</span>
                           </div>
                         </Link>
                         <Link
@@ -256,8 +256,8 @@ export default function Header({ menus = [] }) {
                             <FaUser size={14} />
                           </div>
                           <div className="flex flex-col">
-                            <span className="font-semibold text-white">Profile Settings</span>
-                            <span className="text-[10px] text-white/40">Update your information</span>
+                            <span className="font-semibold text-white">{t("navbar_profile_settings", "Profile Settings")}</span>
+                            <span className="text-[10px] text-white/40">{t("navbar_profile_desc", "Update your information")}</span>
                           </div>
                         </Link>
                         <div className="my-1 border-t border-white/5 mx-2" />
@@ -268,7 +268,7 @@ export default function Header({ menus = [] }) {
                           <div className="w-8 h-8 rounded-lg bg-error/10 flex items-center justify-center group-hover:bg-error group-hover:text-white transition-all">
                             <FaSignOutAlt size={14} />
                           </div>
-                          <span className="font-bold">Logout</span>
+                          <span className="font-bold">{t("navbar_logout", "Logout")}</span>
                         </button>
                       </div>
                     </div>

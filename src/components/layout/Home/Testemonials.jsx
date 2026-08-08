@@ -71,7 +71,7 @@ function TestimonialCard({ t, cardIndex }) {
     <article className="flex flex-col justify-between h-full text-(--white-color)">
       <div>
         <StarRow />
-        <p className="mt-4 text-[15px] leading-7 text-(--white-color)/90 font-default min-h-[80px]">“{t.text}”</p>
+        <p className="mt-4 text-[15px] leading-7 text-(--white-color)/90 font-default min-h-20">“{t.text}”</p>
       </div>
       <div>
         <div className="mt-6 h-px w-full bg-(--white-color)/12" />

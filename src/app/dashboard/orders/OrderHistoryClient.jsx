@@ -191,7 +191,9 @@ export default function OrderHistoryPage({ localization }) {
                                     onChange={(e) => setFilterStatus(e.target.value)}
                                 >
                                     {statuses.map(status => (
-                                        <option key={status} value={status}>{status}</option>
+                                        <option key={status} value={status}>
+                                            {status === "All" ? (localization?.order_history_filter_all || "All") : status}
+                                        </option>
                                     ))}
                                 </select>
                                 <FaFilter className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-text/40 pointer-events-none" />

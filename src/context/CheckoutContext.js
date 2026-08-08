@@ -13,6 +13,7 @@ const CheckoutContext = createContext();
  * @param {Object} props
  * @param {"one-time"|"subscribe"} [props.checkoutType] – Purchase type filter from URL ?type=
  */
+
 export const CheckoutProvider = ({ children, checkoutType: initialType }) => {
     const { cartItems } = useCart();
     const { user: authUser, isLoggedIn, token } = useAuth();

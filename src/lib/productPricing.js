@@ -84,6 +84,19 @@ export function normalizeProductPricing(raw) {
 
 import { apiService } from "@/lib/api";
 
+async function getLanguage() {
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("appLanguage") || "en";
+  }
+  try {
+    const { cookies } = require("next/headers");
+    const cookieStore = await cookies();
+    return cookieStore.get("appLanguage")?.value || "en";
+  } catch (error) {
+    return "en";
+  }
+}
+
 /**
  * Fetches product pricing data by ID from the external API using apiService.
  * 
@@ -94,8 +107,9 @@ export async function getProductPricing(productId) {
   if (!productId) return null;
 
   try {
+    const lang = await getLanguage();
     const rawData = await apiService.get(
-      `/ProductPricing/${productId}?culture=de`,
+      `/ProductPricing/${productId}?culture=${lang}&lang=${lang}`,
       {},
       { cache: 'no-store' }
     );

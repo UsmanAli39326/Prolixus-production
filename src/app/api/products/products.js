@@ -79,13 +79,26 @@ import { apiService } from "@/lib/api";
 import { getImageUrl } from "@/lib/ImageService";
 
 
+async function getLanguage() {
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("appLanguage") || "en";
+  }
+  try {
+    const { cookies } = require("next/headers");
+    const cookieStore = await cookies();
+    return cookieStore.get("appLanguage")?.value || "en";
+  } catch (error) {
+    return "en";
+  }
+}
+
 // fetch all products
 export async function getAllProducts(page = 1, size = 20) {
   try {
-
+    const lang = await getLanguage();
 
     const response = await apiService.get(
-      `/Configuration/items?pageNumber=${page}&pageSize=${size}`,
+      `/Configuration/items?pageNumber=${page}&pageSize=${size}&culture=${lang}&lang=${lang}`,
       {
         cache: "no-store",
       },
@@ -102,6 +115,7 @@ export async function getAllProducts(page = 1, size = 20) {
     const products = data.items.map((item) => ({
       id: item.itemId,
       title: item.itemName,
+      name: item.itemName,
       price: item.unitPrice,
       rating: 4,
       reviews: item.availableQuantity ?? 0,
@@ -137,8 +151,9 @@ export async function getAllProducts(page = 1, size = 20) {
 // fetch single product by ID
 export async function getProductById(id) {
   try {
+    const lang = await getLanguage();
     const response = await apiService.get(
-      `/Configuration/items/${id}`,
+      `/Configuration/items/${id}?culture=${lang}&lang=${lang}`,
       {},
       { cache: 'no-store' }
     );
@@ -148,7 +163,8 @@ export async function getProductById(id) {
 
     return {
       id: item.id,
-      title: item.name,
+      title: item.name || item.itemName,
+      name: item.name || item.itemName,
       price: item.price,
       rating: 4,
       reviews: item.quantity ?? 0,

@@ -1,25 +1,23 @@
 "use client";
 import React from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { useLanguage } from "@/context/LanguageContext";
 
 /**
  * DataTable Component
  * 
  * A reusable table component for the dashboard with support for custom columns, 
  * data rendering, and pagination UI.
- * 
- * @param {Object} props
- * @param {Array} props.columns - Configuration for table columns
- * @param {Array} props.data - Array of data objects to display
- * @param {Object} props.pagination - Pagination state and controls (optional)
- * @param {string} props.emptyMessage - Message to show when data is empty
  */
 const DataTable = ({
     columns = [],
     data = [],
     pagination = null,
-    emptyMessage = "No data found."
+    emptyMessage
 }) => {
+    const { t } = useLanguage();
+    const resolvedEmptyMessage = emptyMessage || t("datatable_empty_message", "No data found.");
+
     return (
         <div className="flex flex-col gap-6">
             <div className="w-full overflow-hidden rounded-xl border border-divider bg-white dark:bg-background-dark/50 shadow-sm">
@@ -57,7 +55,7 @@ const DataTable = ({
                             ) : (
                                 <tr>
                                     <td colSpan={columns.length} className="px-6 py-10 text-center text-text/50">
-                                        {emptyMessage}
+                                        {resolvedEmptyMessage}
                                     </td>
                                 </tr>
                             )}
@@ -70,14 +68,15 @@ const DataTable = ({
             {pagination && (
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                     <p className="text-sm text-text/60 dark:text-white/60">
-                        Showing <span className="font-bold text-text dark:text-white">{pagination.from}-{pagination.to}</span> of{" "}
-                        <span className="font-bold text-text dark:text-white">{pagination.total}</span> entries
+                        {t("datatable_showing", "Showing")} <span className="font-bold text-text dark:text-white">{pagination.from}-{pagination.to}</span> {t("datatable_of", "of")}{" "}
+                        <span className="font-bold text-text dark:text-white">{pagination.total}</span> {t("datatable_entries", "entries")}
                     </p>
                     <div className="flex items-center gap-2">
                         <button
                             onClick={pagination.onPrev}
                             disabled={pagination.currentPage === 1}
                             className="flex size-9 items-center justify-center rounded-lg border border-divider bg-white dark:bg-white/5 text-text dark:text-white hover:bg-secondary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            aria-label={t("datatable_previous", "Previous")}
                         >
                             <FaChevronLeft className="text-xs" />
                         </button>
@@ -122,6 +121,7 @@ const DataTable = ({
                             onClick={pagination.onNext}
                             disabled={pagination.currentPage === pagination.totalPages}
                             className="flex size-9 items-center justify-center rounded-lg border border-divider bg-white dark:bg-white/5 text-text dark:text-white hover:bg-secondary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            aria-label={t("datatable_next", "Next")}
                         >
                             <FaChevronRight className="text-xs" />
                         </button>

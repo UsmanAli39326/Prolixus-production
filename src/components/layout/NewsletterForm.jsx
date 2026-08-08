@@ -4,8 +4,10 @@ import { useState } from "react";
 import { FaAt, FaArrowRight, FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 import Button from "@/components/ui/Button";
 import { subscribeNewsletter } from "@/app/api/newsletter/newsletter";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function NewsletterForm() {
+  const { t } = useLanguage();
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState("idle"); // idle, loading, success, error
   const [message, setMessage] = useState("");
@@ -22,15 +24,15 @@ export default function NewsletterForm() {
       
       if (response?.success) {
         setStatus("success");
-        setMessage(response?.message || "Thank you for subscribing!");
+        setMessage(response?.message || t("newsletter_success_message", "Thank you for subscribing!"));
         setEmail("");
       } else {
         setStatus("error");
-        setMessage(response?.message || "Something went wrong. Please try again.");
+        setMessage(response?.message || t("newsletter_error_message", "Something went wrong. Please try again."));
       }
     } catch (error) {
       setStatus("error");
-      setMessage("Failed to subscribe. Please check your connection.");
+      setMessage(t("newsletter_error_connection", "Failed to subscribe. Please check your connection."));
     }
   };
 
@@ -43,7 +45,7 @@ export default function NewsletterForm() {
           </div>
           <input
             type="email"
-            placeholder="Enter your email"
+            placeholder={t("newsletter_placeholder", "Enter your email")}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full bg-white/5 border border-white/10 rounded-xl py-4 pl-12 pr-4 text-(--white-color) font-default text-[15px] focus:outline-none focus:border-(--accent-color)/50 transition"
@@ -60,7 +62,7 @@ export default function NewsletterForm() {
           disabled={status === "loading"}
           rightIcon={status !== "loading" && <FaArrowRight size={14} className="group-hover:translate-x-1 transition" />}
         >
-          {status === "loading" ? "Subscribing..." : "Subscribe Now"}
+          {status === "loading" ? t("newsletter_subscribing", "Subscribing...") : t("newsletter_submit_button", "Subscribe Now")}
         </Button>
       </form>
 

@@ -39,7 +39,7 @@ export default function RecentOrderSection({ order, loading, localization }) {
                 </Link>
             </div>
 
-            <RecentOrderCard order={order} />
+            <RecentOrderCard order={order} localization={localization} />
         </section>
     );
 }

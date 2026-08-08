@@ -2,7 +2,11 @@ import { apiService } from "@/lib/api";
 
 export async function getShopMenus() {
   try {
-    const response = await apiService.get("/Configuration/shopmenus");
+    const response = await apiService.get(
+      "/Configuration/shopmenus",
+      {},
+      { cache: "no-store", next: { revalidate: 0 } }
+    );
 
     let menus = [];
 

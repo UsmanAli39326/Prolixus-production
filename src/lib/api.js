@@ -41,10 +41,9 @@ function getBrowserTimeZone() {
 async function request(endpoint, method = 'GET', body = null, headers = {}, isGuest = false, options = {}) {
   const token = isGuest ? process.env.NEXT_PUBLIC_API_TOKEN : getToken();
 
-  // Add cache buster for GET requests, except for specific endpoints
-  const skipCacheBuster = endpoint.includes('/about') || endpoint.includes('/shopmenus');
+  // Add cache buster for GET requests
   const separator = endpoint.includes('?') ? '&' : '?';
-  const url = (method === 'GET' && !skipCacheBuster)
+  const url = method === 'GET'
     ? `${BASE_URL}${endpoint}${separator}t=${Date.now()}`
     : `${BASE_URL}${endpoint}`;
 

@@ -5,11 +5,13 @@ import Image from "next/image";
 import { getProductPricing } from "@/lib/productPricing";
 import useCart from "@/Hooks/useCart";
 import { useCurrency } from "@/context/CurrencyContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { ProductImageGallery, ProductAccordion } from "@/components/layout/Ecommerce/ProductPage";
 import { motion, AnimatePresence } from "framer-motion";
 import { getImageUrl } from "@/lib/ImageService";
 
 export default function ProductVariantBlock({ product, isGrid = false }) {
+  const { t } = useLanguage();
   const [pricingData, setPricingData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -40,10 +42,10 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
             setSelectedVariantId(data.oneTimeOptions[0].id);
           }
         } else {
-          setError("Failed to fetch pricing options.");
+          setError(t("error_fetch_pricing", "Failed to fetch pricing options."));
         }
       } catch (err) {
-        setError("An error occurred while fetching pricing.");
+        setError(t("error_pricing_general", "An error occurred while fetching pricing."));
       } finally {
         setLoading(false);
       }
@@ -93,26 +95,25 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
 
     const variantId = purchaseType === 'one-time' ? selectedVariantId : primarySubscription?.id;
 
-    // The system should consider it as 1 item (a single bundle/subscription package).
-    // The total price is passed as the item price.
     const price = purchaseType === 'one-time'
       ? selectedOneTimeOption?.price
       : primarySubscription?.price;
 
     const label = purchaseType === 'one-time' ? selectedOneTimeOption?.label : primarySubscription?.label;
 
-    // The physical number of bottles/items for display purposes
     const bundleQuantity = purchaseType === 'one-time' ? selectedOneTimeOption?.quantity : primarySubscription?.quantity || 1;
 
     const cartProduct = {
       ...product,
       productId: product.id,
+      title: product.title || product.name,
+      name: product.name || product.title,
       price,
       variantId,
       variantLabel: label,
-      purchaseType, // 'one-time' | 'subscribe'
-      bundleQuantity, // Displayed as description in Cart
-      id: `${product.id}-${variantId}-${purchaseType}` // Make a unique cart ID so different variants don't merge wrongly
+      purchaseType,
+      bundleQuantity,
+      id: `${product.id}-${variantId}-${purchaseType}`
     };
 
     addToCart(cartProduct, 1);
@@ -125,11 +126,9 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
   const selectedOptionFile = purchaseType === 'one-time' ? selectedOneTimeOption?.file : primarySubscription?.file;
   const activeImageUrl = selectedOptionFile?.url ? getImageUrl(selectedOptionFile.url) : null;
 
-  // Compile full list of unique images for the carousel
   const allImgs = [activeImageUrl, productImageUrl, product.image, ...(product.itemImages || [])].filter(Boolean);
   let uniqueImages = Array.from(new Set(allImgs));
 
-  // Use fallback if images are missing or it's just the placeholder
   if (uniqueImages.length === 0 || (uniqueImages.length === 1 && uniqueImages[0].includes("placeholder.png"))) {
     uniqueImages = ["/images/new/prolixus-nutrients.jpeg"];
   }
@@ -152,7 +151,7 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
               </span>
             )}
             <span className="text-sm font-medium text-(--primary-color)/60 uppercase tracking-wider">
-              {product.category || "Premium Supplement"}
+              {product.category || t("product_category_default", "Premium Supplement")}
             </span>
           </div>
           <h2 className="text-3xl md:text-4xl font-accent font-semibold text-(--primary-color) mb-2">
@@ -165,8 +164,8 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
           <ProductAccordion
             items={[
               {
-                title: "Description",
-                content: product.description || "No description available",
+                title: t("product_description_title", "Description"),
+                content: product.description || t("product_no_description", "No description available"),
               },
             ]}
           />
@@ -184,11 +183,11 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
             >
               {/* Discount/Best Value Badge */}
               <span className="absolute -top-3 right-4 bg-(--accent-color) text-(--white-color) text-xs font-bold px-3 py-1 rounded-full shadow-sm flex items-center gap-1">
-                <i className="fa-solid fa-star text-[10px]"></i> Best Value
-                {discountPercentage > 0 && ` | Save ${discountPercentage}%`}
+                <i className="fa-solid fa-star text-[10px]"></i> {t("product_best_value", "Best Value")}
+                {discountPercentage > 0 && ` | ${t("product_save", "Save")} ${discountPercentage}%`}
               </span>
               <span className={`text-base font-bold ${purchaseType === "subscribe" ? "text-(--accent-color)" : "text-(--primary-color)"}`}>
-                Subscribe & save
+                {t("product_subscribe_save", "Subscribe & save")}
               </span>
             </button>
           )}
@@ -201,7 +200,7 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
               }`}
           >
             <span className={`text-base font-semibold ${purchaseType === "one-time" ? "text-(--accent-color)" : "text-(--primary-color)"}`}>
-              One-time purchase
+              {t("product_one_time", "One-time purchase")}
             </span>
           </button>
         </div>
@@ -221,7 +220,9 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
           <div className="mb-2">
             {(oneTimeOptions.length > 1 || (oneTimeOptions.length === 1 && !isGrid)) && (
               <>
-                <h4 className="text-sm font-semibold uppercase tracking-wider text-(--primary-color) mb-3">Select Quantity</h4>
+                <h4 className="text-sm font-semibold uppercase tracking-wider text-(--primary-color) mb-3">
+                  {t("product_select_quantity", "Select Quantity")}
+                </h4>
                 <div className="flex flex-col gap-2">
                   {oneTimeOptions.map((opt) => (
                     <button
@@ -242,7 +243,7 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
                       <div className="flex flex-col items-end">
                         <span className="font-bold text-(--primary-color)">{formatPrice(opt.price)}</span>
                         {opt.quantity > 1 && (
-                          <span className="text-xs text-gray-500">{formatPrice(opt.price / opt.quantity)} / each</span>
+                          <span className="text-xs text-gray-500">{formatPrice(opt.price / opt.quantity)} / {t("product_each", "each")}</span>
                         )}
                       </div>
                     </button>
@@ -264,23 +265,36 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
             <div className="p-5 rounded-2xl bg-(--secondary-color) border border-(--divider-color)">
             <div className="flex justify-between items-center mb-4">
               <h4 className="text-lg font-bold text-(--primary-color)">
-                {primarySubscription?.label || "Subscription Plan"}
+                {primarySubscription?.label || t("product_subscription_plan", "Subscription Plan")}
               </h4>
               <span className="text-2xl font-bold text-(--accent-color)">
-                {formatPrice(primarySubscription?.price)}<span className="text-sm font-normal text-(--primary-color)/70">/mo</span>
+                {formatPrice(primarySubscription?.price)}<span className="text-sm font-normal text-(--primary-color)/70">/{t("product_per_month", "mo")}</span>
               </span>
             </div>
 
             {subscriptionBenefits && subscriptionBenefits.length > 0 && (
               <ul className="space-y-3">
-                {subscriptionBenefits.map((benefit, idx) => (
-                  <li key={idx} className="flex items-start gap-3">
-                    <span className="text-(--accent-color) mt-0.5">
-                      <i className="fa-solid fa-circle-check"></i>
-                    </span>
-                    <span className="text-sm text-(--primary-color)/90">{benefit}</span>
-                  </li>
-                ))}
+                {subscriptionBenefits.map((benefit, idx) => {
+                  const normalizedKey = benefit ? `subscribe_${benefit.toLowerCase().replace(/[^a-z0-9]/g, '_')}` : '';
+                  const localizedBenefit = benefit === "Cancel anytime"
+                    ? t("subscribe_cancel_anytime", "Cancel anytime")
+                    : benefit === "Automatic monthly delivery"
+                    ? t("subscribe_auto_delivery", "Automatic monthly delivery")
+                    : benefit === "Exclusive subscriber savings"
+                    ? t("subscribe_subscriber_savings", "Exclusive subscriber savings")
+                    : t(normalizedKey, benefit);
+
+                  return (
+                    <li key={idx} className="flex items-start gap-3">
+                      <span className="text-(--accent-color) mt-0.5">
+                        <i className="fa-solid fa-circle-check"></i>
+                      </span>
+                      <span className="text-sm text-(--text-color)/90">
+                        {localizedBenefit}
+                      </span>
+                    </li>
+                  );
+                })}
               </ul>
             )}
             </div>
@@ -309,7 +323,7 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
                   transition={{ duration: 0.2 }}
                   className="flex items-center gap-2"
                 >
-                  <i className="fa-solid fa-spinner fa-spin"></i> Adding...
+                  <i className="fa-solid fa-spinner fa-spin"></i> {t("product_adding", "Adding...")}
                 </motion.span>
               ) : addStatus === "added" ? (
                 <motion.span
@@ -320,7 +334,7 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
                   transition={{ duration: 0.3, type: "spring", stiffness: 300 }}
                   className="flex items-center gap-2"
                 >
-                  <i className="fa-solid fa-check"></i> Added to Cart
+                  <i className="fa-solid fa-check"></i> {t("product_added_to_cart", "Added to Cart")}
                 </motion.span>
               ) : purchaseType === "one-time" ? (
                 <motion.span
@@ -330,7 +344,7 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
                   exit={{ opacity: 0, y: -15 }}
                   transition={{ duration: 0.2 }}
                 >
-                  Add to cart — ${selectedOneTimeOption?.price.toFixed(2) || '0.00'}
+                  {t("product_add_to_cart", "Add to cart")} — {formatPrice(selectedOneTimeOption?.price || 0)}
                 </motion.span>
               ) : (
                 <motion.span
@@ -340,7 +354,7 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
                   exit={{ opacity: 0, y: -15 }}
                   transition={{ duration: 0.2 }}
                 >
-                  Subscribe — ${primarySubscription?.price.toFixed(2) || '0.00'}/mo
+                  {t("product_subscribe_button", "Subscribe")} — {formatPrice(primarySubscription?.price || 0)}/{t("product_per_month", "mo")}
                 </motion.span>
               )}
             </AnimatePresence>

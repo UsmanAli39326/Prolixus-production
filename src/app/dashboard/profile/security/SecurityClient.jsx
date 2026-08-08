@@ -79,7 +79,7 @@ export default function SecuritySettingsPage({ localization }) {
         dismissToast();
 
         if (formData.newPassword !== formData.confirmPassword) {
-            setErrors({ confirmPassword: localization?.error_password_mismatch || "Passwords do not match." });
+            setErrors({ confirmPassword: localization?.security_error_password_mismatch || localization?.error_password_mismatch || "Passwords do not match." });
             return;
         }
 

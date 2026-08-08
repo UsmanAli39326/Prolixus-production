@@ -16,6 +16,34 @@ const INITIAL_FORM = {
   messageDescription: "",
 };
 
+const getEmbedMapUrl = (mapLocation, address) => {
+  let url = mapLocation;
+  if (url) {
+    // Extract src if mapLocation contains an <iframe> tag
+    if (url.includes("<iframe") && url.includes("src=")) {
+      const match = url.match(/src=["']([^"']+)["']/);
+      if (match && match[1]) {
+        url = match[1];
+      }
+    }
+    // Decode HTML entities such as &amp;
+    url = url.replace(/&amp;/g, "&");
+
+    // Ensure output=embed parameter is present for search/pin links
+    if ((url.includes("google.com/maps") || url.includes("maps.google.com")) && !url.includes("output=embed") && !url.includes("/embed")) {
+      const separator = url.includes("?") ? "&" : "?";
+      url = `${url}${separator}output=embed`;
+    }
+    return url;
+  }
+
+  if (address) {
+    return `https://www.google.com/maps?q=${encodeURIComponent(address)}&output=embed`;
+  }
+
+  return "https://www.google.com/maps?q=Filder+Str.+63,+47441+Moers,+Germany&output=embed";
+};
+
 export default function ContactSection({ localization }) {
   const [about, setAbout] = useState(null);
   const [formData, setFormData] = useState(INITIAL_FORM);
@@ -165,7 +193,7 @@ export default function ContactSection({ localization }) {
                     onChange={handleChange}
                     rows={5}
                     placeholder={localization?.contact_message_placeholder}
-                    className="w-full px-4 py-3 rounded-xl border border-divider bg-white text-text placeholder:text-text/50 text-sm font-default outline-none resize-vertical transition-[border-color,box-shadow] duration-200 focus:border-accent focus:ring-2 focus:ring-accent/20 min-h-[130px]"
+                    className="w-full px-4 py-3 rounded-xl border border-divider bg-white text-text placeholder:text-text/50 text-sm font-default outline-none resize-vertical transition-[border-color,box-shadow] duration-200 focus:border-accent focus:ring-2 focus:ring-accent/20 min-h-32.5"
                     required
                   />
                 </FaderInAnimation>
@@ -177,7 +205,7 @@ export default function ContactSection({ localization }) {
                     variant="accent"
                     size="lg"
                     disabled={isSubmitting}
-                    className="mt-2 w-fit !rounded-full"
+                    className="mt-2 w-fit rounded-full!"
                   >
                     {isSubmitting ? localization?.contact_submitting_button : localization?.contact_submit_button}
                   </Button>
@@ -189,11 +217,8 @@ export default function ContactSection({ localization }) {
             <div className="min-h-80 border-t border-divider lg:min-h-full lg:border-l lg:border-t-0">
               <iframe
                 title="Google Map"
-                className="h-full w-full"
-                src={
-                  about?.googleMap ||
-                  "https://www.google.com/maps?q=Filder+Str.+63,+47441+Moers,+Germany&output=embed"
-                }
+                className="h-full w-full min-h-[400px] border-0"
+                src={getEmbedMapUrl(about?.googleMap, about?.address)}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 allowFullScreen

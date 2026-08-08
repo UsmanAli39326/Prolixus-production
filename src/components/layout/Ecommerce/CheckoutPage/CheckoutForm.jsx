@@ -8,8 +8,10 @@ import Button from "@/components/ui/Button";
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import { getCountries } from "@/app/api/products/countries";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function CheckoutForm({ nextStep, goToStep, formData, updateFormData, isAuthenticated, total, onDirectComplete, isSubmitting, isSubscription, localization }) {
+    const { t } = useLanguage();
     const [errors, setErrors] = useState({});
 
     const inputStyles = {
@@ -42,14 +44,15 @@ export default function CheckoutForm({ nextStep, goToStep, formData, updateFormD
 
     const validate = () => {
         const newErrors = {};
-        if (!formData.email) newErrors.email = `${localization?.checkout_email_label} is required`;
-        if (!formData.fullName) newErrors.fullName = `${localization?.checkout_fullname_label} is required`;
-        if (!formData.phone) newErrors.phone = `${localization?.checkout_phone_label} is required`;
-        if (!formData.address) newErrors.address = `${localization?.checkout_street_label} is required`;
-        if (!formData.city) newErrors.city = `${localization?.checkout_city_label} is required`;
-        if (!formData.zip) newErrors.zip = `${localization?.checkout_zip_label} is required`;
+        const isReq = localization?.checkout_field_required || t("checkout_field_required", "is required");
+        if (!formData.email) newErrors.email = `${localization?.checkout_email_label || t("checkout_email_label", "Email")} ${isReq}`;
+        if (!formData.fullName) newErrors.fullName = `${localization?.checkout_fullname_label || t("checkout_fullname_label", "Full Name")} ${isReq}`;
+        if (!formData.phone) newErrors.phone = `${localization?.checkout_phone_label || t("checkout_phone_label", "Phone")} ${isReq}`;
+        if (!formData.address) newErrors.address = `${localization?.checkout_street_label || t("checkout_street_label", "Address")} ${isReq}`;
+        if (!formData.city) newErrors.city = `${localization?.checkout_city_label || t("checkout_city_label", "City")} ${isReq}`;
+        if (!formData.zip) newErrors.zip = `${localization?.checkout_zip_label || t("checkout_zip_label", "ZIP / Postal Code")} ${isReq}`;
         if (formData.countryCode === "US" && !formData.state) {
-            newErrors.state = localization?.checkout_state_required || "State is required for United States shipping";
+            newErrors.state = localization?.checkout_state_required || t("checkout_state_required", "State is required for United States shipping");
         }
 
         setErrors(newErrors);

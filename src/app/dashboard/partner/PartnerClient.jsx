@@ -91,10 +91,10 @@ export default function PartnerProgramPage({ localization }) {
             if (response.success) {
                 setWalletData(response.data);
             } else {
-                setError(response.message || "Failed to fetch wallet data.");
+                setError(response.message || localization?.partner_error_fetch_wallet || "Failed to fetch wallet data.");
             }
         } catch (err) {
-            setError(err.message || "An unexpected error occurred.");
+            setError(err.message || localization?.partner_error_unexpected || "An unexpected error occurred.");
         } finally {
             setIsLoading(false);
         }
@@ -305,7 +305,7 @@ export default function PartnerProgramPage({ localization }) {
                                 const totalAmount = (entry.totalAffiliateAmount ?? (entry.affiliatePercentageAmount + (entry.affiliateAbsoluteAmount || 0))) || 0;
 
                                 return {
-                                    id: entry.orderInvoiceNumber ? `#${entry.orderInvoiceNumber}` : (entry.invoiceNumber ? `#${entry.invoiceNumber}` : (entry.orderId ? `#ORD-${entry.orderId}` : (entry.id ? `#TRX-${entry.id}` : "N/A"))),
+                                    id: entry.orderInvoiceNumber ? `#${entry.orderInvoiceNumber}` : (entry.invoiceNumber ? `#${entry.invoiceNumber}` : (entry.orderId ? `#ORD-${entry.orderId}` : (entry.id ? `#TRX-${entry.id}` : (localization?.partner_na || "N/A")))),
                                     date: formatDate(entry.createdDateTime || entry.transactionDate, 'datetime'),
                                     customer: entry.customerName || "-",
                                     rate: entry.affiliatePercentage > 0 ? `${entry.affiliatePercentage}%` : (entry.affiliateAbsoluteAmount > 0 ? formatPrice(entry.affiliateAbsoluteAmount) : "-"),
@@ -330,9 +330,9 @@ export default function PartnerProgramPage({ localization }) {
             {/* Footer Links */}
             <FaderInAnimation direction="up" delay={0.8}>
                 <div className="mt-4 flex flex-wrap justify-center md:justify-start gap-6 text-sm text-text/50">
-                    <a className="hover:text-accent transition-colors underline decoration-divider underline-offset-4" href="/terms">Terms & Conditions</a>
-                    <a className="hover:text-accent transition-colors underline decoration-divider underline-offset-4" href="#">Payout Settings</a>
-                    <a className="hover:text-accent transition-colors underline decoration-divider underline-offset-4" href="#">Contact Support</a>
+                    <a className="hover:text-accent transition-colors underline decoration-divider underline-offset-4" href="/terms">{localization?.partner_footer_terms || "Terms & Conditions"}</a>
+                    <a className="hover:text-accent transition-colors underline decoration-divider underline-offset-4" href="#">{localization?.partner_footer_payout_settings || "Payout Settings"}</a>
+                    <a className="hover:text-accent transition-colors underline decoration-divider underline-offset-4" href="/contact">{localization?.partner_footer_contact_support || localization?.dashboard_contact_support || "Contact Support"}</a>
                 </div>
             </FaderInAnimation>
         </div>

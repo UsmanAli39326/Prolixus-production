@@ -44,13 +44,13 @@ export default function SubscriptionsClient({ localization }) {
         setIsCancelling(true);
         setCancelError(null);
         setCancelProgress(0);
-        setCancelActionText("Initiating cancellation...");
+        setCancelActionText(localization?.subscriptions_cancel_step_initiating || "Initiating cancellation...");
 
         const actions = [
-            "Contacting provider...",
-            "Updating subscription status...",
-            "Revoking access benefits...",
-            "Finalizing cancellation..."
+            localization?.subscriptions_cancel_step_contacting || "Contacting provider...",
+            localization?.subscriptions_cancel_step_updating || "Updating subscription status...",
+            localization?.subscriptions_cancel_step_revoking || "Revoking access benefits...",
+            localization?.subscriptions_cancel_step_finalizing || "Finalizing cancellation..."
         ];
 
         let actionIndex = 0;
@@ -76,7 +76,7 @@ export default function SubscriptionsClient({ localization }) {
 
             clearInterval(progressInterval);
             setCancelProgress(100);
-            setCancelActionText("Cancellation successful.");
+            setCancelActionText(localization?.subscriptions_cancel_step_success || "Cancellation successful.");
 
             await new Promise(resolve => setTimeout(resolve, 500));
 
@@ -342,14 +342,14 @@ export default function SubscriptionsClient({ localization }) {
                                 {localization?.subscriptions_cancel_success || "Cancelled Successfully"}
                             </h3>
                             <p className="text-text/70 dark:text-white/70 text-sm">
-                                Your subscription has been revoked.
+                                {localization?.subscriptions_cancel_revoked_desc || "Your subscription has been revoked."}
                             </p>
                         </>
                     ) : isCancelling ? (
                         <>
                             <div className="w-12 h-12 border-4 border-surface-2 border-t-primary rounded-full animate-spin mb-2"></div>
                             <h3 className="text-lg font-bold text-text dark:text-white">
-                                {localization?.cancelling || "Cancelling Subscription"}
+                                {localization?.subscriptions_cancel_progress_title || localization?.cancelling || "Cancelling Subscription"}
                             </h3>
                             <p className="text-text/70 dark:text-white/70 text-sm animate-pulse min-h-[20px]">
                                 {cancelActionText}
@@ -370,7 +370,13 @@ export default function SubscriptionsClient({ localization }) {
                                 {localization?.subscriptions_cancel_title || "Cancel Subscription?"}
                             </h3>
                             <p className="text-text/70 dark:text-white/70 text-sm mb-2">
-                                You are about to cancel <strong className="text-text dark:text-white">{subscriptionToCancel?.productName || subscriptionToCancel?.name || "this plan"}</strong>. You will immediately lose access to all its benefits.
+                                {localization?.subscriptions_cancel_confirm_message ? (
+                                    localization.subscriptions_cancel_confirm_message.replace("{productName}", subscriptionToCancel?.productName || subscriptionToCancel?.name || localization?.subscriptions_default_product || "this plan")
+                                ) : (
+                                    <>
+                                        You are about to cancel <strong className="text-text dark:text-white">{subscriptionToCancel?.productName || subscriptionToCancel?.name || localization?.subscriptions_default_product || "this plan"}</strong>. You will immediately lose access to all its benefits.
+                                    </>
+                                )}
                             </p>
 
                             {cancelError && (
@@ -384,13 +390,13 @@ export default function SubscriptionsClient({ localization }) {
                                     onClick={() => setCancelModalOpen(false)}
                                     className="flex-1 py-2.5 text-sm font-semibold rounded-lg bg-surface-2 dark:bg-surface-dark text-text dark:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-colors border-none cursor-pointer"
                                 >
-                                    {localization?.keep_subscription || "Keep It"}
+                                    {localization?.subscriptions_keep_it || localization?.keep_subscription || "Keep It"}
                                 </button>
                                 <button
                                     onClick={confirmCancelSubscription}
                                     className="flex-1 py-2.5 text-sm font-semibold rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors shadow-sm shadow-red-500/20 border-none cursor-pointer"
                                 >
-                                    {localization?.confirm_cancel || "Yes, Cancel"}
+                                    {localization?.subscriptions_confirm_cancel || localization?.confirm_cancel || "Yes, Cancel"}
                                 </button>
                             </div>
                         </>
