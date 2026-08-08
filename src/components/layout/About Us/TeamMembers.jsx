@@ -2,7 +2,6 @@ import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import { getTeamMembers } from "@/app/api/about/about";
 import { getTeamCopy } from "@/constants/teamCopy";
-import TeamMemberAvatar from "./TeamMemberAvatar";
 
 export default async function TeamMembers({ localization = {} }) {
   const teamMembers = await getTeamMembers();
@@ -36,7 +35,17 @@ export default async function TeamMembers({ localization = {} }) {
               <div className="group flex flex-col items-center bg-white rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 h-full">
                 {/* Profile Image */}
                 <div className="relative h-40 w-40 mb-6 rounded-full overflow-hidden border-4 border-gray-50 shadow-md group-hover:border-accent transition-colors duration-300">
-                  <TeamMemberAvatar member={member} apiBase={API_BASE} />
+                  {member.fileId ? (
+                    <img
+                      src={`${API_BASE}/File/GetFile/${member.fileId}`}
+                      alt={member.name || "Team Member"}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-400">
+                      <span className="text-4xl">👤</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Member Info */}
@@ -49,7 +58,7 @@ export default async function TeamMembers({ localization = {} }) {
 
                 {/* Description */}
                 {member.description && (
-                  <div 
+                  <div
                     className="text-text/70 text-sm text-center prose prose-sm prose-primary mt-auto"
                     dangerouslySetInnerHTML={{ __html: member.description }}
                   />
