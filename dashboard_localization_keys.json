@@ -56,5 +56,7 @@
   { "key": "datatable_of", "value": "of" },
   { "key": "datatable_entries", "value": "entries" },
   { "key": "datatable_previous", "value": "Previous" },
-  { "key": "datatable_next", "value": "Next" }
+  { "key": "datatable_next", "value": "Next" },
+  { "key": "team_title", "value": "Meet Our Team" },
+  { "key": "team_subtitle", "value": "The passionate individuals driving our vision forward." }
 ]

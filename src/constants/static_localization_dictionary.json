@@ -113,5 +113,8 @@
   "datatable_entries": "entries",
   "datatable_previous": "Previous",
   "datatable_next": "Next",
-  "modal_close": "Close"
+  "modal_close": "Close",
+
+  "team_title": "Meet Our Team",
+  "team_subtitle": "The passionate individuals driving our vision forward."
 }
