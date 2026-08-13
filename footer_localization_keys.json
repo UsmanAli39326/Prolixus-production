@@ -1,0 +1,19 @@
+[
+  { "key": "footer_desc_fallback", "en": "Crafting exceptional experiences with a focus on innovation and sustainable growth.", "de": "Gestaltung außergewöhnlicher Erlebnisse mit Fokus auf Innovation und nachhaltiges Wachstum." },
+  { "key": "footer_learn_more", "en": "learn more", "de": "Mehr erfahren" },
+  { "key": "footer_quick_links", "en": "Quick Links", "de": "Schnelllinks" },
+  { "key": "footer_link_login", "en": "Login", "de": "Anmelden" },
+  { "key": "footer_link_certificates", "en": "Certificates", "de": "Zertifikate" },
+  { "key": "footer_link_terms", "en": "Terms & Conditions", "de": "AGB" },
+  { "key": "footer_link_privacy", "en": "Privacy Policy", "de": "Datenschutzrichtlinie" },
+  { "key": "footer_link_return", "en": "Return & Refund Policy", "de": "Rückgabe- & Erstattungsrichtlinie" },
+  { "key": "footer_link_faqs", "en": "FAQ's", "de": "Häufige Fragen (FAQs)" },
+  { "key": "footer_contact_us", "en": "Contact Us", "de": "Kontaktieren Sie uns" },
+  { "key": "footer_address_unavailable", "en": "Address info unavailable", "de": "Adresse nicht verfügbar" },
+  { "key": "footer_stay_updated", "en": "Stay Updated", "de": "Auf dem Laufenden bleiben" },
+  { "key": "footer_newsletter_text", "en": "Join our newsletter to receive the latest updates and health insights.", "de": "Abonnieren Sie unseren Newsletter, um die neuesten Updates und Gesundheitseinblicke zu erhalten." },
+  { "key": "footer_follow_us", "en": "Follow Us", "de": "Folgen Sie uns" },
+  { "key": "footer_all_rights", "en": "All rights reserved.", "de": "Alle Rechte vorbehalten." },
+  { "key": "footer_privacy_short", "en": "Privacy", "de": "Datenschutz" },
+  { "key": "footer_terms_short", "en": "Terms", "de": "AGB" }
+]

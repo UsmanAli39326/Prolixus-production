@@ -64,8 +64,10 @@ export async function getTeamMembers() {
       {},
       { next: { revalidate: 0 }, cache: 'no-store' }
     );
-    if (!response?.success || !response?.data) return [];
-    return response.data;
+    if (!response) return [];
+    if (Array.isArray(response.data)) return response.data;
+    if (Array.isArray(response)) return response;
+    return [];
   } catch (error) {
     console.error("Team Members API Error:", error);
     return [];
