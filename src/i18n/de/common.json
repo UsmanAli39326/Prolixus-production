@@ -10,5 +10,14 @@
         "title": "Über uns",
         "philosophy": "Unsere Philosophie",
         "explore_story": "ENTDECKEN SIE UNSERE GESCHICHTE"
-    }
+    },
+    "certificates": {
+        "header_title": "Zertifikate",
+        "header_subtitle": "Unser Engagement für Qualität",
+        "breadcrumb": "Zertifikate",
+        "title": "Unsere Zertifizierungen",
+        "subtitle": "Den höchsten Standards an Qualität, Sicherheit und Exzellenz verpflichtet."
+    },
+    "certificates_header_title": "Zertifikate",
+    "certificates_header_subtitle": "Unser Engagement für Qualität"
 }

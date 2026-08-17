@@ -177,6 +177,7 @@ export default function WhatWeDo({ data = {} }) {
                     width={150}
                     height={150}
                     className="w-[100px] h-[100px] sm:w-[150px] sm:h-[150px] rounded-full object-cover"
+                    unoptimized
                   />
                 </div>
               </div>

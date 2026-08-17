@@ -3,26 +3,10 @@
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import Image from "next/image";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { getTestimonialsCopy } from "@/constants/testimonialsCopy";
 import { useLanguage } from "@/context/LanguageContext";
-import { FaDroplet, FaFlask, FaLeaf, FaAward } from "react-icons/fa6";
-
-function TestimonialThemeIcon({ iconKey, cardIndex }) {
-  const defaultIcons = [FaDroplet, FaFlask, FaLeaf, FaAward];
-  let IconComponent = FaDroplet;
-
-  if (iconKey === "flask") IconComponent = FaFlask;
-  else if (iconKey === "leaf") IconComponent = FaLeaf;
-  else if (iconKey === "award") IconComponent = FaAward;
-  else if (iconKey === "droplet") IconComponent = FaDroplet;
-  else if (typeof cardIndex === "number") {
-    IconComponent = defaultIcons[cardIndex % defaultIcons.length];
-  }
-
-  return <IconComponent className="h-5 w-5 text-(--accent-color)" />;
-}
 
 function StarRow() {
   return (
@@ -42,79 +26,49 @@ function StarRow() {
   );
 }
 
-function ArrowBtn({ dir = "left", onClick }) {
+function ReviewSkeleton() {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="grid h-10 w-10 place-items-center rounded-full border border-white/15 bg-white/5 text-white/90 transition hover:bg-white/10"
-      aria-label={dir === "left" ? "Previous" : "Next"}
-    >
-      <svg
-        viewBox="0 0 24 24"
-        className="h-5 w-5"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden="true"
-      >
-        {dir === "left" ? <path d="M15 18l-6-6 6-6" /> : <path d="M9 18l6-6-6-6" />}
-      </svg>
-    </button>
-  );
-}
-
-function TestimonialCard({ t, cardIndex }) {
-  return (
-    <article className="flex flex-col justify-between h-full text-(--white-color)">
-      <div>
-        <StarRow />
-        <p className="mt-4 text-[15px] leading-7 text-(--white-color)/90 font-default min-h-20">“{t.text}”</p>
-      </div>
-      <div>
-        <div className="mt-6 h-px w-full bg-(--white-color)/12" />
-        <div className="mt-5 flex items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-(--accent-color)/15 border border-(--accent-color)/30 shadow-xs transition-transform duration-300 hover:scale-105">
-              <TestimonialThemeIcon iconKey={t.icon} cardIndex={cardIndex} />
-            </div>
-            <div>
-              <h3 className="text-[16px] font-semibold text-(--white-color) leading-tight font-default">{t.name}</h3>
-              <p className="mt-0.5 text-[13px] text-(--white-color)/70 font-accent">{t.role}</p>
-            </div>
+    <div className="w-full h-full p-6 sm:p-8 bg-[#090d16] rounded-2xl flex flex-col justify-between animate-pulse border border-white/10">
+      <div className="space-y-5">
+        {/* Header avatar + name */}
+        <div className="flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-full bg-white/15 shrink-0" />
+          <div className="space-y-2">
+            <div className="w-36 h-4 rounded bg-white/15" />
+            <div className="w-24 h-3 rounded bg-white/10" />
           </div>
-          <span className="text-3xl leading-none text-(--white-color)/90">”</span>
+        </div>
+
+        {/* Stars */}
+        <div className="flex items-center gap-1.5 py-1">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="w-4 h-4 rounded bg-white/15" />
+          ))}
+        </div>
+
+        {/* Review body lines */}
+        <div className="space-y-3 pt-1">
+          <div className="w-full h-3.5 rounded bg-white/15" />
+          <div className="w-11/12 h-3.5 rounded bg-white/15" />
+          <div className="w-4/5 h-3.5 rounded bg-white/10" />
+          <div className="w-3/4 h-3.5 rounded bg-white/10" />
+          <div className="w-1/2 h-3.5 rounded bg-white/10" />
         </div>
       </div>
-    </article>
+
+      {/* Footer link */}
+      <div className="flex items-center justify-between pt-4 border-t border-white/10">
+        <div className="w-32 h-4 rounded bg-white/15" />
+        <div className="w-6 h-6 rounded-full bg-white/15" />
+      </div>
+    </div>
   );
 }
 
 export default function OurTestimonials({ data = {} }) {
   const { language } = useLanguage();
-  const perPage = 2;
-
   const copy = useMemo(() => getTestimonialsCopy(data, language), [data, language]);
-  const testimonials = copy.items;
-
-  const pages = useMemo(() => {
-    const out = [];
-    for (let i = 0; i < testimonials.length; i += perPage) {
-      out.push(testimonials.slice(i, i + perPage));
-    }
-    return out;
-  }, [testimonials]);
-
-  const total = pages.length;
-  const [index, setIndex] = useState(0);
-
-  // actual sliding: translate a track that contains ALL pages
-  const viewportRef = useRef(null);
-
-  const next = () => setIndex((i) => (i + 1) % total);
-  const prev = () => setIndex((i) => (i - 1 + total) % total);
+  const [isLoading, setIsLoading] = useState(true);
 
   return (
     <section className="relative w-full overflow-hidden bg-(--primary-color) py-16 sm:py-20">
@@ -128,48 +82,48 @@ export default function OurTestimonials({ data = {} }) {
         }}
       />
 
-      <div className="relative w-full px-6 lg:px-16 xl:px-24">
+      <div className="relative w-full px-4 sm:px-6 lg:px-16 xl:px-24">
         {/* Header */}
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex flex-col gap-6 sm:gap-8 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <div className="mb-3 flex items-center gap-3">
               <span className="h-2 w-2 rounded-full bg-(--accent-color)" />
               <p className="font-serif text-sm italic text-(--white-color)/90">{copy.label}</p>
             </div>
-            <RevealInAnimation >
-              <h2 className="text-3xl font-semibold leading-tight tracking-tight text-(--white-color) sm:text-4xl lg:text-5xl font-default">
+            <RevealInAnimation>
+              <h2 className="text-2xl sm:text-3xl font-semibold leading-tight tracking-tight text-(--white-color) md:text-4xl lg:text-5xl font-default">
                 {copy.title_main}{" "}
                 <span className="block font-accent font-light italic">{copy.title_accent}</span>
               </h2>
             </RevealInAnimation>
           </div>
 
-          <div className="flex items-center gap-6 lg:justify-end">
-            <Image src="/images/google-img.svg" alt="Google" width={100} height={40} className="h-10 w-auto" />
-            <span className="h-10 w-px bg-(--white-color)/15" />
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6 lg:justify-end">
+            <Image src="/images/google-img.svg" alt="Google" width={100} height={40} className="h-8 sm:h-10 w-auto" />
+            <span className="h-8 sm:h-10 w-px bg-(--white-color)/15" />
             <div>
               <StarRow />
-              <p className="mt-2 text-sm text-(--white-color)/70">{copy.happy_customers_text}</p>
+              <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-(--white-color)/70">{copy.happy_customers_text}</p>
             </div>
           </div>
         </div>
 
         {/* Body */}
-        <div className="mt-12 flex flex-col gap-10 lg:flex-row lg:items-center">
+        <div className="mt-8 sm:mt-12 flex flex-col gap-6 sm:gap-8 lg:flex-row lg:items-center">
           {/* Left image box */}
           <div className="w-full lg:w-[32%]">
             <FaderInAnimation direction="left" duration={0.6}>
-              <div className="overflow-hidden rounded-[28px] bg-white/10">
+              <div className="overflow-hidden rounded-[20px] sm:rounded-[28px] bg-white/10 h-[250px] sm:h-[330px] lg:h-[485px]">
                 <Link href={data?.links?.testimonial || "/blog"} className="block w-full h-full group relative">
                   <Image
                     src="/images/new/Testimonials-copy.webp"
                     alt="Happy customers"
                     width={800}
                     height={800}
-                    className="w-full h-auto"
+                    className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 z-20">
-                    <span className="text-white font-bold text-lg flex items-center gap-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                    <span className="text-white font-bold text-base sm:text-lg flex items-center gap-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                       Read more &rarr;
                     </span>
                   </div>
@@ -177,36 +131,28 @@ export default function OurTestimonials({ data = {} }) {
               </div>
             </FaderInAnimation>
           </div>
-          {/* Right slider */}
+
+          {/* Right side Google Reviews iframe */}
           <div className="w-full lg:w-[68%]">
             <FaderInAnimation direction="right" duration={0.6}>
-              {/* viewport */}
-              <div ref={viewportRef} className="overflow-hidden">
-                {/* track: contains all pages side-by-side */}
-                <div
-                  className="flex transition-transform duration-500 ease-out will-change-transform"
-                  style={{ transform: `translateX(-${index * 100}%)` }}
-                >
-                  {pages.map((page, pIdx) => (
-                    <div
-                      key={pIdx}
-                      className="w-full shrink-0"
-                      style={{ width: "100%" }}
-                    >
-                      <div className="grid gap-10 md:grid-cols-2">
-                        {page.map((t, i) => (
-                          <TestimonialCard key={i} t={t} cardIndex={pIdx * perPage + i} />
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Nav */}
-              <div className="mt-10 flex items-center justify-center gap-3">
-                <ArrowBtn dir="left" onClick={prev} />
-                <ArrowBtn dir="right" onClick={next} />
+              <div
+                className="relative w-full h-[575px] sm:h-[525px] lg:h-[485px] overflow-hidden rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.3)] bg-[#090d16]"
+              >
+                {isLoading && (
+                  <div className="absolute inset-0 z-10 overflow-hidden">
+                    <ReviewSkeleton />
+                  </div>
+                )}
+                <iframe
+                  src="https://widgets.sociablekit.com/google-reviews/iframe/25705668"
+                  frameBorder="0"
+                  scrolling="no"
+                  width="100%"
+                  className="w-full h-[calc(100%+35px)] border-0 rounded-2xl"
+                  style={{ overflow: "hidden" }}
+                  title="Google Reviews"
+                  onLoad={() => setIsLoading(false)}
+                />
               </div>
             </FaderInAnimation>
           </div>

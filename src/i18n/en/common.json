@@ -10,5 +10,14 @@
         "title": "About Us",
         "philosophy": "Our Philosophy",
         "explore_story": "EXPLORE OUR STORY"
-    }
+    },
+    "certificates": {
+        "header_title": "Certificates",
+        "header_subtitle": "Our commitment to quality",
+        "breadcrumb": "Certificates",
+        "title": "Our Certifications",
+        "subtitle": "Committed to the highest standards of quality, safety, and excellence."
+    },
+    "certificates_header_title": "Certificates",
+    "certificates_header_subtitle": "Our commitment to quality"
 }

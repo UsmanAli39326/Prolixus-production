@@ -264,6 +264,7 @@ export default function OurBenefits({ data = {} }) {
                   width={110}
                   height={110}
                   className="w-[80px] h-[80px] sm:w-[110px] sm:h-[110px] rounded-full object-cover"
+                  unoptimized
                 />
               </div>
             </div>

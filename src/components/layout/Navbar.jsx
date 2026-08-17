@@ -45,6 +45,7 @@ export default function Header({ menus = [] }) {
             height={50}
             className="h-12 w-auto object-contain scale-110 lg:scale-[1.5] origin-left"
             priority
+            unoptimized
           />
         </Link>
 

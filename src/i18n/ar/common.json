@@ -10,5 +10,14 @@
         "title": "من نحن",
         "philosophy": "فلسفتنا",
         "explore_story": "اكتشف قصتنا"
-    }
+    },
+    "certificates": {
+        "header_title": "الشهادات",
+        "header_subtitle": "التزامنا بالجودة",
+        "breadcrumb": "الشهادات",
+        "title": "شهاداتنا",
+        "subtitle": "ملتزمون بأعلى معايير الجودة والسلامة والتميز."
+    },
+    "certificates_header_title": "الشهادات",
+    "certificates_header_subtitle": "التزامنا بالجودة"
 }

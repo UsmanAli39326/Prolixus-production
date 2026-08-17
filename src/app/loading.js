@@ -18,6 +18,7 @@ export default function Loading() {
             width={500}
             height={500}
             className=" w-auto object-contain"
+            unoptimized
           />
         </div>
 

@@ -65,6 +65,7 @@ export default async function MainFooter() {
                 width={240}
                 height={66}
                 className="h-12 w-auto object-contain scale-[1.5] origin-left"
+                unoptimized
               />
             </div>
             <div className="text-(--white-color)/60 font-default text-[15px] leading-[1.6] max-w-sm text-justify">
