@@ -16,10 +16,21 @@ export const LanguageProvider = ({ children }) => {
 
     const loadTranslations = async (lang) => {
         try {
-            const common = await import(`@/i18n/${lang}/common.json`);
-            setTranslations(common.default || {});
+            const res = await fetch(`/api/translations?lang=${lang}`, { cache: "no-store" });
+            if (res.ok) {
+                const data = await res.json();
+                setTranslations(data || {});
+            } else {
+                throw new Error("Failed to fetch translations");
+            }
         } catch (error) {
-            console.error("Failed to load local translations:", error);
+            // Fallback: try dynamic import if fetch route isn't available
+            try {
+                const common = await import(`@/i18n/${lang}/common.json`);
+                setTranslations(common.default || {});
+            } catch (importError) {
+                console.error("Failed to load local translations:", importError);
+            }
         }
 
         try {

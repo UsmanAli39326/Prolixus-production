@@ -7,6 +7,7 @@ import {
     FaBuildingColumns,
 } from "react-icons/fa6";
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
+import { useLanguage } from "@/context/LanguageContext";
 
 /**
  * A dynamic payment method selector that renders buttons from the API data.
@@ -26,6 +27,14 @@ export default function PaymentMethodSelector({
     error,
     isSubscription = false,
 }) {
+    const { t } = useLanguage();
+
+    // Converts a method display name into a translation key slug
+    // e.g. "Credit Card" → "checkout.payment_method.credit_card"
+    const getMethodKey = (name) => {
+        if (!name) return null;
+        return `checkout.payment_method.${name.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '')}`;
+    };
     // =========================================================================
     // TEMPORARY FIX: HIDE PAYPAL FOR SUBSCRIPTIONS
     // To re-enable PayPal for subscription checkouts in the future (once fixed):
@@ -115,7 +124,7 @@ export default function PaymentMethodSelector({
                             </div>
 
                             <span className="font-bold text-primary">
-                                {method.displayName || method.name}
+                                {t(getMethodKey(method.displayName || method.name), method.displayName || method.name)}
                             </span>
                         </button>
                     </FaderInAnimation>

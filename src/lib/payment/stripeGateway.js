@@ -11,6 +11,7 @@ import {
 import { apiService } from "@/lib/api";
 import { FaCcVisa, FaCcMastercard, FaCcAmex } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage } from "@/context/LanguageContext";
 
 /**
  * ─── Provider ────────────────────────────────────────────────────────────────
@@ -22,6 +23,7 @@ function StripeGatewayProvider({ publishableKey, amount, currency, isSubscriptio
 
     const [clientSecret, setClientSecret] = useState(null);
     const [error, setError] = useState(null);
+    const { t, language } = useLanguage();
 
     const stripePromise = useMemo(() => {
         if (!publishableKey) return null;
@@ -118,7 +120,7 @@ function StripeGatewayProvider({ publishableKey, amount, currency, isSubscriptio
                 currency: (currency || 'eur').toLowerCase(),
                 paymentMethodCreation: 'manual',
                 appearance,
-                locale: 'en',
+                locale: language,
             }}>
                 {children}
             </Elements>
@@ -135,8 +137,8 @@ function StripeGatewayProvider({ publishableKey, amount, currency, isSubscriptio
                     <div className="w-12 h-12 border-4 border-t-blue-500 rounded-full animate-spin absolute top-0" />
                 </div>
                 <div className="text-center relative">
-                    <p className="text-xl font-black text-primary tracking-tight">Initializing Secure Checkout</p>
-                    <p className="text-sm font-medium text-text/40 mt-1">Establishing encrypted connection to Stripe...</p>
+                    <p className="text-xl font-black text-primary tracking-tight">{t('checkout.stripe.initializing_title', 'Initializing Secure Checkout')}</p>
+                    <p className="text-sm font-medium text-text/40 mt-1">{t('checkout.stripe.initializing_subtitle', 'Establishing encrypted connection to Stripe...')}</p>
                 </div>
             </div>
         );
@@ -146,7 +148,7 @@ function StripeGatewayProvider({ publishableKey, amount, currency, isSubscriptio
         <Elements key={clientSecret} stripe={stripePromise} options={{
             clientSecret,
             appearance,
-            locale: 'en',
+            locale: language,
         }}>
             {children}
         </Elements>
@@ -166,6 +168,7 @@ function StripeCheckoutForm({
     const stripe = useStripe();
     const elements = useElements();
     const [errorMessage, setErrorMessage] = useState(null);
+    const { t } = useLanguage();
 
     const handlePayment = async () => {
         if (!stripe || !elements) {
@@ -370,8 +373,8 @@ function StripeCheckoutForm({
 
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
                     <div>
-                        <p className="text-2xl font-black text-primary tracking-tight">Checkout</p>
-                        <p className="text-sm text-text/50 font-medium font-accent">Select your preferred payment method</p>
+                        <p className="text-2xl font-black text-primary tracking-tight">{t('checkout.stripe.title', 'Checkout')}</p>
+                        <p className="text-sm text-text/50 font-medium font-accent">{t('checkout.stripe.subtitle', 'Select your preferred payment method')}</p>
                     </div>
                     <div className="flex items-center gap-3 bg-secondary/50 px-4 py-2 rounded-full border border-divider">
                         <div className="flex items-center gap-1.5 p-1 bg-white rounded-lg shadow-sm">
@@ -379,7 +382,7 @@ function StripeCheckoutForm({
                             <FaCcMastercard className="text-[#EB001B] text-2xl" />
                             <FaCcAmex className="text-[#0070d1] text-2xl" />
                         </div>
-                        <span className="text-[10px] font-bold text-text/40 uppercase tracking-widest leading-none">Secure Payments</span>
+                        <span className="text-[10px] font-bold text-text/40 uppercase tracking-widest leading-none">{t('checkout.stripe.secure_payments', 'Secure Payments')}</span>
                     </div>
                 </div>
 
@@ -404,7 +407,7 @@ function StripeCheckoutForm({
                 )}
 
                 <p className="text-[11px] text-text/40 font-medium text-center uppercase tracking-widest">
-                    Encrypted and processed by Stripe
+                    {t('checkout.stripe.encrypted_by_stripe', 'Encrypted and processed by Stripe')}
                 </p>
             </motion.div>
         ),

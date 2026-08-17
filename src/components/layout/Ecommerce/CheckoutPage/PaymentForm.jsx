@@ -14,6 +14,7 @@ import PaymentMethodSelector from "./PaymentMethodSelector";
 import OrderConfirmation from "./OrderConfirmation";
 import { useRouter } from "next/navigation";
 import { SUBSCRIPTION_COPY } from "@/constants/subscriptionCopy";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function PaymentForm({
     prevStep,
@@ -39,6 +40,7 @@ export default function PaymentForm({
     const { currency, formatPrice } = useCurrency();
     const { setOrderCompleted, totals, walletBalance, isAuthenticated } = useCheckout();
     const router = useRouter();
+    const { t } = useLanguage();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [orderData, setOrderData] = useState(null);
@@ -205,7 +207,7 @@ export default function PaymentForm({
                                         <span className={`block text-xl font-black ${walletBalance > 0 ? 'text-accent' : 'text-gray-400 dark:text-gray-500'}`}>
                                             {formatPrice(walletBalance)}
                                         </span>
-                                        <span className="text-[10px] uppercase tracking-widest font-bold text-text/30">Available</span>
+                                        <span className="text-[10px] uppercase tracking-widest font-bold text-text/30">{t('checkout.payment.wallet_available', 'Available')}</span>
                                     </div>
                                 </div>
                             </label>

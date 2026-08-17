@@ -7,10 +7,12 @@ import { useCurrency } from "@/context/CurrencyContext";
 import { useCheckout } from "@/context/CheckoutContext";
 import { apiService } from "@/lib/api";
 import { buildGuestOrderPayload } from "./CheckoutWizard";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function OrderSummary() {
     const { formatPrice } = useCurrency();
     const { formData, updateFormData, totals, user, isAuthenticated, checkoutItems, isSubscription } = useCheckout();
+    const { t } = useLanguage();
 
     const [inputCode, setInputCode] = useState("");
     const [codeType, setCodeType] = useState("promo");
@@ -93,14 +95,14 @@ export default function OrderSummary() {
                 <RevealInAnimation direction="bottom">
                     <div className="flex items-center justify-between mb-6 pb-4 border-b border-divider">
                         <div className="flex items-center gap-3">
-                            <h3 className="text-xl font-bold text-primary">Order Summary</h3>
+                            <h3 className="text-xl font-bold text-primary">{t('checkout.order_summary.title', 'Order Summary')}</h3>
                             {isSubscription && (
                                 <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-accent/10 text-accent border border-accent/20">
-                                    Subscription
+                                    {t('checkout.order_summary.subscription', 'Subscription')}
                                 </span>
                             )}
                         </div>
-                        <span className="text-sm text-gray-400 font-accent">{checkoutItems.length} items</span>
+                        <span className="text-sm text-gray-400 font-accent">{checkoutItems.length} {t('checkout.order_summary.items', 'items')}</span>
                     </div>
                 </RevealInAnimation>
 
@@ -112,7 +114,7 @@ export default function OrderSummary() {
                                 <OrderItem key={item.id} item={item} />
                             ))
                         ) : (
-                            <p className="text-gray-500 py-8 italic font-accent text-left">Your cart is empty</p>
+                            <p className="text-gray-500 py-8 italic font-accent text-left">{t('checkout.order_summary.cart_empty', 'Your cart is empty')}</p>
                         )}
                     </div>
                 </FaderInAnimation>
@@ -126,14 +128,14 @@ export default function OrderSummary() {
                                 disabled={hasCodeApplied}
                                 className={`text-xs font-bold uppercase tracking-wider pb-1 border-b-2 transition-all ${hasCodeApplied ? "opacity-50 cursor-not-allowed" : ""} ${codeType === "promo" ? "border-accent text-primary" : "border-transparent text-gray-400 hover:text-primary"}`}
                             >
-                                Promo Code
+                                {t('checkout.order_summary.promo_code', 'Promo Code')}
                             </button>
                             <button
                                 onClick={() => { setCodeType("affiliate"); setError(""); setInputCode(""); }}
                                 disabled={hasCodeApplied}
                                 className={`text-xs font-bold uppercase tracking-wider pb-1 border-b-2 transition-all ${hasCodeApplied ? "opacity-50 cursor-not-allowed" : ""} ${codeType === "affiliate" ? "border-accent text-primary" : "border-transparent text-gray-400 hover:text-primary"}`}
                             >
-                                Affiliate Code
+                                {t('checkout.order_summary.affiliate_code', 'Affiliate Code')}
                             </button>
                         </div>
 
@@ -143,7 +145,7 @@ export default function OrderSummary() {
                                 <div className="relative flex-1">
                                     <input
                                         type="text"
-                                        placeholder={codeType === "promo" ? "Enter promo code" : "Enter affiliate code"}
+                                        placeholder={codeType === "promo" ? t('checkout.order_summary.enter_promo_code', 'Enter promo code') : t('checkout.order_summary.enter_affiliate_code', 'Enter affiliate code')}
                                         value={inputCode}
                                         disabled={hasCodeApplied}
                                         onChange={(e) => {
@@ -159,7 +161,7 @@ export default function OrderSummary() {
                                     disabled={!inputCode.trim() || loading || hasCodeApplied}
                                     className="bg-primary text-white disabled:opacity-50 disabled:cursor-not-allowed font-bold text-xs px-5 h-11 rounded-xl transition-all active:scale-95 whitespace-nowrap"
                                 >
-                                    {loading ? "..." : "Apply"}
+                                    {loading ? "..." : t('checkout.order_summary.apply', 'Apply')}
                                 </button>
                             </div>
                             {error && <p className="text-red-500 text-[10px] mt-2 ml-1 font-bold">{error}</p>}
@@ -167,12 +169,12 @@ export default function OrderSummary() {
                             {(formData.couponCode || formData.affiliateCustomerCode) && (
                                 <div className="mt-4 p-3 bg-accent/5 rounded-xl border border-accent/20 flex justify-between items-center animate-in fade-in slide-in-from-top-2">
                                     <div className="text-xs">
-                                        <span className="text-gray-400 block uppercase text-[8px] font-bold">Applied {formData.couponCode ? "Promo" : "Affiliate"}</span>
+                                        <span className="text-gray-400 block uppercase text-[8px] font-bold">{t('checkout.order_summary.applied', 'Applied')} {formData.couponCode ? t('checkout.order_summary.promo', 'Promo') : t('checkout.order_summary.affiliate', 'Affiliate')}</span>
                                         <div className="flex items-center gap-2">
                                             <span className="text-primary font-bold">{formData.couponCode || formData.affiliateCustomerCode}</span>
                                             {formData.discountDisplay && (
                                                 <span className="text-accent font-bold px-1.5 py-0.5 bg-accent/10 rounded text-[9px] whitespace-nowrap">
-                                                    {formData.discountDisplay} OFF
+                                                    {formData.discountDisplay} {t('checkout.order_summary.off', 'OFF')}
                                                 </span>
                                             )}
                                         </div>
@@ -193,28 +195,28 @@ export default function OrderSummary() {
                 <FaderInAnimation direction="up" delay={0.2}>
                     <div className="space-y-3 text-sm text-left">
                         <div className="flex justify-between text-text/70 font-accent">
-                            <span>Subtotal</span>
+                            <span>{t('checkout.order_summary.subtotal', 'Subtotal')}</span>
                             <span className="font-semibold text-primary">{formatPrice(totals.subtotal)}</span>
                         </div>
                         <div className="flex justify-between text-text/70 font-accent">
-                            <span>Shipping</span>
-                            <span className="font-semibold text-accent">Free</span>
+                            <span>{t('checkout.order_summary.shipping', 'Shipping')}</span>
+                            <span className="font-semibold text-accent">{t('checkout.order_summary.free', 'Free')}</span>
                         </div>
                         {isSubscription && (
                             <>
                                 <div className="flex justify-between text-text/70 font-accent">
-                                    <span>Delivery Interval</span>
-                                    <span className="font-semibold text-primary">Every 30 Days</span>
+                                    <span>{t('checkout.order_summary.delivery_interval', 'Delivery Interval')}</span>
+                                    <span className="font-semibold text-primary">{t('checkout.order_summary.every_30_days', 'Every 30 Days')}</span>
                                 </div>
                                 <div className="flex justify-between text-text/70 font-accent">
-                                    <span>Next Billing Date</span>
+                                    <span>{t('checkout.order_summary.next_billing_date', 'Next Billing Date')}</span>
                                     <span className="font-semibold text-primary">
                                         {new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                     </span>
                                 </div>
                                 <div className="flex justify-between text-text/70 font-accent">
-                                    <span>Cancellation Terms</span>
-                                    <span className="font-semibold text-accent">Cancel or pause anytime</span>
+                                    <span>{t('checkout.order_summary.cancellation_terms', 'Cancellation Terms')}</span>
+                                    <span className="font-semibold text-accent">{t('checkout.order_summary.cancel_anytime', 'Cancel or pause anytime')}</span>
                                 </div>
                             </>
                         )}
@@ -226,13 +228,13 @@ export default function OrderSummary() {
                         ))}
                         {totals.discountAmount > 0 && (
                             <div className="flex justify-between text-accent font-accent font-bold">
-                                <span>Discount</span>
+                                <span>{t('checkout.order_summary.discount', 'Discount')}</span>
                                 <span>-{formatPrice(totals.discountAmount)}</span>
                             </div>
                         )}
                         {totals.walletAmount > 0 && (
                             <div className="flex justify-between text-accent font-accent font-bold">
-                                <span>Wallet</span>
+                                <span>{t('checkout.order_summary.wallet', 'Wallet')}</span>
                                 <span>-{formatPrice(totals.walletAmount)}</span>
                             </div>
                         )}
@@ -241,10 +243,10 @@ export default function OrderSummary() {
 
                 <FaderInAnimation direction="up" delay={0.3}>
                     <div className="flex justify-between items-end mt-6 pt-6 border-t border-divider">
-                        <span className="text-base font-medium text-text/60 font-accent">{isSubscription ? 'Monthly total' : 'Total due'}</span>
+                        <span className="text-base font-medium text-text/60 font-accent">{isSubscription ? t('checkout.order_summary.monthly_total', 'Monthly total') : t('checkout.order_summary.total_due', 'Total due')}</span>
                         <div className="flex items-baseline gap-1">
                             <span className="text-3xl font-bold text-accent tracking-tight">{formatPrice(totals.total)}</span>
-                            {isSubscription && <span className="text-sm font-medium text-text/50">/mo</span>}
+                            {isSubscription && <span className="text-sm font-medium text-text/50">{t('checkout.order_summary.per_month', '/mo')}</span>}
                         </div>
                     </div>
                 </FaderInAnimation>

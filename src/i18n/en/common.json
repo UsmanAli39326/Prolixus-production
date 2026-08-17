@@ -19,5 +19,57 @@
         "subtitle": "Committed to the highest standards of quality, safety, and excellence."
     },
     "certificates_header_title": "Certificates",
-    "certificates_header_subtitle": "Our commitment to quality"
+    "certificates_header_subtitle": "Our commitment to quality",
+    "checkout": {
+        "order_summary": {
+            "title": "Order Summary",
+            "subscription": "Subscription",
+            "items": "items",
+            "cart_empty": "Your cart is empty",
+            "promo_code": "Promo Code",
+            "affiliate_code": "Affiliate Code",
+            "enter_promo_code": "Enter promo code",
+            "enter_affiliate_code": "Enter affiliate code",
+            "apply": "Apply",
+            "applied": "Applied",
+            "promo": "Promo",
+            "affiliate": "Affiliate",
+            "off": "OFF",
+            "subtotal": "Subtotal",
+            "shipping": "Shipping",
+            "free": "Free",
+            "delivery_interval": "Delivery Interval",
+            "every_30_days": "Every 30 Days",
+            "next_billing_date": "Next Billing Date",
+            "cancellation_terms": "Cancellation Terms",
+            "cancel_anytime": "Cancel or pause anytime",
+            "discount": "Discount",
+            "wallet": "Wallet",
+            "monthly_total": "Monthly total",
+            "total_due": "Total due",
+            "per_month": "/mo"
+        },
+        "stripe": {
+            "title": "Checkout",
+            "subtitle": "Select your preferred payment method",
+            "secure_payments": "Secure Payments",
+            "encrypted_by_stripe": "Encrypted and processed by Stripe",
+            "initializing_title": "Initializing Secure Checkout",
+            "initializing_subtitle": "Establishing encrypted connection to Stripe..."
+        },
+        "payment": {
+            "wallet_available": "Available"
+        },
+        "payment_method": {
+            "credit_card": "Credit Card",
+            "card": "Card",
+            "stripe": "Credit Card",
+            "paypal": "PayPal",
+            "google_pay": "Google Pay",
+            "amazon_pay": "Amazon Pay",
+            "cash_on_delivery": "Cash on Delivery",
+            "cod": "Cash on Delivery",
+            "bank_transfer": "Bank Transfer"
+        }
+    }
 }

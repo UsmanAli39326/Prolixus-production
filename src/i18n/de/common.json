@@ -19,5 +19,57 @@
         "subtitle": "Den höchsten Standards an Qualität, Sicherheit und Exzellenz verpflichtet."
     },
     "certificates_header_title": "Zertifikate",
-    "certificates_header_subtitle": "Unser Engagement für Qualität"
+    "certificates_header_subtitle": "Unser Engagement für Qualität",
+    "checkout": {
+        "order_summary": {
+            "title": "Bestellübersicht",
+            "subscription": "Abonnement",
+            "items": "Artikel",
+            "cart_empty": "Ihr Warenkorb ist leer",
+            "promo_code": "Aktionscode",
+            "affiliate_code": "Affiliate-Code",
+            "enter_promo_code": "Aktionscode eingeben",
+            "enter_affiliate_code": "Affiliate-Code eingeben",
+            "apply": "Anwenden",
+            "applied": "Angewendet",
+            "promo": "Aktion",
+            "affiliate": "Affiliate",
+            "off": "RABATT",
+            "subtotal": "Zwischensumme",
+            "shipping": "Versand",
+            "free": "Kostenlos",
+            "delivery_interval": "Lieferintervall",
+            "every_30_days": "Alle 30 Tage",
+            "next_billing_date": "Nächstes Rechnungsdatum",
+            "cancellation_terms": "Stornierungsbedingungen",
+            "cancel_anytime": "Jederzeit kündigen oder pausieren",
+            "discount": "Rabatt",
+            "wallet": "Guthaben",
+            "monthly_total": "Monatlicher Gesamtbetrag",
+            "total_due": "Fälliger Gesamtbetrag",
+            "per_month": "/Monat"
+        },
+        "stripe": {
+            "title": "Bezahlung",
+            "subtitle": "Wählen Sie Ihre bevorzugte Zahlungsmethode",
+            "secure_payments": "Sichere Zahlung",
+            "encrypted_by_stripe": "Verschlüsselt und verarbeitet von Stripe",
+            "initializing_title": "Sichere Kasse wird initialisiert",
+            "initializing_subtitle": "Verschlüsselte Verbindung zu Stripe wird hergestellt..."
+        },
+        "payment": {
+            "wallet_available": "Verfügbar"
+        },
+        "payment_method": {
+            "credit_card": "Kreditkarte",
+            "card": "Karte",
+            "stripe": "Kreditkarte",
+            "paypal": "PayPal",
+            "google_pay": "Google Pay",
+            "amazon_pay": "Amazon Pay",
+            "cash_on_delivery": "Nachnahme",
+            "cod": "Nachnahme",
+            "bank_transfer": "Banküberweisung"
+        }
+    }
 }
