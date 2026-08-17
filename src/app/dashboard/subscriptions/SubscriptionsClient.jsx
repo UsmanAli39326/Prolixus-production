@@ -156,7 +156,7 @@ export default function SubscriptionsClient({ localization }) {
             header: localization?.subscriptions_header_product || "Product",
             accessor: "productName",
             cellClassName: "text-text dark:text-white font-bold",
-            cell: (row) => row.productName || row.name || "Subscription Product"
+            cell: (row) => row.product?.name || row.productName || row.name || "Subscription Product"
         },
         {
             header: localization?.subscriptions_header_status || "Status",
@@ -172,14 +172,23 @@ export default function SubscriptionsClient({ localization }) {
         {
             header: localization?.subscriptions_header_price || "Price",
             cellClassName: "text-text dark:text-white font-medium",
-            cell: (row) => formatPrice(row.price || row.amount || 0)
+            cell: (row) => formatPrice(row.subscriptionPrice || row.price || row.amount || 0)
         },
         {
             header: localization?.subscriptions_header_date || "Start Date",
             cellClassName: "whitespace-nowrap",
             cell: (row) => {
-                if (!row.startDate && !row.createdAt) return "-";
-                const dateStr = formatDate(row.startDate || row.createdAt, 'date');
+                if (!row.startDate && !row.createdAt && !row.createdDate) return "-";
+                const dateStr = formatDate(row.startDate || row.createdAt || row.createdDate, 'date');
+                return <span className="text-text/80 dark:text-white/80 font-medium">{dateStr}</span>;
+            }
+        },
+        {
+            header: localization?.subscriptions_header_next_billing || "Next Billing Date",
+            cellClassName: "whitespace-nowrap",
+            cell: (row) => {
+                if (filterStatus !== "Active" || !row.nextBillingDate) return "-";
+                const dateStr = formatDate(row.nextBillingDate, 'date');
                 return <span className="text-text/80 dark:text-white/80 font-medium">{dateStr}</span>;
             }
         },

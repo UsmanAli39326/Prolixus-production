@@ -104,7 +104,7 @@ function ProductPackageGroup({ product, onSelectPackage, selectedPackage, copy }
     const quantity = plan.quantity || 1;
 
     packages.push({
-      id: `sub-${plan.id || index}`,
+      id: plan.id || index,
       title: plan.label || product.title || "Subscription Plan",
       badge: pricingData?.discountPercentage > 0 ? `Save ${pricingData.discountPercentage}%` : product.badge || null,
       bottleCount: quantity,

@@ -10,7 +10,7 @@ const languageMeta = {
     ar: { label: "AR", flag: "🇦🇪" },
 };
 
-export default function LanguageSwitcher() {
+export default function LanguageSwitcher({ variant = "desktop" }) {
     const { language, availableLanguages, switchLanguage } = useLanguage();
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
@@ -34,20 +34,38 @@ export default function LanguageSwitcher() {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
+    const isMobile = variant === "mobile";
+
     return (
-        <div className="relative" ref={dropdownRef}>
+        <div className="relative w-full" ref={dropdownRef}>
             <button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-white/10 hover:border-white/40"
+                className={
+                    isMobile
+                        ? "flex w-full items-center justify-between border border-accent bg-accent px-4 py-3 text-sm font-bold text-primary transition-all active:scale-[0.98] hover:brightness-110 rounded-xl shadow-lg shadow-accent/20"
+                        : "flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-white/10 hover:border-white/40"
+                }
             >
-                <span className="text-base">{currentMeta.flag}</span>
-                <span>{currentMeta.label}</span>
+                {isMobile ? (
+                    <span>{currentMeta.label}</span>
+                ) : (
+                    <>
+                        <span className="text-base">{currentMeta.flag}</span>
+                        <span>{currentMeta.label}</span>
+                    </>
+                )}
                 <FaChevronDown className={`text-[10px] transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} />
             </button>
 
             {isOpen && (
-                <ul className="absolute right-0 mt-2 w-40 origin-top-right rounded-2xl bg-[#1A2E35] p-2 shadow-2xl ring-1 ring-white/10 animate-in fade-in zoom-in duration-200 z-50">
+                <ul
+                    className={`absolute z-[60] min-w-[160px] rounded-2xl bg-[#1A2E35] p-2 shadow-2xl ring-1 ring-white/10 animate-in fade-in zoom-in duration-200 ${
+                        isMobile
+                            ? "bottom-full mb-2 left-0 w-full origin-bottom"
+                            : "right-0 mt-2 w-40 origin-top-right"
+                    }`}
+                >
                     {displayLanguages.filter(lang => lang.isActive !== false).map((lang) => {
                         const meta = languageMeta[lang.code] || { label: lang.code.toUpperCase(), flag: "🌐" };
                         return (
@@ -63,7 +81,7 @@ export default function LanguageSwitcher() {
                                             : "text-white/70 hover:bg-white/5 hover:text-white"
                                     }`}
                                 >
-                                    <span className="text-base">{meta.flag}</span>
+                                    {isMobile ? null : <span className="text-base">{meta.flag}</span>}
                                     <span>{lang.name}</span>
                                 </button>
                             </li>

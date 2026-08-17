@@ -194,48 +194,48 @@ export default function OrderSummary() {
                 {/* Price Breakdown */}
                 <FaderInAnimation direction="up" delay={0.2}>
                     <div className="space-y-3 text-sm text-left">
-                        <div className="flex justify-between text-text/70 font-accent">
+                        <div className="flex justify-between gap-4 text-text/70 font-accent">
                             <span>{t('checkout.order_summary.subtotal', 'Subtotal')}</span>
-                            <span className="font-semibold text-primary">{formatPrice(totals.subtotal)}</span>
+                            <span className="font-semibold text-primary text-right">{formatPrice(totals.subtotal)}</span>
                         </div>
-                        <div className="flex justify-between text-text/70 font-accent">
+                        <div className="flex justify-between gap-4 text-text/70 font-accent">
                             <span>{t('checkout.order_summary.shipping', 'Shipping')}</span>
-                            <span className="font-semibold text-accent">{t('checkout.order_summary.free', 'Free')}</span>
+                            <span className="font-semibold text-accent text-right">{t('checkout.order_summary.free', 'Free')}</span>
                         </div>
                         {isSubscription && (
                             <>
-                                <div className="flex justify-between text-text/70 font-accent">
+                                <div className="flex justify-between gap-4 text-text/70 font-accent">
                                     <span>{t('checkout.order_summary.delivery_interval', 'Delivery Interval')}</span>
-                                    <span className="font-semibold text-primary">{t('checkout.order_summary.every_30_days', 'Every 30 Days')}</span>
+                                    <span className="font-semibold text-primary text-right">{t('checkout.order_summary.every_30_days', 'Every 30 Days')}</span>
                                 </div>
-                                <div className="flex justify-between text-text/70 font-accent">
+                                <div className="flex justify-between gap-4 text-text/70 font-accent">
                                     <span>{t('checkout.order_summary.next_billing_date', 'Next Billing Date')}</span>
-                                    <span className="font-semibold text-primary">
+                                    <span className="font-semibold text-primary text-right">
                                         {new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                                     </span>
                                 </div>
-                                <div className="flex justify-between text-text/70 font-accent">
+                                <div className="flex justify-between gap-4 text-text/70 font-accent">
                                     <span>{t('checkout.order_summary.cancellation_terms', 'Cancellation Terms')}</span>
-                                    <span className="font-semibold text-accent">{t('checkout.order_summary.cancel_anytime', 'Cancel or pause anytime')}</span>
+                                    <span className="font-semibold text-accent text-right">{t('checkout.order_summary.cancel_anytime', 'Cancel or pause anytime')}</span>
                                 </div>
                             </>
                         )}
                         {totals.vatDetails?.map((vat) => (
-                            <div key={vat.percentage} className="flex justify-between text-text/70 font-accent">
+                            <div key={vat.percentage} className="flex justify-between gap-4 text-text/70 font-accent">
                                 <span>VAT ({vat.percentage}%)</span>
-                                <span className="font-semibold text-primary">{formatPrice(vat.amount)}</span>
+                                <span className="font-semibold text-primary text-right">{formatPrice(vat.amount)}</span>
                             </div>
                         ))}
                         {totals.discountAmount > 0 && (
-                            <div className="flex justify-between text-accent font-accent font-bold">
+                            <div className="flex justify-between gap-4 text-accent font-accent font-bold">
                                 <span>{t('checkout.order_summary.discount', 'Discount')}</span>
-                                <span>-{formatPrice(totals.discountAmount)}</span>
+                                <span className="text-right">-{formatPrice(totals.discountAmount)}</span>
                             </div>
                         )}
                         {totals.walletAmount > 0 && (
-                            <div className="flex justify-between text-accent font-accent font-bold">
+                            <div className="flex justify-between gap-4 text-accent font-accent font-bold">
                                 <span>{t('checkout.order_summary.wallet', 'Wallet')}</span>
-                                <span>-{formatPrice(totals.walletAmount)}</span>
+                                <span className="text-right">-{formatPrice(totals.walletAmount)}</span>
                             </div>
                         )}
                     </div>

@@ -306,8 +306,8 @@ export default function Header({ menus = [] }) {
             className="fixed inset-0 z-40 bg-black/50 lg:hidden top-[80px]"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="absolute top-full left-0 right-0 max-h-[calc(100vh-80px)] z-50 bg-primary shadow-2xl lg:hidden font-sans border-b border-white flex flex-col">
-            <nav className="overflow-y-auto px-6 py-8 shrink">
+          <div className="absolute top-full left-0 right-0 max-h-[calc(100vh-80px)] z-50 bg-primary shadow-2xl lg:hidden font-sans border-b border-white flex flex-col overflow-y-auto">
+            <nav className="px-6 py-8 shrink">
               <ul className="flex flex-col gap-6">
                 {mainMenus.map((menu) => (
                   <li key={menu.id}>
@@ -324,11 +324,10 @@ export default function Header({ menus = [] }) {
             </nav>
 
             {/* Drawer Footer */}
-            <div className="p-6 border-t border-white/10 bg-white/5 shrink-0 mt-auto">
-              <div className="flex items-center">
-                <div className="scale-90 origin-left">
-                  <LanguageSwitcher />
-                </div>
+            <div className="sticky bottom-0 p-6 border-t border-white/10 bg-primary shrink-0 mt-auto z-10 w-full">
+              <div className="flex flex-col w-full">
+                <span className="text-white/60 text-sm mb-3 font-medium">Language</span>
+                <LanguageSwitcher variant="mobile" />
               </div>
             </div>
           </div>

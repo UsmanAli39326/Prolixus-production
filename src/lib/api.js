@@ -47,6 +47,10 @@ async function request(endpoint, method = 'GET', body = null, headers = {}, isGu
     ? `${BASE_URL}${endpoint}${separator}t=${Date.now()}`
     : `${BASE_URL}${endpoint}`;
 
+  const payload = body ? JSON.stringify(body) : null;
+  console.log(`[API Request] ${method} ${url}`);
+  if (payload) console.log(`[API Payload]`, body);
+
   const response = await fetch(url, {
     method,
     headers: {
@@ -56,12 +60,13 @@ async function request(endpoint, method = 'GET', body = null, headers = {}, isGu
       Authorization: `Bearer ${token}`,
       ...headers,
     },
-    body: body ? JSON.stringify(body) : null,
+    body: payload,
     ...options,
   });
 
   if (!response.ok) {
     const error = await response.text();
+    console.error(`[API Error] ${response.status} from ${url}:`, error);
     throw new Error(error || 'API request failed');
   }
 

@@ -268,10 +268,11 @@ function StripeCheckoutForm({
                 // 3. Call Subscriptions/create
                 const subPayload = {
                     productId: cartItems[0]?.productId || parseInt(cartItems[0]?.id?.toString().split('-')[0]),
-                    pricingTierId: cartItems[0]?.variantId,
+                    pricingTierId: parseInt(cartItems[0]?.variantId?.toString().replace(/\D/g, '')) || 0,
                     quantity: cartItems[0]?.quantity || 1,
                     paymentGateway: "Stripe",
                     paymentMethodId: paymentMethod.id,
+                    currency: currency || "USD"
                 };
 
                 if (finalGatewayCustomerId) {
@@ -310,7 +311,7 @@ function StripeCheckoutForm({
                 }
 
                 // 5. Finalize local order
-                payload.paymentToken = paymentIntentId || subscriptionId;
+                payload.paymentToken = paymentIntentId
                 payload.subscriptionId = subscriptionId;
 
                 const finalRes = await apiService.post("/Checkout/create-order", payload);
