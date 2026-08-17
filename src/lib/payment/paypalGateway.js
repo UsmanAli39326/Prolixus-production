@@ -82,7 +82,7 @@ function PayPalCheckoutComponent({
 
                         // 2. Call backend /Subscriptions/create
                         const subPayload = {
-                            pricingTierId: parseInt(cartItems[0]?.variantId?.toString().replace(/\D/g, '')) || 0,
+                            pricingTierId: cartItems[0]?.variantId?.toString().replace('sub-', ''),
                             paymentGateway: "PayPal",
                             payPalPlanId: planData.planId,
                             currency: currency || "USD"

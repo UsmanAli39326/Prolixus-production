@@ -268,7 +268,7 @@ function StripeCheckoutForm({
                 // 3. Call Subscriptions/create
                 const subPayload = {
                     productId: cartItems[0]?.productId || parseInt(cartItems[0]?.id?.toString().split('-')[0]),
-                    pricingTierId: parseInt(cartItems[0]?.variantId?.toString().replace(/\D/g, '')) || 0,
+                    pricingTierId: cartItems[0]?.variantId?.toString().replace('sub-', ''),
                     quantity: cartItems[0]?.quantity || 1,
                     paymentGateway: "Stripe",
                     paymentMethodId: paymentMethod.id,
