@@ -122,7 +122,7 @@ export default function Header({ menus = [] }) {
                       onClick={() => setUserMenuOpen(!userMenuOpen)}
                       className="flex items-center gap-2 text-white hover:text-accent transition-all duration-300 py-1.5 px-2 rounded-full hover:bg-white/5"
                     >
-                      <div className="h-9 w-9 rounded-full bg-accent flex items-center justify-center text-primary font-bold shadow-lg border border-white">
+                      <div className="h-9 w-9 shrink-0 rounded-full bg-accent flex items-center justify-center text-primary font-bold shadow-lg border border-white">
                         {profile?.name?.charAt(0).toUpperCase() || <FaUser size={14} />}
                       </div>
                       <div className="hidden lg:flex flex-col items-start leading-none">
@@ -195,7 +195,7 @@ export default function Header({ menus = [] }) {
                 ) : (
                   <Link
                     href="/login"
-                    className="flex items-center justify-center h-10 w-10 rounded-full border border-white text-white transition hover:bg-white hover:text-accent no-underline"
+                    className="flex items-center justify-center h-10 w-10 shrink-0 rounded-full border border-white text-white transition hover:bg-white hover:text-accent no-underline"
                   >
                     <FaCircleUser />
                   </Link>
@@ -213,7 +213,7 @@ export default function Header({ menus = [] }) {
               <div className="relative">
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center justify-center h-10 w-10 rounded-full bg-accent text-primary font-bold shadow-lg border border-white transition-all"
+                  className="flex items-center justify-center h-10 w-10 shrink-0 rounded-full bg-accent text-primary font-bold shadow-lg border border-white transition-all"
                 >
                   {profile?.name?.charAt(0).toUpperCase() || <FaUser size={14} />}
                 </button>
@@ -279,7 +279,7 @@ export default function Header({ menus = [] }) {
             ) : (
               <Link
                 href="/login"
-                className="flex items-center justify-center h-10 w-10 rounded-full border border-white/20 text-white bg-white/5 active:scale-95 transition-all no-underline"
+                className="flex items-center justify-center h-10 w-10 shrink-0 rounded-full border border-white/20 text-white bg-white/5 active:scale-95 transition-all no-underline"
               >
                 <FaCircleUser size={20} />
               </Link>

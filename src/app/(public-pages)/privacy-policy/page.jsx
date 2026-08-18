@@ -18,9 +18,9 @@ export default async function PrivacyPolicyPage() {
 
   return (
     <>
-      <PageHeader 
-        title={pageData?.displayNameTl || data?.privacy_header_title} 
-        subtitle="" 
+      <PageHeader
+        title={pageData?.displayName}
+        subtitle=""
         pageKey="privacy"
       />
 
@@ -28,9 +28,9 @@ export default async function PrivacyPolicyPage() {
         <div className="container mx-auto px-4 max-w-4xl">
           {pageData ? (
             <div className="bg-white rounded-2xl shadow-md p-8 md:p-12">
-              <div 
+              <div
                 className="dynamic-content-wrapper"
-                dangerouslySetInnerHTML={{ __html: pageData.descriptionText }} 
+                dangerouslySetInnerHTML={{ __html: pageData.descriptionText }}
               />
             </div>
           ) : (
