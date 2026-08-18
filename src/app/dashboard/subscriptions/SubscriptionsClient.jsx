@@ -2,12 +2,14 @@
 import React, { useState, useEffect } from "react";
 import { FaFilter, FaArrowRight } from "react-icons/fa";
 
+import Link from "next/link";
 import DashboardHeader from "@/components/layout/Dashboard/DashboardHeader";
 import Badge from "@/components/ui/Badge";
 import DataTable from "@/components/ui/DataTable";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import { getSubscriptions, getSubscriptionOrders, cancelSubscription } from "@/lib/SubscriptionService";
+import { getCustomerOrders } from "@/lib/OrderService";
 import { useCurrency } from "@/context/CurrencyContext";
 import { formatDate } from "@/utitlis/formatters";
 import Modal from "@/components/ui/Modal";
@@ -89,7 +91,13 @@ export default function SubscriptionsClient({ localization }) {
             }, 2000);
         } catch (err) {
             clearInterval(progressInterval);
-            setCancelError(err.message || localization?.subscriptions_cancel_error || "Failed to cancel subscription.");
+            let errorObj = null;
+            try {
+                if (err.message && err.message.startsWith('{')) {
+                    errorObj = JSON.parse(err.message);
+                }
+            } catch (e) {}
+            setCancelError(errorObj?.message || err.message || localization?.subscriptions_cancel_error || "Failed to cancel subscription.");
         } finally {
             if (!isSuccess) clearInterval(progressInterval);
             setIsCancelling(false);
@@ -118,7 +126,13 @@ export default function SubscriptionsClient({ localization }) {
                 }
             } catch (err) {
                 if (isMounted) {
-                    setError(err.message || localization?.subscriptions_error_fetch || "Failed to fetch subscriptions.");
+                    let errorObj = null;
+                    try {
+                        if (err.message && err.message.startsWith('{')) {
+                            errorObj = JSON.parse(err.message);
+                        }
+                    } catch (e) {}
+                    setError(errorObj?.message || err.message || localization?.subscriptions_error_fetch || "Failed to fetch subscriptions.");
                     console.error("Dashboard fetch error:", err);
                 }
             } finally {
@@ -135,16 +149,49 @@ export default function SubscriptionsClient({ localization }) {
         setOrdersLoading(true);
         setOrdersError(null);
         try {
-            const response = await getSubscriptionOrders(productId);
+            const response = await getCustomerOrders();
             const data = response?.data || response || [];
-            setSelectedOrders(Array.isArray(data) ? data : []);
+            
+            // Filter orders to only include those that contain the productId
+            const filteredOrders = (Array.isArray(data) ? data : []).filter(entry => {
+                const order = entry.order || entry;
+                const details = order.orderDetails || order.items || [];
+                return details.some(item => 
+                    item.itemId === productId || 
+                    item.productId === productId
+                );
+            });
+            
+            const mappedOrders = filteredOrders.map(entry => {
+                const order = entry.order || entry;
+                const summary = entry.orderHeadSummary;
+                return {
+                    id: order.id,
+                    invoiceNumber: order.invoiceNumber,
+                    transactionDate: order.transactionDate,
+                    totalNetAmount: summary?.paidAmount ?? order.totalNetAmount ?? 0,
+                };
+            });
+            
+            setSelectedOrders(mappedOrders);
         } catch (err) {
+            let errorObj = null;
+            try {
+                if (err.message && err.message.startsWith('{')) {
+                    errorObj = JSON.parse(err.message);
+                }
+            } catch (e) {
+                // Ignore parsing errors
+            }
+
+            const statusCode = err?.response?.status || err?.statusCode || errorObj?.statusCode;
+
             // Check for 404
-            if (err?.response?.status === 404 || err?.statusCode === 404) {
+            if (statusCode === 404) {
                 setOrdersError(localization?.subscriptions_no_orders || "No orders found for this subscription.");
                 setSelectedOrders([]);
             } else {
-                setOrdersError(err.message || localization?.subscriptions_orders_error || "Failed to fetch orders.");
+                setOrdersError(errorObj?.message || err.message || localization?.subscriptions_orders_error || "Failed to fetch orders.");
             }
         } finally {
             setOrdersLoading(false);
@@ -255,6 +302,20 @@ export default function SubscriptionsClient({ localization }) {
         {
             header: localization?.order_history_header_total || "Total",
             cell: (row) => formatPrice(row.totalNetAmount || row.total || row.amount || 0)
+        },
+        {
+            header: localization?.order_history_header_action || "Action",
+            className: "text-right pr-8",
+            cellClassName: "text-right pr-8",
+            cell: (row) => (
+                <Link
+                    href={`/order-detail?invoiceNumber=${row.invoiceNumber}`}
+                    className="inline-flex items-center gap-1 text-accent hover:text-accent/80 text-sm font-bold tracking-wide transition-colors group-hover:underline decoration-2 underline-offset-4"
+                >
+                    {localization?.order_history_view_details || "View Details"}
+                    <FaArrowRight className="text-[10px]" />
+                </Link>
+            )
         }
     ];
 

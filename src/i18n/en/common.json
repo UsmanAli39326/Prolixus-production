@@ -20,6 +20,8 @@
     },
     "certificates_header_title": "Certificates",
     "certificates_header_subtitle": "Our commitment to quality",
+    "blog_empty_title": "No articles found",
+    "blog_empty_desc": "We currently do not have any blog posts published. Please check back soon.",
     "checkout": {
         "order_summary": {
             "title": "Order Summary",

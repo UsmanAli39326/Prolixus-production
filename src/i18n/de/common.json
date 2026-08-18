@@ -20,6 +20,8 @@
     },
     "certificates_header_title": "Zertifikate",
     "certificates_header_subtitle": "Unser Engagement für Qualität",
+    "blog_empty_title": "Keine Artikel gefunden",
+    "blog_empty_desc": "Wir haben derzeit keine Blog-Beiträge veröffentlicht. Schauen Sie bald wieder vorbei für neue Updates und Tipps.",
     "checkout": {
         "order_summary": {
             "title": "Bestellübersicht",
