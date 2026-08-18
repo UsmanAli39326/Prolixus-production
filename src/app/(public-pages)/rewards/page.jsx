@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { getLocalization } from "@/lib/getLocalization";
 import { getConductCopy } from "@/constants/conductCopy";
 import RewardsClient from "./RewardsClient";

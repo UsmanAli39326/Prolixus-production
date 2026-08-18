@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { getLocalization } from "@/lib/getLocalization";
 import PageHeader from '@/components/layout/PageHeader'
 import ContactForm from '@/components/layout/ContactUS/ContactForm'

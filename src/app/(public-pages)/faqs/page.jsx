@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import PageHeader from "@/components/layout/PageHeader";
 import { getFaqs } from "@/lib/getFaqs";
 import FaqsClient from "./FaqsClient";

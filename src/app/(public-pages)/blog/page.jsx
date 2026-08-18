@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import PageHeader from "@/components/layout/PageHeader";
 import BlogListing from "@/components/layout/Blog/BlogListing";
 import { getLocalization } from "@/lib/getLocalization";

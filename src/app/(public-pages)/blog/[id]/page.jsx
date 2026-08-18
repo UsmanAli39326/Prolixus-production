@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { notFound } from "next/navigation";
 import PageHeader from "@/components/layout/PageHeader";
 import BlogDetail from "@/components/layout/Blog/BlogDetail";
