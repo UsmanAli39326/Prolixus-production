@@ -7,6 +7,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { getTestimonialsCopy } from "@/constants/testimonialsCopy";
 import { useLanguage } from "@/context/LanguageContext";
+import Script from "next/script";
 
 function StarRow() {
   return (
@@ -98,12 +99,10 @@ export default function OurTestimonials({ data = {} }) {
             </RevealInAnimation>
           </div>
 
-          <div className="flex flex-wrap items-center gap-4 sm:gap-6 lg:justify-end">
-            <Image src="/images/google-img.svg" alt="Google" width={100} height={40} className="h-8 sm:h-10 w-auto" />
-            <span className="h-8 sm:h-10 w-px bg-(--white-color)/15" />
-            <div>
-              <StarRow />
-              <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-(--white-color)/70">{copy.happy_customers_text}</p>
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6 justify-end w-full lg:w-auto">
+            <Script src="https://elfsightcdn.com/platform.js" strategy="lazyOnload" />
+            <div className="relative overflow-hidden w-[180px] h-[85px] flex items-center justify-start">
+              <div className="elfsight-app-5da1561c-040b-4496-a1da-c39d51f91c42 w-[300px] -ml-1 lg:-ml-1" data-elfsight-app-lazy></div>
             </div>
           </div>
         </div>

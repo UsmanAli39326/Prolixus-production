@@ -3,10 +3,12 @@
 import Badge from "@/components/ui/Badge";
 import { stripHtmlTags } from "@/utitlis/formatters";
 import { useCurrency } from "@/context/CurrencyContext";
+import { useLanguage } from "@/context/LanguageContext";
 import Image from "next/image";
 
 export default function OrderItem({ item }) {
     const { formatPrice } = useCurrency();
+    const { t } = useLanguage();
     return (
         <div className="flex gap-3 py-1">
             {/* Thumbnail */}
@@ -38,12 +40,12 @@ export default function OrderItem({ item }) {
                 <h4 className="font-semibold text-primary text-base leading-snug font-accent truncate">{item.name || item.title || item.variantLabel}</h4>
                 <div className="flex items-center gap-3 text-sm text-text/50 font-default">
                     <span className="truncate max-w-[140px]">
-                        {item.variant || stripHtmlTags(item.description) || "Product"}
+                        {item.variant || stripHtmlTags(item.description) || t('checkout.order_item.product', 'Product')}
                     </span>
-                    <span className="shrink-0">Qty: {item.quantity}</span>
+                    <span className="shrink-0">{t('checkout.order_item.qty', 'Qty')}: {item.quantity}</span>
                     {item.purchaseType === "subscribe" && (
                         <span className="shrink-0 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-accent/10 text-accent">
-                            Monthly
+                            {t('checkout.order_item.monthly', 'Monthly')}
                         </span>
                     )}
                 </div>

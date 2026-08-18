@@ -260,10 +260,25 @@
     color: var(--primary-color);
   }
 
-  .about-description-content h1, .dynamic-content-wrapper h1 { font-size: 1.75rem; }
-  .about-description-content h2, .dynamic-content-wrapper h2 { font-size: 1.5rem; }
-  .about-description-content h3, .dynamic-content-wrapper h3 { font-size: 1.25rem; }
-  .about-description-content h4, .dynamic-content-wrapper h4 { font-size: 1.125rem; }
+  .about-description-content h1,
+  .dynamic-content-wrapper h1 {
+    font-size: 1.75rem;
+  }
+
+  .about-description-content h2,
+  .dynamic-content-wrapper h2 {
+    font-size: 1.5rem;
+  }
+
+  .about-description-content h3,
+  .dynamic-content-wrapper h3 {
+    font-size: 1.25rem;
+  }
+
+  .about-description-content h4,
+  .dynamic-content-wrapper h4 {
+    font-size: 1.125rem;
+  }
 
   .about-description-content p,
   .dynamic-content-wrapper p {
@@ -278,8 +293,15 @@
     padding-left: 1.5em;
   }
 
-  .about-description-content ul, .dynamic-content-wrapper ul { list-style-type: disc; }
-  .about-description-content ol, .dynamic-content-wrapper ol { list-style-type: decimal; }
+  .about-description-content ul,
+  .dynamic-content-wrapper ul {
+    list-style-type: disc;
+  }
+
+  .about-description-content ol,
+  .dynamic-content-wrapper ol {
+    list-style-type: decimal;
+  }
 
   .about-description-content li,
   .dynamic-content-wrapper li {
@@ -346,4 +368,15 @@
     background-color: var(--secondary-color);
     font-weight: 700;
   }
-}
+
+  /* Hide Elfsight Free Badge */
+  a[href*="elfsight"],
+  .eapps-link,
+  [class*="Badge__Container"],
+  [class*="WidgetBackground__Container"]>a {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+}

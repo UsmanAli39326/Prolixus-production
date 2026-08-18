@@ -92,11 +92,11 @@ export default function CheckoutForm({ nextStep, goToStep, formData, updateFormD
         <div className="flex flex-col gap-8">
             <RevealInAnimation direction="left">
                 <nav className="flex items-center gap-3 text-sm font-medium font-default">
-                    <span className="text-primary font-bold">{localization?.checkout_breadcrumb_info}</span>
+                    <span className="text-primary font-bold">{localization?.checkout_breadcrumb_info || t('checkout_breadcrumb_info', 'Information')}</span>
                     <div className="text-gray-400">
                         <svg className="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                     </div>
-                    <span className="text-gray-400 cursor-default">{localization?.checkout_breadcrumb_payment}</span>
+                    <span className="text-gray-400 cursor-default">{localization?.checkout_breadcrumb_payment || t('checkout_breadcrumb_payment', 'Payment')}</span>
                 </nav>
             </RevealInAnimation>
 
