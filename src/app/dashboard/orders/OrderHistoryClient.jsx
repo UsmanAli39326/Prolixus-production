@@ -100,8 +100,8 @@ export default function OrderHistoryPage({ localization }) {
                 const parts = row.date.split(', ');
                 return (
                     <div className="flex flex-col">
-                        <span className="text-text/80 dark:text-white/80 font-medium">{parts[0]}</span>
-                        {parts[1] && <span className="text-xs text-text/50">{parts[1]}</span>}
+                        <span className="text-black font-medium">{parts[0]}</span>
+                        {parts[1] && <span className="text-xs text-black/60">{parts[1]}</span>}
                     </div>
                 );
             }
@@ -109,7 +109,7 @@ export default function OrderHistoryPage({ localization }) {
         {
             header: localization?.order_history_header_invoice,
             accessor: "invoiceNumber",
-            cellClassName: "text-text dark:text-white font-bold"
+            cellClassName: "text-black font-bold"
         },
         {
             header: localization?.order_history_header_status,
@@ -137,13 +137,13 @@ export default function OrderHistoryPage({ localization }) {
         },
         {
             header: localization?.order_history_header_wallet,
-            cellClassName: "text-text dark:text-white font-medium",
+            cellClassName: "text-black font-medium",
             cell: (row) => formatPrice(row.customerAffiliatedAmount)
         },
         {
             header: localization?.order_history_header_total,
             accessor: "total",
-            cellClassName: "text-text dark:text-white font-medium"
+            cellClassName: "text-black font-medium"
         },
         {
             header: localization?.order_history_header_action,

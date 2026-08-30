@@ -237,7 +237,7 @@ export default function VerifyOTPPage() {
                                 )}
 
                                 <form onSubmit={handleSubmit} className="mt-8">
-                                    <div className="flex items-center justify-center gap-3">
+                                    <div className="flex items-center justify-center gap-2 sm:gap-3">
                                         {otp.map((digit, index) => (
                                             <input
                                                 key={index}
@@ -250,7 +250,7 @@ export default function VerifyOTPPage() {
                                                 onKeyDown={(e) => handleKeyDown(index, e)}
                                                 onPaste={handlePaste}
                                                 className={`
-                                                    w-12 h-14 sm:w-14 sm:h-16 rounded-xl border text-center text-lg font-semibold
+                                                    w-10 h-12 sm:w-14 sm:h-16 rounded-xl border text-center text-lg font-semibold
                                                     bg-white text-primary transition-all duration-200
                                                     focus:border-accent focus:ring-2 focus:ring-accent/25 focus:outline-none
                                                     ${error ? "border-error" : "border-divider"}

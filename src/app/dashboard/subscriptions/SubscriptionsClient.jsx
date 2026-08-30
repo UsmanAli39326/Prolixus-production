@@ -202,7 +202,7 @@ export default function SubscriptionsClient({ localization }) {
         {
             header: localization?.subscriptions_header_product || "Product",
             accessor: "productName",
-            cellClassName: "text-text dark:text-white font-bold",
+            cellClassName: "text-black font-bold",
             cell: (row) => row.product?.name || row.productName || row.name || "Subscription Product"
         },
         {
@@ -218,7 +218,7 @@ export default function SubscriptionsClient({ localization }) {
         },
         {
             header: localization?.subscriptions_header_price || "Price",
-            cellClassName: "text-text dark:text-white font-medium",
+            cellClassName: "text-black font-medium",
             cell: (row) => formatPrice(row.subscriptionPrice || row.price || row.amount || 0)
         },
         {
@@ -227,7 +227,7 @@ export default function SubscriptionsClient({ localization }) {
             cell: (row) => {
                 if (!row.startDate && !row.createdAt && !row.createdDate) return "-";
                 const dateStr = formatDate(row.startDate || row.createdAt || row.createdDate, 'date');
-                return <span className="text-text/80 dark:text-white/80 font-medium">{dateStr}</span>;
+                return <span className="text-black font-medium">{dateStr}</span>;
             }
         },
         {
@@ -236,7 +236,7 @@ export default function SubscriptionsClient({ localization }) {
             cell: (row) => {
                 if (filterStatus !== "Active" || !row.nextBillingDate) return "-";
                 const dateStr = formatDate(row.nextBillingDate, 'date');
-                return <span className="text-text/80 dark:text-white/80 font-medium">{dateStr}</span>;
+                return <span className="text-black font-medium">{dateStr}</span>;
             }
         },
         {

@@ -67,9 +67,9 @@ const DataTable = ({
             {/* Pagination */}
             {pagination && (
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <p className="text-sm text-text/60 dark:text-white/60">
-                        {t("datatable_showing", "Showing")} <span className="font-bold text-text dark:text-white">{pagination.from}-{pagination.to}</span> {t("datatable_of", "of")}{" "}
-                        <span className="font-bold text-text dark:text-white">{pagination.total}</span> {t("datatable_entries", "entries")}
+                    <p className="text-sm text-black">
+                        {t("datatable_showing", "Showing")} <span className="font-bold text-black">{pagination.from}-{pagination.to}</span> {t("datatable_of", "of")}{" "}
+                        <span className="font-bold text-black">{pagination.total}</span> {t("datatable_entries", "entries")}
                     </p>
                     <div className="flex items-center gap-2">
                         <button

@@ -49,7 +49,7 @@ export default function DashboardLayout({ children, localization: propLocalizati
                 {/* Mobile Header */}
                 {/* Mobile Dashboard Sub-Header */}
                 <header className="md:hidden bg-white/10 backdrop-blur-md text-primary dark:text-white p-3 flex items-center justify-between sticky mt-20 z-40 border-b border-divider">
-                    <span className="text-sm font-bold uppercase tracking-wider ml-2">{localization?.dashboard_menu_label}</span>
+                    <span className="text-sm font-bold uppercase tracking-wider ml-2 text-primary">{localization?.dashboard_menu_label}</span>
                     <button
                         onClick={toggleSidebar}
                         className="p-2 text-2xl focus:outline-none bg-primary text-white rounded-lg "

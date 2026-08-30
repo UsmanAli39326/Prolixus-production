@@ -125,9 +125,9 @@ export default function Header({ menus = [] }) {
                       <div className="h-9 w-9 shrink-0 rounded-full bg-accent flex items-center justify-center text-primary font-bold shadow-lg border border-white">
                         {profile?.name?.charAt(0).toUpperCase() || <FaUser size={14} />}
                       </div>
-                      <div className="hidden lg:flex flex-col items-start leading-none">
-                        <span className="text-[10px] text-white/40 uppercase tracking-widest font-bold mb-0.5">{t("navbar_welcome", "Welcome")}</span>
-                        <span className="font-bold text-sm">{profile?.name || t("navbar_user", "User")}</span>
+                      <div className="hidden xl:flex flex-col items-start leading-none min-w-0 overflow-hidden" style={{maxWidth: '90px'}}>
+                        <span className="text-[10px] text-white/40 uppercase tracking-widest font-bold mb-0.5 whitespace-nowrap">{t("navbar_welcome", "Welcome")}</span>
+                        <span className="font-bold text-sm truncate w-full block">{profile?.name || t("navbar_user", "User")}</span>
                       </div>
                       <FaChevronDown className={`text-[10px] text-white/40 transition-transform duration-300 ${userMenuOpen ? "rotate-180" : ""}`} />
                     </button>
