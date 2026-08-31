@@ -16,6 +16,7 @@ export default async function TermsPage() {
   const data = await getLocalization();
   const pageData = pages.find(p => p.displayNameTl === "Term & Conditions");
 
+
   return (
     <>
       <PageHeader

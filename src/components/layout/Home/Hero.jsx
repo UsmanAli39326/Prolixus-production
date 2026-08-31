@@ -251,7 +251,6 @@ export default function Hero({ data = {} }) {
               </FadeInAnimation>
             </div>
           </div>
-
         </div>
       </div>
     </section>
