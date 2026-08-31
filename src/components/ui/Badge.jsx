@@ -17,11 +17,11 @@ const baseStyles = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text
 
 const variantStyles = {
     primary: "bg-(--primary-color) text-(--secondary-color) border-(--primary-color) shadow-sm",
-    success: "bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800",
-    warning: "bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800",
-    error: "bg-red-50 text-red-700 border-red-100 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800",
-    info: "bg-blue-50 text-blue-700 border-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800",
-    outline: "bg-transparent text-(--text-color) border-(--divider-color) dark:text-white/80",
+    success: "bg-green-100 text-green-800 border-green-200",
+    warning: "bg-amber-50 text-amber-700 border-amber-100",
+    error: "bg-red-50 text-red-700 border-red-100",
+    info: "bg-blue-50 text-blue-700 border-blue-100",
+    outline: "bg-transparent text-(--text-color) border-(--divider-color)",
 };
 
 const dotColors = {
