@@ -71,12 +71,12 @@ export default function PageHeader({ title, subtitle, breadcrumbs, bgImage, mobi
         @media (min-width: 768px) { .page-header-section { background-image: url('${activeBg}'); } }
       `}} />
       <section
-        className={`page-header-section bg-(--primary-color) ${className} flex justify-center items-center text-center bg-center bg-cover bg-no-repeat`}
+        className={`page-header-section bg-(--primary-color) ${className} flex justify-center items-center text-center bg-center bg-cover bg-no-repeat overflow-hidden`}
       >
         <div className="container mx-auto px-4">
           <div className="page-header-box">
             {/* Title */}
-            <h1 className="text-4xl md:text-5xl font-default font-bold text-(--white-color) break-words break-all sm:break-words">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-default font-bold text-(--white-color) break-words hyphens-auto leading-tight">
               {title}{" "}
               <span className="font-accent italic font-light">
                 {subtitle}

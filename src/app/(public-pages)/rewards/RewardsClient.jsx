@@ -67,7 +67,7 @@ export default function RewardsClient({ localization }) {
     ];
 
     return (
-        <main className="bg-(--secondary-color) min-h-screen font-default">
+        <main className="bg-(--secondary-color) min-h-screen font-default overflow-x-hidden">
             {/* Page Header */}
             <PageHeader
                 title={localization?.conduct_header_title || t("conduct_header_title", "CONDUCT –")}
@@ -81,10 +81,10 @@ export default function RewardsClient({ localization }) {
 
             {/* SECTION 1: HERO */}
             <section className="relative py-8 md:py-12 bg-(--white-color) bg-no-repeat bg-bottom-right border-b border-(--divider-color) overflow-hidden" style={{ backgroundImage: "url(/images/section-bg-shape-1.png)" }}>
-                <div className="container mx-auto px-4 max-w-5xl relative z-10">
+                <div className="container mx-auto px-4 sm:px-6 max-w-5xl relative z-10">
                     <RevealInAnimation direction="up">
                         <div className="text-center max-w-3xl mx-auto space-y-4">
-                            <Badge variant="info" className="uppercase tracking-widest font-default">
+                            <Badge variant="info" className="uppercase tracking-wider font-default max-w-full text-wrap break-words">
                                 {copy.hero.eyebrow}
                             </Badge>
                             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-(--primary-color) leading-tight">
@@ -129,11 +129,11 @@ export default function RewardsClient({ localization }) {
             </section>
 
             {/* SECTION 2: HOW IT WORKS / STEPS */}
-            <section id="how-it-works" className="py-12 md:py-16 bg-(--secondary-color)">
-                <div className="container mx-auto px-4 max-w-6xl">
+            <section id="how-it-works" className="py-12 md:py-16 bg-(--secondary-color) overflow-hidden">
+                <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
                     <div className="text-center max-w-2xl mx-auto mb-10 md:mb-12">
                         <RevealInAnimation direction="up">
-                            <Badge variant="info" className="uppercase tracking-widest font-default mb-3">
+                            <Badge variant="info" className="uppercase tracking-wider font-default mb-3 max-w-full break-words">
                                 {copy.stepsHeader.tag}
                             </Badge>
                             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-(--primary-color) mb-2 font-accent">
@@ -189,8 +189,8 @@ export default function RewardsClient({ localization }) {
             </section>
 
             {/* SECTION 3: PROGRESS TABLE (WITH STATSCARD STYLE HIGHLIGHT TIER) */}
-            <section className="py-8 md:py-12 bg-(--white-color)">
-                <div className="container mx-auto px-4 max-w-4xl">
+            <section className="py-8 md:py-12 bg-(--white-color) overflow-hidden">
+                <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
                     <div className="text-left max-w-2xl mb-6">
                         <RevealInAnimation direction="up">
                             <Badge variant="info" className="uppercase tracking-widest font-default mb-2">
@@ -228,14 +228,16 @@ export default function RewardsClient({ localization }) {
                                                         : "bg-(--secondary-color)/40 hover:bg-(--secondary-color)/70"
                                                 }`}
                                             >
-                                                <td className="py-3.5 px-5 flex items-center gap-2.5">
-                                                    <span className={`h-2 w-2 rounded-full ${row.isHighlight ? "bg-(--accent-color)" : "bg-(--accent-color)"}`}></span>
-                                                    <span className={`font-medium ${row.isHighlight ? "text-white" : "text-(--primary-color)"}`}>{row.referrals}</span>
+                                                <td className="py-3.5 px-4 sm:px-5 whitespace-nowrap">
+                                                    <span className={`inline-flex items-center gap-2 font-medium ${row.isHighlight ? "text-white" : "text-(--primary-color)"}`}>
+                                                        <span className={`h-2 w-2 shrink-0 rounded-full bg-(--accent-color) inline-block`}></span>
+                                                        {row.referrals}
+                                                    </span>
                                                 </td>
-                                                <td className={`py-3.5 px-5 font-bold ${row.isHighlight ? "text-(--accent-color) text-base" : "text-(--accent-color)"}`}>
+                                                <td className={`py-3.5 px-4 sm:px-5 font-bold whitespace-nowrap ${row.isHighlight ? "text-(--accent-color) text-base" : "text-(--accent-color)"}`}>
                                                     {row.reward}
                                                 </td>
-                                                <td className="py-3.5 px-5 text-right font-medium">
+                                                <td className="py-3.5 px-4 sm:px-5 text-right font-medium whitespace-nowrap">
                                                     {row.isHighlight ? (
                                                         <Badge variant="primary" className="bg-(--accent-color) text-(--primary-color) border-none font-bold text-xs">
                                                             <FaAward /> {row.value}
@@ -255,9 +257,9 @@ export default function RewardsClient({ localization }) {
             </section>
 
             {/* SECTION 4: WARUM WIR EMPFEHLUNGEN BELOHNEN (STATSCARD STYLE CARD) */}
-            <section className="py-8 md:py-12 bg-(--secondary-color)">
-                <div className="container mx-auto px-4 max-w-4xl">
-                    <div className="group relative overflow-hidden rounded-2xl bg-(--primary-color) text-(--white-color) p-6 sm:p-8 lg:p-10 shadow-xl transition-all">
+            <section className="py-8 md:py-12 bg-(--secondary-color) overflow-hidden">
+                <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
+                    <div className="group relative overflow-hidden rounded-2xl bg-(--primary-color) text-(--white-color) p-5 sm:p-8 lg:p-10 shadow-xl transition-all">
                         <div className="absolute -right-6 -top-6 h-32 w-32 rounded-full bg-white/5 blur-2xl transition-all group-hover:bg-(--accent-color)/10 pointer-events-none" />
                         <div className="relative z-10 text-left space-y-3">
                             <Badge variant="info" className="bg-white/10 text-(--accent-color) border-white/20 uppercase tracking-widest font-default mb-1">
@@ -276,8 +278,8 @@ export default function RewardsClient({ localization }) {
             </section>
 
             {/* SECTION 5: SHARING SECTION */}
-            <section id="share-section" className="py-8 md:py-12 bg-(--secondary-color)">
-                <div className="container mx-auto px-4 max-w-4xl">
+            <section id="share-section" className="py-8 md:py-12 bg-(--secondary-color) overflow-hidden">
+                <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
                     <FaderInAnimation direction="up">
                         <div className="bg-(--white-color) rounded-2xl p-6 sm:p-8 border border-(--divider-color) shadow-xs text-left space-y-4">
                             {isLoggedIn ? (
@@ -347,12 +349,12 @@ export default function RewardsClient({ localization }) {
             <SubscriptionFAQ copy={copy.faqs} faqHeader={copy.faqHeader} />
 
             {/* BOTTOM CALLOUT CTA (STATSCARD STYLE CARD WITH LEFT ALIGNMENT) */}
-            <section className="py-8 bg-(--secondary-color) border-t border-(--divider-color)">
-                <div className="container mx-auto px-4 max-w-4xl">
+            <section className="py-8 bg-(--secondary-color) border-t border-(--divider-color) overflow-hidden">
+                <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
                     <RevealInAnimation direction="up">
                         <div className="group relative overflow-hidden rounded-2xl bg-(--primary-color) text-(--white-color) p-6 sm:p-8 lg:p-10 shadow-xl text-left">
                             <div className="absolute -right-6 -top-6 h-32 w-32 rounded-full bg-white/5 blur-2xl transition-all group-hover:bg-(--accent-color)/10 pointer-events-none" />
-                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
                                 <div>
                                     <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-(--white-color) mb-1.5">
                                         {copy.bottom.title}
@@ -361,16 +363,16 @@ export default function RewardsClient({ localization }) {
                                         {copy.bottom.desc}
                                     </p>
                                 </div>
-                                <div className="shrink-0">
+                                <div className="shrink-0 w-full sm:w-auto">
                                     {isLoggedIn ? (
-                                        <Link href="/dashboard/partner" className="inline-block w-full sm:w-auto">
-                                            <Button variant="accent" size="lg" className="w-full sm:w-auto px-8 py-3 rounded-full font-bold uppercase tracking-wide text-xs sm:text-sm whitespace-nowrap">
+                                        <Link href="/dashboard/partner" className="block w-full sm:w-auto">
+                                            <Button variant="accent" size="lg" className="w-full sm:w-auto px-8 py-3 rounded-full font-bold uppercase tracking-wide text-xs sm:text-sm">
                                                 {copy.bottom.btnLoggedin}
                                             </Button>
                                         </Link>
                                     ) : (
-                                        <Link href="/login?redirect=/conduct" className="inline-block w-full sm:w-auto">
-                                            <Button variant="accent" size="lg" className="w-full sm:w-auto px-8 py-3 rounded-full font-bold uppercase tracking-wide text-xs sm:text-sm whitespace-nowrap">
+                                        <Link href="/login?redirect=/conduct" className="block w-full sm:w-auto">
+                                            <Button variant="accent" size="lg" className="w-full sm:w-auto px-8 py-3 rounded-full font-bold uppercase tracking-wide text-xs sm:text-sm">
                                                 {copy.bottom.btnLoggedout}
                                             </Button>
                                         </Link>
