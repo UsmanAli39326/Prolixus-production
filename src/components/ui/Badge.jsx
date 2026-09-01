@@ -85,4 +85,4 @@ Badge.propTypes = {
 };
 
 export default Badge;
-export { Badge };
+export { Badge };   
