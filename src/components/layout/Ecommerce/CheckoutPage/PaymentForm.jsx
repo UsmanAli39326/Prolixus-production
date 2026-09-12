@@ -101,6 +101,19 @@ export default function PaymentForm({
             return;
         }
 
+        const isOfflineOrManual = selectedMethod && (
+            !selectedMethod.publishableKey ||
+            /cash|cod|bank|transfer|delivery/i.test(selectedMethod.name || "")
+        );
+
+        if (isOfflineOrManual) {
+            if (onSubmitOrders) {
+                setError(null);
+                onSubmitOrders();
+            }
+            return;
+        }
+
         if (!selectedMethod || !selectedMethod.publishableKey) {
             setError(localization?.checkout_error_payment_config);
             return;
@@ -110,6 +123,9 @@ export default function PaymentForm({
         if (paymentHandlerRef.current) {
             setError(null);
             paymentHandlerRef.current();
+        } else if (onSubmitOrders) {
+            setError(null);
+            onSubmitOrders();
         }
         // For gateways that manage their own submit (e.g. PayPal buttons), no action needed
     };

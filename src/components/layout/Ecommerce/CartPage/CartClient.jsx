@@ -27,9 +27,10 @@ export default function CartClient({ localization }) {
   // Subscription items in cart require login
   const needsLogin = hasSubscription && !isLoggedIn;
 
-  // Per-type totals
+  // Per-type & overall totals
   const oneTimeTotals = calcCartTotals(oneTimeItems);
   const subscriptionTotals = calcCartTotals(subscriptionItems);
+  const overallTotals = calcCartTotals(cartItems);
 
   return (
     <FaderInAnimation direction="up">

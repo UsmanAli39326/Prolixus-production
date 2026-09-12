@@ -18,6 +18,7 @@ import { useLanguage } from "@/context/LanguageContext";
  * Updated to fetch clientSecret immediately and pass it to Elements provider.
  * This is required for automatic payment methods and the Payment Element.
  */
+
 function StripeGatewayProvider({ publishableKey, amount, currency, isSubscription, cartItems, children }) {
     console.log("[StripeGatewayProvider] Initialized with amount:", amount, "isSubscription:", isSubscription);
 
