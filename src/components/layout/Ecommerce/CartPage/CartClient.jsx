@@ -297,13 +297,13 @@ export default function CartClient({ localization }) {
 
                             <div className="h-px bg-divider my-4" />
 
-                            {/* Due now = one-time only (subscription billed monthly) */}
+                            {/* Due now includes one-time + initial subscription charge */}
                             <div className="flex justify-between items-center">
                               <span className="text-base font-accent font-semibold text-primary">{t("cart_due_now", "Due Now")}</span>
-                              <span className="text-2xl font-bold text-primary">{formatPrice(oneTimeTotals.total)}</span>
+                              <span className="text-2xl font-bold text-primary">{formatPrice(overallTotals.total)}</span>
                             </div>
                             <p className="text-xs text-text/50 text-right -mt-2">
-                              {t("cart_subscription_billed_separately", "Subscription billed monthly separately")}
+                              {t("cart_subscription_billed_separately", "Subscription billed monthly thereafter")}
                             </p>
                           </>
                         ) : (
@@ -332,7 +332,7 @@ export default function CartClient({ localization }) {
 
                             <div className="flex justify-between items-center">
                               <span className="text-xl font-accent font-semibold text-primary">
-                                {localization?.cart_total || t("cart_total", "Total")}
+                                {hasSubscription ? t("cart_due_now", "Due Now") : (localization?.cart_total || t("cart_total", "Total"))}
                               </span>
                               <div className="flex items-baseline gap-1">
                                 <span className="text-2xl font-bold text-primary">

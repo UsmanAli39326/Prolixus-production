@@ -284,24 +284,24 @@ export default function OrderSummary() {
                 <FaderInAnimation direction="up" delay={0.3}>
                     <div className="flex justify-between items-end mt-6 pt-6 border-t border-divider">
                         {hasMixed ? (
-                            /* Mixed: show "Due Now" (one-time total) with sub note */
+                            /* Mixed: show "Due Now" including overall totals with sub note */
                             <div className="w-full">
                                 <div className="flex justify-between items-end">
                                     <span className="text-base font-medium text-text/60 font-accent">
                                         {t('checkout.order_summary.due_now', 'Due now')}
                                     </span>
                                     <div className="flex items-baseline gap-1">
-                                        <span className="text-3xl font-bold text-accent tracking-tight">{formatPrice(oneTimeTotals.total)}</span>
+                                        <span className="text-3xl font-bold text-accent tracking-tight">{formatPrice(totals.total)}</span>
                                     </div>
                                 </div>
                                 <p className="text-[10px] text-text/40 font-accent text-right mt-1">
-                                    {t('checkout.order_summary.plus_sub', '+ subscription billed monthly')}
+                                    {t('checkout.order_summary.plus_sub', '+ subscription billed monthly thereafter')}
                                 </p>
                             </div>
                         ) : (
                             <>
                                 <span className="text-base font-medium text-text/60 font-accent">
-                                    {isSubscription ? t('checkout.order_summary.monthly_total', 'Monthly total') : t('checkout.order_summary.total_due', 'Total due')}
+                                    {isSubscription ? t('checkout.order_summary.due_now', 'Due now') : t('checkout.order_summary.total_due', 'Total due')}
                                 </span>
                                 <div className="flex items-baseline gap-1">
                                     <span className="text-3xl font-bold text-accent tracking-tight">{formatPrice(totals.total)}</span>
