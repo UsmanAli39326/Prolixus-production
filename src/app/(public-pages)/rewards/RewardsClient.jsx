@@ -12,6 +12,7 @@ import Image from "next/image";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { getWalletData } from "@/lib/PartnerService";
+import { getCustomerOrders } from "@/lib/OrderService";
 import { getConductCopy } from "@/constants/conductCopy";
 import {
     FaShoppingBag,
@@ -31,20 +32,27 @@ export default function RewardsClient({ localization }) {
     const { isLoggedIn, loading: authLoading } = useAuth();
 
     const [referralCode, setReferralCode] = useState("");
+    const [hasOrders, setHasOrders] = useState(false);
     const [isFetchingCode, setIsFetchingCode] = useState(false);
     const [copied, setCopied] = useState(false);
 
     useEffect(() => {
         if (isLoggedIn) {
             setIsFetchingCode(true);
-            getWalletData()
-                .then((res) => {
-                    if (res && res.success && res.data) {
-                        setReferralCode(res.data.affiliateCode || "");
+            Promise.allSettled([
+                getWalletData(),
+                getCustomerOrders()
+            ])
+                .then(([walletRes, ordersRes]) => {
+                    if (walletRes.status === "fulfilled" && walletRes.value?.success && walletRes.value?.data) {
+                        setReferralCode(walletRes.value.data.affiliateCode || "");
+                    }
+                    if (ordersRes.status === "fulfilled" && ordersRes.value?.data && Array.isArray(ordersRes.value.data)) {
+                        setHasOrders(ordersRes.value.data.length > 0);
                     }
                 })
                 .catch((err) => {
-                    console.error("Error fetching referral code for CONDUCT page:", err);
+                    console.error("Error fetching referral data for CONDUCT page:", err);
                 })
                 .finally(() => {
                     setIsFetchingCode(false);
@@ -117,7 +125,7 @@ export default function RewardsClient({ localization }) {
                                     </a>
                                 </div>
 
-                                {!isLoggedIn && (
+                                {(!isLoggedIn || !hasOrders) && (
                                     <span className="text-xs text-(--text-color)/60 italic max-w-md text-center block pt-0.5">
                                         {copy.hero.ctaSubtext}
                                     </span>
@@ -220,13 +228,12 @@ export default function RewardsClient({ localization }) {
                                         {copy.table.rows.map((row, idx) => (
                                             <tr
                                                 key={idx}
-                                                className={`transition-colors ${
-                                                    row.isHighlight
-                                                        ? "bg-(--primary-color) text-white font-bold"
-                                                        : idx % 2 === 0
+                                                className={`transition-colors ${row.isHighlight
+                                                    ? "bg-(--primary-color) text-white font-bold"
+                                                    : idx % 2 === 0
                                                         ? "bg-(--white-color) hover:bg-(--secondary-color)/50"
                                                         : "bg-(--secondary-color)/40 hover:bg-(--secondary-color)/70"
-                                                }`}
+                                                    }`}
                                             >
                                                 <td className="py-3.5 px-4 sm:px-5 whitespace-nowrap">
                                                     <span className={`inline-flex items-center gap-2 font-medium ${row.isHighlight ? "text-white" : "text-(--primary-color)"}`}>
@@ -283,41 +290,64 @@ export default function RewardsClient({ localization }) {
                     <FaderInAnimation direction="up">
                         <div className="bg-(--white-color) rounded-2xl p-6 sm:p-8 border border-(--divider-color) shadow-xs text-left space-y-4">
                             {isLoggedIn ? (
-                                <>
-                                    <div className="space-y-1">
-                                        <h3 className="text-xl sm:text-2xl font-bold text-(--primary-color)">
-                                            {copy.share.title}
-                                        </h3>
-                                        <p className="text-xs sm:text-sm text-(--primary-color)/75">
-                                            {copy.share.desc}
-                                        </p>
-                                    </div>
-
-                                    <div className="pt-1 max-w-lg">
-                                        <label className="block text-[11px] font-bold uppercase tracking-wider text-(--primary-color)/60 mb-1.5 text-left font-default">
-                                            {copy.share.label}
-                                        </label>
-                                        <div className="flex flex-col sm:flex-row items-center gap-2.5">
-                                            <div className="relative w-full">
-                                                <input
-                                                    type="text"
-                                                    readOnly
-                                                    value={isFetchingCode ? "Wird geladen..." : (referralCode || "Code nicht verfügbar")}
-                                                    className="w-full rounded-lg border border-(--divider-color) bg-(--secondary-color)/50 py-2.5 px-3.5 font-mono font-bold text-(--primary-color) text-xs sm:text-sm text-left focus:outline-none focus:border-(--accent-color)"
-                                                />
-                                            </div>
-                                            <Button
-                                                variant="accent"
-                                                className="w-full sm:w-auto px-5 py-2.5 rounded-lg whitespace-nowrap font-bold text-xs sm:text-sm"
-                                                leftIcon={copied ? <FaCheckCircle /> : <FaCopy />}
-                                                onClick={handleCopy}
-                                                disabled={!referralCode || isFetchingCode}
-                                            >
-                                                {copied ? copy.share.copied : copy.share.copy}
-                                            </Button>
+                                hasOrders ? (
+                                    <>
+                                        <div className="space-y-1">
+                                            <h3 className="text-xl sm:text-2xl font-bold text-(--primary-color)">
+                                                {copy.share.title}
+                                            </h3>
+                                            <p className="text-xs sm:text-sm text-(--primary-color)/75">
+                                                {copy.share.desc}
+                                            </p>
                                         </div>
-                                    </div>
-                                </>
+
+                                        <div className="pt-1 max-w-lg">
+                                            <label className="block text-[11px] font-bold uppercase tracking-wider text-(--primary-color)/60 mb-1.5 text-left font-default">
+                                                {copy.share.label}
+                                            </label>
+                                            <div className="flex flex-col sm:flex-row items-center gap-2.5">
+                                                <div className="relative w-full">
+                                                    <input
+                                                        type="text"
+                                                        readOnly
+                                                        value={isFetchingCode ? "Wird geladen..." : (referralCode || "Code nicht verfügbar")}
+                                                        className="w-full rounded-lg border border-(--divider-color) bg-(--secondary-color)/50 py-2.5 px-3.5 font-mono font-bold text-(--primary-color) text-xs sm:text-sm text-left focus:outline-none focus:border-(--accent-color)"
+                                                    />
+                                                </div>
+                                                <Button
+                                                    variant="accent"
+                                                    className="w-full sm:w-auto px-5 py-2.5 rounded-lg whitespace-nowrap font-bold text-xs sm:text-sm"
+                                                    leftIcon={copied ? <FaCheckCircle /> : <FaCopy />}
+                                                    onClick={handleCopy}
+                                                    disabled={!referralCode || isFetchingCode}
+                                                >
+                                                    {copied ? copy.share.copied : copy.share.copy}
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div className="flex items-center gap-3">
+                                            <div className="h-10 w-10 shrink-0 rounded-full bg-(--accent-color)/15 flex items-center justify-center text-(--accent-color) text-lg">
+                                                <FaLock />
+                                            </div>
+                                            <h3 className="text-xl sm:text-2xl font-bold text-(--primary-color)">
+                                                {copy.share.noOrdersTitle || "Empfehlungslink nach Erstbestellung verfügbar"}
+                                            </h3>
+                                        </div>
+                                        <p className="text-xs sm:text-sm text-(--primary-color)/75">
+                                            {copy.share.noOrdersDesc || "Dein persönlicher Empfehlungscode wird automatisch freigeschaltet, sobald du deine erste Bestellung getätigt hast."}
+                                        </p>
+                                        <div className="pt-1">
+                                            <Link href="/products">
+                                                <Button variant="accent" size="lg" className="px-6 py-2.5 rounded-full font-bold text-xs sm:text-sm shadow-xs">
+                                                    {localization?.cart_start_shopping || "Jetzt bestellen"}
+                                                </Button>
+                                            </Link>
+                                        </div>
+                                    </>
+                                )
                             ) : (
                                 <>
                                     <div className="flex items-center gap-3">

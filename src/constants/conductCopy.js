@@ -52,6 +52,8 @@ const ENGLISH_CONDUCT_COPY = {
   conduct_share_desc: "Copy your referral code and share it directly with your friends.",
   conduct_share_loggedout_title: "Log in to view your link",
   conduct_share_loggedout_desc: "You need an active Prolixus account with at least one completed order to participate in the CONDUCT program.",
+  conduct_share_no_orders_title: "Referral Link Available After First Order",
+  conduct_share_no_orders_desc: "Your personal referral code will be unlocked automatically once you place your first order.",
   conduct_share_copy: "Copy",
   conduct_share_copied: "Copied!",
   conduct_share_label: "Your Personal Referral Code",
@@ -186,6 +188,8 @@ export function getConductCopy(loc = {}) {
       desc: get("conduct_share_desc"),
       loggedoutTitle: get("conduct_share_loggedout_title"),
       loggedoutDesc: get("conduct_share_loggedout_desc"),
+      noOrdersTitle: get("conduct_share_no_orders_title"),
+      noOrdersDesc: get("conduct_share_no_orders_desc"),
       copy: get("conduct_share_copy"),
       copied: get("conduct_share_copied"),
       label: get("conduct_share_label")

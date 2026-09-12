@@ -26,6 +26,10 @@
         "order_summary": {
             "title": "Bestellübersicht",
             "subscription": "Abonnement",
+            "mixed": "Gemischt",
+            "one_time": "Einmalig",
+            "due_now": "Jetzt fällig",
+            "plus_sub": "+ Abonnement wird monatlich abgerechnet",
             "items": "Artikel",
             "cart_empty": "Ihr Warenkorb ist leer",
             "promo_code": "Aktionscode",
@@ -73,5 +77,9 @@
             "cod": "Nachnahme",
             "bank_transfer": "Banküberweisung"
         }
-    }
+    },
+    "cart_one_time_subtotal": "Einmalig",
+    "cart_subscription_subtotal": "Abonnement",
+    "cart_due_now": "Jetzt fällig",
+    "cart_subscription_billed_separately": "Abonnement wird monatlich separat abgerechnet"
 }

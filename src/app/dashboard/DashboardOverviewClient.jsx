@@ -10,7 +10,7 @@ import { getProfile } from "@/lib/ProfileService";
 import { getCustomerOrders } from "@/lib/OrderService";
 import { getWalletData } from "@/lib/PartnerService";
 import Button from "@/components/ui/Button";
-import { FaCopy, FaCheckCircle, FaLink, FaWallet, FaShoppingBag, FaChartBar } from "react-icons/fa";
+import { FaCopy, FaCheckCircle, FaLink, FaWallet, FaShoppingBag, FaChartBar, FaLock } from "react-icons/fa";
 import { useCurrency } from "@/context/CurrencyContext";
 
 const StatCard = ({ title, value, icon: Icon, color = "accent" }) => (
@@ -39,7 +39,7 @@ export default function DashboardOverviewPage({ localization }) {
     const [copied, setCopied] = useState(false);
 
     const handleCopy = () => {
-        if (walletData?.affiliateCode) {
+        if (stats.totalOrders > 0 && walletData?.affiliateCode) {
             navigator.clipboard.writeText(walletData.affiliateCode);
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
@@ -147,18 +147,27 @@ export default function DashboardOverviewPage({ localization }) {
                                     </p>
                                 </div>
                                 <div className="relative w-full md:w-64">
-                                    <input
-                                        className="w-full rounded-xl border border-divider bg-secondary/30 dark:bg-white/5 py-2.5 pl-4 pr-10 text-sm font-bold text-primary focus:border-accent outline-none transition-all"
-                                        readOnly
-                                        type="text"
-                                        value={loading ? "..." : (walletData?.affiliateCode || localization?.dashboard_affiliate_no_code || "No code")}
-                                    />
-                                    <button
-                                        onClick={handleCopy}
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-text/40 hover:text-accent transition-colors"
-                                    >
-                                        {copied ? <FaCheckCircle className="text-green-500" /> : <FaCopy />}
-                                    </button>
+                                    {stats.totalOrders > 0 ? (
+                                        <>
+                                            <input
+                                                className="w-full rounded-xl border border-divider bg-secondary/30 dark:bg-white/5 py-2.5 pl-4 pr-10 text-sm font-bold text-primary focus:border-accent outline-none transition-all"
+                                                readOnly
+                                                type="text"
+                                                value={loading ? "..." : (walletData?.affiliateCode || localization?.dashboard_affiliate_no_code || "No code")}
+                                            />
+                                            <button
+                                                onClick={handleCopy}
+                                                className="absolute right-3 top-1/2 -translate-y-1/2 text-text/40 hover:text-accent transition-colors"
+                                            >
+                                                {copied ? <FaCheckCircle className="text-green-500" /> : <FaCopy />}
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <div className="flex items-center gap-2 text-xs font-semibold text-text/60 bg-secondary/50 dark:bg-white/5 py-2.5 px-4 rounded-xl border border-divider">
+                                            <FaLock className="text-accent text-sm shrink-0" />
+                                            <span>{localization?.dashboard_affiliate_unlocked_after_order || "Unlocked after 1st order"}</span>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 

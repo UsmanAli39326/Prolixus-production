@@ -46,6 +46,7 @@ export default function ProductCard({
       productId: productRaw?.id || id,
       title: `${title} (${bottleCount} ${bottleCount === 1 ? t("product_bottle_singular", "Bottle") : t("product_bottle_plural", "Bottles")})`,
       name: productRaw?.name || productRaw?.title || title,
+      image: backendImageUrl || productRaw?.image || productRaw?.itemImages?.[0] || null,
       price: price,
       variantId: id,
       variantLabel: title,

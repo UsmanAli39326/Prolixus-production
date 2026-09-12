@@ -55,7 +55,7 @@ export function buildGuestOrderPayload(formData, cartItems, currency = "EURO", t
         shopId: 1,
         customerId,
         guestCustomerInfo,
-        orderDetails,                                   // always a proper array
+        orderDetails,
         couponCode: formData.couponCode?.trim() || null,
         paymentMethod: formData.paymentMethod || "Cash",
         paymentToken: formData.paymentToken ?? null,
@@ -69,7 +69,7 @@ export function buildGuestOrderPayload(formData, cartItems, currency = "EURO", t
         servicesChargesAmount: 0,
         servicesChargesPercentage: 0,
         currency,
-        invoiceNumber: "",                              // default empty string
+        invoiceNumber: "",
         description: formData.orderNotes || "",
         deliveryPostCode: formData.zip || "",
         deliveryCity: formData.city || "",
@@ -83,7 +83,6 @@ export function buildGuestOrderPayload(formData, cartItems, currency = "EURO", t
     // ── Subscription-specific fields ────────────────────────────────────────
     if (isSubscription) {
         payload.isSubscription = true;
-        // Extract subscription plan metadata from the first cart item
         const subItem = cartItems[0];
         if (subItem) {
             payload.subscriptionPlanId = subItem.variantId || null;
@@ -101,19 +100,26 @@ export default function CheckoutWizard({ localization }) {
     const router = useRouter();
     const { cartItems, isInitialized, clearCart } = useCart();
     const { currency, formatPrice } = useCurrency();
-    const { formData, updateFormData, totals, user, isAuthenticated, setOrderCompleted, orderCompleted, checkoutItems, isSubscription, checkoutType } = useCheckout();
+    const {
+        formData, updateFormData, totals,
+        oneTimeTotals, subscriptionTotals,
+        user, isAuthenticated, setOrderCompleted, orderCompleted,
+        checkoutItems, oneTimeItems, subscriptionItems,
+        hasOneTime, hasSubscription, isSubscription,
+    } = useCheckout();
+
     const [currentStep, setCurrentStep] = useState(0);
-    const [orderData, setOrderData] = useState(null);
+    const [orderData, setOrderData] = useState(null);        // first completed order
+    const [allOrderResults, setAllOrderResults] = useState([]); // all completed orders
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Fetch payment methods from the API (sanitized, active-only, filtered for subscription)
+    // Fetch payment methods — use subscription flag based on cart composition
     const {
         paymentMethods,
         loading: methodsLoading,
         error: methodsError,
     } = usePaymentMethods({ isSubscription });
 
-    // Track selected payment method object (contains publishableKey)
     const [selectedMethod, setSelectedMethod] = useState(null);
     const hasAutoSelected = useRef(false);
 
@@ -122,14 +128,14 @@ export default function CheckoutWizard({ localization }) {
         setOrderCompleted(false);
     }, [setOrderCompleted]);
 
-    // Redirect to cart if the filtered checkout items are empty (only after initialization and if order is not completed)
+    // Redirect to cart if no items (only after initialization and if order is not completed)
     useEffect(() => {
         if (isInitialized && checkoutItems.length === 0 && !orderCompleted) {
             router.push("/cart");
         }
     }, [isInitialized, checkoutItems, router, orderCompleted]);
 
-    // When methods load, auto-select the first valid one if none selected or if selected is unavailable
+    // Auto-select first payment method
     useEffect(() => {
         if (paymentMethods.length > 0) {
             const isCurrentValid = selectedMethod && paymentMethods.some((m) => m.name?.toLowerCase() === selectedMethod.name?.toLowerCase());
@@ -150,46 +156,95 @@ export default function CheckoutWizard({ localization }) {
         [updateFormData]
     );
 
-    // Get the gateway adapter for the selected method
     const gateway = useMemo(() => {
         return getAdapter(selectedMethod?.name);
     }, [selectedMethod]);
 
-    const handleDirectComplete = async () => {
+    // ---------------------------------------------------------------------------
+    // SEQUENTIAL ORDER SUBMISSION
+    // Submits one-time order first (if present), then subscription order (if present).
+    // On any failure, stops and reports which order failed — cart is NOT cleared.
+    // ---------------------------------------------------------------------------
+    const handleOrderSubmit = useCallback(async (overrideFormData) => {
+        const fd = overrideFormData || formData;
         setIsSubmitting(true);
+        const results = [];
+
         try {
-            const payload = buildGuestOrderPayload(
-                { ...formData, paymentMethod: "Cash" },
-                checkoutItems,
-                currency,
-                totals,
-                user,
-                isSubscription
-            );
+            // ── 1. One-time order ────────────────────────────────────────────
+            if (hasOneTime && oneTimeItems.length > 0) {
+                const payload = buildGuestOrderPayload(
+                    fd,
+                    oneTimeItems,
+                    currency,
+                    oneTimeTotals,
+                    user,
+                    false // not a subscription
+                );
 
-            const response = await apiService.post("/Checkout/create-order", payload);
+                const response = await apiService.post("/Checkout/create-order", payload);
 
-            if (response.success) {
-                setOrderData(response.data);
-                setOrderCompleted(true);
-                clearCart();
-                const invoiceNumber = response.data?.invoiceNumber || response.data?.orderId || response.data?.id;
-                if (invoiceNumber) {
-                    router.push(`/order-detail?invoiceNumber=${invoiceNumber}`);
-                } else {
-                    setCurrentStep(2); // Go to confirmation step
+                if (!response.success) {
+                    alert(response.message || localization?.checkout_error_create_order || "Failed to place one-time order.");
+                    return;
                 }
+                results.push({ type: "one-time", data: response.data });
+            }
+
+            // ── 2. Subscription order ────────────────────────────────────────
+            if (hasSubscription && subscriptionItems.length > 0) {
+                const payload = buildGuestOrderPayload(
+                    fd,
+                    subscriptionItems,
+                    currency,
+                    subscriptionTotals,
+                    user,
+                    true // is a subscription
+                );
+
+                const response = await apiService.post("/Checkout/create-order", payload);
+
+                if (!response.success) {
+                    // One-time order already placed — note this in the error
+                    const prefix = results.length > 0
+                        ? "Your one-time order was placed, but the "
+                        : "";
+                    alert(`${prefix}${response.message || localization?.checkout_error_create_order || "Failed to place subscription order."}`);
+                    // Partial success: clear only if one-time succeeded
+                    if (results.length > 0) {
+                        clearCart();
+                        setOrderCompleted(true);
+                    }
+                    return;
+                }
+                results.push({ type: "subscription", data: response.data });
+            }
+
+            // ── 3. All orders succeeded ──────────────────────────────────────
+            setAllOrderResults(results);
+            setOrderData(results[0]?.data || null);
+            setOrderCompleted(true);
+            clearCart();
+
+            // Navigate to order detail for the first invoice
+            const firstInvoice = results[0]?.data?.invoiceNumber || results[0]?.data?.orderId || results[0]?.data?.id;
+            if (firstInvoice) {
+                router.push(`/order-detail?invoiceNumber=${firstInvoice}`);
             } else {
-                alert(response.message || localization?.checkout_error_create_order);
+                setCurrentStep(2); // Fallback to in-page confirmation
             }
         } catch (error) {
-            console.error("Direct completion failed:", error);
-            alert(localization?.checkout_error_generic);
+            console.error("Order submission failed:", error);
+            alert(localization?.checkout_error_generic || "Something went wrong. Please try again.");
         } finally {
             setIsSubmitting(false);
         }
-    };
+    }, [formData, hasOneTime, hasSubscription, oneTimeItems, subscriptionItems, currency, oneTimeTotals, subscriptionTotals, user, clearCart, setOrderCompleted, router, localization]);
 
+    // Zero-total shortcut (wallet covers everything) — still uses sequential logic
+    const handleDirectComplete = useCallback(async () => {
+        await handleOrderSubmit({ ...formData, paymentMethod: "Cash" });
+    }, [formData, handleOrderSubmit]);
 
     const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 1));
     const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 0));
@@ -215,24 +270,28 @@ export default function CheckoutWizard({ localization }) {
         user,
         isAuthenticated,
         isSubscription,
-        checkoutType,
-        // New payment-specific props
+        hasSubscription,
+        hasOneTime,
+        checkoutType: isSubscription ? "subscribe" : "one-time",
+        // Payment props
         paymentMethods,
         methodsLoading,
         methodsError,
         selectedMethod,
         onMethodSelect: handleMethodSelect,
         gateway,
-        // Zero-total props
+        // Submit
         total: totals.total,
         onDirectComplete: handleDirectComplete,
+        onSubmitOrders: handleOrderSubmit,
         isSubmitting,
         orderData,
-        formatPrice: (p) => p, // Placeholder, wrapped by useCurrency inside components or passed
+        allOrderResults,
+        formatPrice: (p) => p,
         localization,
     };
 
-    // If step is confirmation, we need to pass specific props
+    // If step is confirmation, render inline confirmation
     if (currentStep === 2) {
         return (
             <OrderConfirmation

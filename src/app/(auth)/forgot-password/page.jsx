@@ -77,6 +77,7 @@ export default function ForgotPasswordPage() {
                                             alt="Prolixus Logo"
                                             width={200}
                                             height={56}
+                                            aria-labelss
                                             className="h-14 w-auto object-contain"
                                         />
                                     </Link>

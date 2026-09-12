@@ -103,11 +103,21 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
 
     const bundleQuantity = purchaseType === 'one-time' ? selectedOneTimeOption?.quantity : primarySubscription?.quantity || 1;
 
+    // Resolve the best image for this specific variant/plan
+    const selectedFile = purchaseType === 'one-time' ? selectedOneTimeOption?.file : primarySubscription?.file;
+    const resolvedImage =
+      (selectedFile?.url ? getImageUrl(selectedFile.url) : null) ||
+      (productFile?.url ? getImageUrl(productFile.url) : null) ||
+      product.image ||
+      product.itemImages?.[0] ||
+      null;
+
     const cartProduct = {
       ...product,
       productId: product.id,
       title: product.title || product.name,
       name: product.name || product.title,
+      image: resolvedImage,
       price,
       variantId,
       variantLabel: label,

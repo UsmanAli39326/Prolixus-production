@@ -26,6 +26,10 @@
         "order_summary": {
             "title": "Order Summary",
             "subscription": "Subscription",
+            "mixed": "Mixed",
+            "one_time": "One-Time",
+            "due_now": "Due now",
+            "plus_sub": "+ subscription billed monthly",
             "items": "items",
             "cart_empty": "Your cart is empty",
             "promo_code": "Promo Code",
@@ -73,5 +77,9 @@
             "cod": "Cash on Delivery",
             "bank_transfer": "Bank Transfer"
         }
-    }
+    },
+    "cart_one_time_subtotal": "One-Time",
+    "cart_subscription_subtotal": "Subscription",
+    "cart_due_now": "Due Now",
+    "cart_subscription_billed_separately": "Subscription billed monthly separately"
 }

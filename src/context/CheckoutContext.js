@@ -9,27 +9,29 @@ import { useAuth } from "./AuthContext";
 
 const CheckoutContext = createContext();
 
-/**
- * @param {Object} props
- * @param {"one-time"|"subscribe"} [props.checkoutType] – Purchase type filter from URL ?type=
- */
-
-export const CheckoutProvider = ({ children, checkoutType: initialType }) => {
+export const CheckoutProvider = ({ children }) => {
     const { cartItems } = useCart();
     const { user: authUser, isLoggedIn, token } = useAuth();
 
-    // ── Checkout type awareness ─────────────────────────────────────────────
-    const [checkoutType, setCheckoutType] = useState(initialType || "one-time");
-    const isSubscription = checkoutType === "subscribe";
+    // ── Split items by purchase type ────────────────────────────────────────
+    const oneTimeItems = useMemo(
+        () => cartItems.filter((item) => item.purchaseType !== "subscribe"),
+        [cartItems]
+    );
+    const subscriptionItems = useMemo(
+        () => cartItems.filter((item) => item.purchaseType === "subscribe"),
+        [cartItems]
+    );
+    const hasOneTime = oneTimeItems.length > 0;
+    const hasSubscription = subscriptionItems.length > 0;
 
-    // Filter cart items to only the type being checked out
-    const checkoutItems = useMemo(() =>
-        cartItems.filter(item =>
-            checkoutType === "subscribe"
-                ? item.purchaseType === "subscribe"
-                : item.purchaseType !== "subscribe"
-        ), [cartItems, checkoutType]);
+    // All cart items go to checkout — no type filtering
+    const checkoutItems = cartItems;
 
+    // Legacy: isSubscription = true only when cart is purely subscriptions
+    const isSubscription = hasSubscription && !hasOneTime;
+
+    // ── User & auth state ───────────────────────────────────────────────────
     const [user, setUser] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [walletBalance, setWalletBalance] = useState(0);
@@ -50,7 +52,7 @@ export const CheckoutProvider = ({ children, checkoutType: initialType }) => {
         countryCode: "",
 
         // Payment & metadata
-        paymentMethod: "Stripe", // Default to Stripe as per common usage
+        paymentMethod: "Stripe",
         paymentToken: null,
         couponCode: "",
         orderNotes: "",
@@ -93,10 +95,8 @@ export const CheckoutProvider = ({ children, checkoutType: initialType }) => {
                     try {
                         const walletRes = await apiService.get("/Dashboard/customer-wallet");
                         const balance = parseFloat(walletRes?.data?.remainingAffiliateAmount ?? 0);
-                        // const balance = 50;
                         setWalletBalance(isNaN(balance) ? 0 : balance);
                     } catch {
-                        // Wallet fetch is non-critical — silently default to 0
                         setWalletBalance(0);
                     }
                 } catch (error) {
@@ -115,22 +115,28 @@ export const CheckoutProvider = ({ children, checkoutType: initialType }) => {
         setFormData((prev) => ({ ...prev, ...newData }));
     }, []);
 
-    // Calculate totals from FILTERED checkout items (not all cart items)
-    const totals = useMemo(() => {
-        const baseTotals = calcCartTotals(checkoutItems);
-        // Truncate to 2 decimal places — never round up
+    // ── Helper: apply discount & wallet to a base totals object ────────────
+    const applyDeductions = useCallback((baseTotals) => {
         const t = (n) => Math.trunc((n ?? 0) * 100) / 100;
         const discountAmount = t(formData.discountAmount || 0);
         const afterDiscount = t(Math.max(0, baseTotals.total - discountAmount));
         const walletAmount = formData.useWallet ? t(Math.min(formData.walletAmount, afterDiscount)) : 0;
-
         return {
             ...baseTotals,
             discountAmount,
             walletAmount,
             total: t(Math.max(0, afterDiscount - walletAmount)),
         };
-    }, [checkoutItems, formData.discountAmount, formData.useWallet, formData.walletAmount]);
+    }, [formData.discountAmount, formData.useWallet, formData.walletAmount]);
+
+    // ── Combined totals (used for order summary display) ───────────────────
+    const totals = useMemo(() => {
+        return applyDeductions(calcCartTotals(checkoutItems));
+    }, [checkoutItems, applyDeductions]);
+
+    // ── Per-type totals (for split display in OrderSummary & checkout) ─────
+    const oneTimeTotals = useMemo(() => calcCartTotals(oneTimeItems), [oneTimeItems]);
+    const subscriptionTotals = useMemo(() => calcCartTotals(subscriptionItems), [subscriptionItems]);
 
     return (
         <CheckoutContext.Provider
@@ -138,16 +144,23 @@ export const CheckoutProvider = ({ children, checkoutType: initialType }) => {
                 formData,
                 updateFormData,
                 totals,
+                oneTimeTotals,
+                subscriptionTotals,
                 user,
                 isAuthenticated,
                 walletBalance,
                 orderCompleted,
                 setOrderCompleted,
-                // ── New type-aware values ──
-                checkoutType,
-                setCheckoutType,
-                isSubscription,
+                // ── Type-aware values ──
                 checkoutItems,
+                oneTimeItems,
+                subscriptionItems,
+                hasOneTime,
+                hasSubscription,
+                isSubscription,
+                // Legacy compat (kept for PaymentMethodSelector / PaymentForm)
+                checkoutType: isSubscription ? "subscribe" : "one-time",
+                setCheckoutType: () => {},
             }}
         >
             {children}

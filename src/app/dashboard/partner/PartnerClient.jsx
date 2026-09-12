@@ -8,7 +8,8 @@ import {
     FaLink,
     FaCopy,
     FaCheckCircle,
-    FaExclamationTriangle
+    FaExclamationTriangle,
+    FaLock
 } from "react-icons/fa";
 
 import DashboardHeader from "@/components/layout/Dashboard/DashboardHeader";
@@ -18,6 +19,7 @@ import DataTable from "@/components/ui/DataTable";
 import RevealInAnimation from "@/Hooks/RevealInAnimation";
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import { getWalletData } from "@/lib/PartnerService";
+import { getCustomerOrders } from "@/lib/OrderService";
 import { MdRefresh, MdErrorOutline } from "react-icons/md";
 import { useCurrency } from "@/context/CurrencyContext";
 import { formatDate } from "@/utitlis/formatters";
@@ -76,6 +78,7 @@ const StatsCard = ({ title, value, trend, detail, icon: Icon }) => (
 
 export default function PartnerProgramPage({ localization }) {
     const [walletData, setWalletData] = useState(null);
+    const [hasOrders, setHasOrders] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [copied, setCopied] = useState(false);
@@ -87,11 +90,19 @@ export default function PartnerProgramPage({ localization }) {
         setIsLoading(true);
         setError(null);
         try {
-            const response = await getWalletData();
-            if (response.success) {
-                setWalletData(response.data);
-            } else {
-                setError(response.message || localization?.partner_error_fetch_wallet || "Failed to fetch wallet data.");
+            const [walletRes, ordersRes] = await Promise.allSettled([
+                getWalletData(),
+                getCustomerOrders()
+            ]);
+
+            if (walletRes.status === "fulfilled" && walletRes.value?.success) {
+                setWalletData(walletRes.value.data);
+            } else if (walletRes.status === "fulfilled") {
+                setError(walletRes.value?.message || localization?.partner_error_fetch_wallet || "Failed to fetch wallet data.");
+            }
+
+            if (ordersRes.status === "fulfilled" && ordersRes.value?.data && Array.isArray(ordersRes.value.data)) {
+                setHasOrders(ordersRes.value.data.length > 0);
             }
         } catch (err) {
             setError(err.message || localization?.partner_error_unexpected || "An unexpected error occurred.");
@@ -107,9 +118,11 @@ export default function PartnerProgramPage({ localization }) {
     const referralLink = walletData?.affiliateCode || "";
 
     const handleCopy = () => {
-        navigator.clipboard.writeText(referralLink);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
+        if (hasOrders && referralLink) {
+            navigator.clipboard.writeText(referralLink);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        }
     };
 
     const columns = [
@@ -263,31 +276,58 @@ export default function PartnerProgramPage({ localization }) {
             {/* Referral Link Box */}
             <FaderInAnimation direction="up" delay={0.4}>
                 <div className="rounded-2xl bg-white dark:bg-background-dark/30 border border-divider p-8 shadow-sm">
-                    <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-                        <div className="flex-1">
-                            <h3 className="text-lg font-bold text-text mb-1">{localization?.partner_referral_code_title} </h3>
-                            <p className="text-sm text-text/60">{localization?.partner_referral_code_desc}</p>
-                        </div>
-                        <div className="flex w-full lg:w-auto flex-col sm:flex-row items-center gap-3">
-                            <div className="relative w-full lg:w-[320px]">
-                                <input
-                                    className="w-full rounded-lg border border-divider bg-secondary/20 dark:bg-white/5 py-3 pl-4 pr-12 text-sm font-medium text-text focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all"
-                                    readOnly
-                                    type="text"
-                                    value={referralLink}
-                                />
-                                <FaLink className="absolute right-4 top-1/2 -translate-y-1/2 text-text/40" />
+                    {hasOrders ? (
+                        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+                            <div className="flex-1">
+                                <h3 className="text-lg font-bold text-text mb-1">{localization?.partner_referral_code_title} </h3>
+                                <p className="text-sm text-text/60">{localization?.partner_referral_code_desc}</p>
                             </div>
-                            <Button
-                                className="w-full sm:w-auto whitespace-nowrap"
-                                variant="primary"
-                                leftIcon={copied ? <FaCheckCircle /> : <FaCopy />}
-                                onClick={handleCopy}
-                            >
-                                {copied ? localization?.partner_copied : localization?.partner_copy}
-                            </Button>
+                            <div className="flex w-full lg:w-auto flex-col sm:flex-row items-center gap-3">
+                                <div className="relative w-full lg:w-[320px]">
+                                    <input
+                                        className="w-full rounded-lg border border-divider bg-secondary/20 dark:bg-white/5 py-3 pl-4 pr-12 text-sm font-medium text-text focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all"
+                                        readOnly
+                                        type="text"
+                                        value={referralLink}
+                                    />
+                                    <FaLink className="absolute right-4 top-1/2 -translate-y-1/2 text-text/40" />
+                                </div>
+                                <Button
+                                    className="w-full sm:w-auto whitespace-nowrap"
+                                    variant="primary"
+                                    leftIcon={copied ? <FaCheckCircle /> : <FaCopy />}
+                                    onClick={handleCopy}
+                                >
+                                    {copied ? localization?.partner_copied : localization?.partner_copy}
+                                </Button>
+                            </div>
                         </div>
-                    </div>
+                    ) : (
+                        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+                            <div className="flex items-start gap-4 flex-1">
+                                <div className="p-3 bg-accent/10 rounded-xl text-accent shrink-0 mt-0.5">
+                                    <FaLock className="text-xl" />
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-bold text-text mb-1">
+                                        {localization?.partner_code_locked_title || "Referral Link Locked"}
+                                    </h3>
+                                    <p className="text-sm text-text/60 max-w-xl">
+                                        {localization?.partner_code_locked_desc || "Your personal referral code will be unlocked automatically after your first order."}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="w-full lg:w-auto flex justify-end">
+                                <Button
+                                    className="w-full sm:w-auto whitespace-nowrap"
+                                    variant="primary"
+                                    href="/products"
+                                >
+                                    {localization?.cart_start_shopping || "Shop Now"}
+                                </Button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </FaderInAnimation>
 

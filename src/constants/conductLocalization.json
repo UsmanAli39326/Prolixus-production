@@ -8,7 +8,6 @@
   "conduct_hero_cta_subtext": "* Dein persönlicher Empfehlungslink wird automatisch nach deiner ersten Bestellung freigeschaltet.",
   "conduct_hero_cta_loggedin": "Meinen Empfehlungslink anzeigen",
   "conduct_hero_secondary_cta": "So funktioniert es",
-
   "conduct_steps_tag": "EINFACH & TRANSPARENT",
   "conduct_steps_title": "So funktioniert CONDUCT",
   "conduct_steps_subtitle": "In drei einfachen Schritten zu deiner kostenlosen Monatsration.",
@@ -18,7 +17,6 @@
   "conduct_step2_desc": "Teile deinen Link mit Freunden, Familie oder Bekannten. Deine Empfehlung gewährt ihnen einen Vorteil bei ihrer Erstbestellung.",
   "conduct_step3_title": "3. Guthaben erhalten",
   "conduct_step3_desc": "Für jede erfolgreiche Bestellung über deinen Link wird dir automatisch Guthaben gutgeschrieben. Nach 5 Empfehlungen ist deine nächste Monatsration komplett kostenlos.",
-
   "conduct_table_tag": "BELOHNUNGSÜBERSICHT",
   "conduct_table_title": "Dein Weg zur kostenlosen Monatsration",
   "conduct_table_subtitle": "Für jede erfolgreiche Empfehlung wächst dein Guthaben kontinuierlich an.",
@@ -40,20 +38,19 @@
   "conduct_table_row5_refs": "5 Empfehlungen",
   "conduct_table_row5_reward": "199,00 €",
   "conduct_table_row5_value": "Kostenlose Monatsration (100%)",
-
   "conduct_brand_tag": "UNSERE PHILOSOPHIE",
   "conduct_brand_title": "Warum wir Empfehlungen belohnen",
   "conduct_brand_text1": "Bei Prolixus glauben wir fest an die Wirkung unseres Produkts und das Vertrauen unserer Community. Statt in anonyme Werbekampagnen zu investieren, geben wir diesen Wert direkt an diejenigen weiter, die Prolixus überzeugt nutzen und ehrlich weiterempfehlen.",
   "conduct_brand_text2": "Dein Vertrauen ist unser wertvollstes Gut. Mit dem CONDUCT Empfehlungsprogramm schaffen wir eine Win-Win-Situation für dich und deine Freunde.",
-
   "conduct_share_title": "Dein Link. Deine Empfehlung. Dein Guthaben.",
   "conduct_share_desc": "Kopiere deinen Empfehlungscode und teile ihn direkt mit deinen Freunden.",
   "conduct_share_loggedout_title": "Logge dich ein, um deinen Link zu sehen",
   "conduct_share_loggedout_desc": "Du benötigst ein aktives Prolixus Konto mit mindestens einer getätigten Bestellung, um am CONDUCT Programm teilzunehmen.",
+  "conduct_share_no_orders_title": "Empfehlungslink nach Erstbestellung verfügbar",
+  "conduct_share_no_orders_desc": "Dein persönlicher Empfehlungscode wird automatisch freigeschaltet, sobald du deine erste Bestellung getätigt hast.",
   "conduct_share_copy": "Kopieren",
   "conduct_share_copied": "Kopiert!",
   "conduct_share_label": "Dein persönlicher Empfehlungscode",
-
   "conduct_faq_tag": "HÄUFIG GESTELLTE FRAGEN",
   "conduct_faq_title": "Fragen zu CONDUCT",
   "conduct_faq_q1": "Wie funktioniert das CONDUCT Empfehlungsprogramm?",
@@ -70,7 +67,6 @@
   "conduct_faq_a6": "Sollte eine Bestellung innerhalb der gesetzlichen Widerrufsfrist storniert oder widerrufen werden, wird das dafür gutgeschriebene Guthaben storniert.",
   "conduct_faq_q7": "Kann ich mir mein Guthaben bar auszahlen lassen?",
   "conduct_faq_a7": "Eine Barauszahlung des Guthabens ist nicht möglich. Das Guthaben dient ausschließlich der Anrechnung auf deine Prolixus Bestellungen und Monatsrationen.",
-
   "conduct_bottom_title": "Bereit für deine erste Belohnung?",
   "conduct_bottom_desc": "Sichere dir jetzt deine Monatskur oder teile deinen Link mit Freunden.",
   "conduct_bottom_btn_loggedin": "Zu Mein CONDUCT im Dashboard",
