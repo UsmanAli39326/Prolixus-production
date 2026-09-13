@@ -29,8 +29,8 @@ export async function POST(req) {
   try {
     const { email, name, paymentMethodId, customerId } = await req.json();
 
-    if (!paymentMethodId) {
-      return Response.json({ error: "paymentMethodId is required" }, { status: 400 });
+    if (!email && !customerId) {
+      return Response.json({ error: "Email or customerId is required" }, { status: 400 });
     }
 
     const secretKey = await getStripeSecretKey();
@@ -39,31 +39,46 @@ export async function POST(req) {
     let finalCustomerId = customerId;
 
     if (!finalCustomerId) {
-      // 1. Create customer and implicitly attach the payment method
-      if (!email) return Response.json({ error: "Email is required to create a Stripe customer" }, { status: 400 });
-      
-      const customer = await stripe.customers.create({
-        email,
-        name,
-        payment_method: paymentMethodId,
-        invoice_settings: {
-          default_payment_method: paymentMethodId,
+      // 1. Check if customer already exists for this email
+      if (email) {
+        const existingList = await stripe.customers.list({ email, limit: 1 });
+        if (existingList.data && existingList.data.length > 0) {
+          finalCustomerId = existingList.data[0].id;
         }
-      });
-      finalCustomerId = customer.id;
-    } else {
-      // 2. Customer exists, explicitly attach the payment method to them
-      await stripe.paymentMethods.attach(paymentMethodId, {
-        customer: finalCustomerId,
-      });
+      }
 
-      // 3. Set it as the default payment method for their invoices/subscriptions
-      await stripe.customers.update(finalCustomerId, {
-        invoice_settings: {
-          default_payment_method: paymentMethodId,
-        },
-      });
+      // 2. If still no customer, create a new one
+      if (!finalCustomerId) {
+        const customer = await stripe.customers.create({
+          email,
+          name,
+        });
+        finalCustomerId = customer.id;
+      }
     }
+
+    // 3. Attach payment method if provided
+    if (paymentMethodId && finalCustomerId) {
+      try {
+        await stripe.paymentMethods.attach(paymentMethodId, {
+          customer: finalCustomerId,
+        });
+      } catch (attachErr) {
+        console.warn("Payment method attach notice:", attachErr.message);
+      }
+
+      try {
+        await stripe.customers.update(finalCustomerId, {
+          invoice_settings: {
+            default_payment_method: paymentMethodId,
+          },
+        });
+      } catch (updateErr) {
+        console.warn("Customer update notice:", updateErr.message);
+      }
+    }
+
+    console.log("[Stripe setup-customer] Successfully resolved customerId:", finalCustomerId);
 
     return Response.json({
       customerId: finalCustomerId,

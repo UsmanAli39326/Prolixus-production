@@ -18,21 +18,30 @@ import { apiService } from "@/lib/api";
 // Converts the cart state + checkout formData into the exact guest-order
 // payload required by the backend API contract.
 // ---------------------------------------------------------------------------
-export function buildGuestOrderPayload(formData, cartItems, currency = "EURO", totals = {}, user = null, isSubscription = false) {
-
-    console.log("payload")
-    // Helper: round a number to 2 decimal places
-    // Truncate to 2 decimal places — never round up
+export function buildGuestOrderPayload(formData, cartItems, currency = "EURO", totals = {}, user = null, isSubscription = false, extraPaymentData = {}) {
+    console.log("[buildGuestOrderPayload] Generating order payload for cartItems count:", cartItems?.length);
     const r = (n) => Math.trunc((n ?? 0) * 100) / 100;
 
-    // ── orderDetails ────────────────────────────────────────────────────────
     const vatPercentage = totals.vatPercentage || 0;
 
-    const orderDetails = cartItems.map((item) => {
-        // Normalize: if value >= 1 it's already a %, otherwise convert decimal to %
+    const oneTimeItems = (cartItems || []).filter((item) => item.purchaseType !== "subscribe");
+    const subscriptionItems = (cartItems || []).filter((item) => item.purchaseType === "subscribe");
+
+    const orderDetails = (cartItems || []).map((item) => {
         const rawVat = item.vatPercentage ?? 0;
         const vatDecimal = rawVat >= 1 ? rawVat / 100 : rawVat;
         const itemVatPct = vatDecimal * 100;
+        const isItemSubscription = item.purchaseType === "subscribe";
+        const bundleQty = item.bundleQuantity || item.bundleQty || item.subscriptionQty || 1;
+        const totalItemNet = r(item.price * item.quantity);
+
+        // Item-level discount (uses explicit item.discount or proportional share of totals.discountAmount)
+        const itemDiscount = item.discount
+            ? r(item.discount)
+            : (totals?.subtotal > 0 && totals?.discountAmount > 0)
+                ? r((totalItemNet / totals.subtotal) * totals.discountAmount)
+                : 0;
+
         return {
             itemId: item.productId || (typeof item.id === 'string' ? parseInt(item.id.split('-')[0], 10) : item.id),
             quantity: item.quantity,
@@ -40,31 +49,52 @@ export function buildGuestOrderPayload(formData, cartItems, currency = "EURO", t
             vatPercentage: r(itemVatPct),
             vatAmount: r(item.price * item.quantity * vatDecimal),
             promotionPrice: r(item.price),   // same as unitPrice when no promotion
-            discount: 0,
-            totalNetPrice: r(item.price * item.quantity),
+            discount: itemDiscount,
+            totalNetPrice: totalItemNet,
+            isSubscription: isItemSubscription,
+            bundleQty: bundleQty,
         };
     });
 
-    // ── Guest customer string ───────────────────────────────────────────────
-    // If we have a user.id, we send customerId instead of guestCustomerInfo
+    const createSubscriptions = subscriptionItems.map((item) => {
+        const rawTier = item.variantId || item.pricingTierId || item.subscriptionPlanId || "";
+        const pricingTierId = rawTier.toString().replace('sub-', '');
+        return {
+            productId: item.productId || (typeof item.id === 'string' ? parseInt(item.id.split('-')[0], 10) : item.id),
+            pricingTierId: pricingTierId,
+            quantity: item.quantity || 1,
+            paymentGateway: formData.paymentMethod || "Stripe",
+            paymentMethodId: extraPaymentData?.paymentMethodId || formData.paymentMethodId || null,
+            currency: currency || "EUR",
+            gatewayCustomerId: extraPaymentData?.gatewayCustomerId || formData.gatewayCustomerId || user?.gatewayCustomerId || null,
+        };
+    });
+
     const customerId = user?.id || null;
     const guestCustomerInfo = customerId ? null : `${formData.fullName}, ${formData.email}, ${formData.phone}`;
 
-    // ── Base payload ────────────────────────────────────────────────────────
+    const hasSub = isSubscription || subscriptionItems.length > 0;
+    const primarySubItem = subscriptionItems[0];
+    const rawSubTier = primarySubItem?.variantId || primarySubItem?.pricingTierId || "";
+    const subscriptionPlanId = hasSub
+        ? (parseInt(rawSubTier.toString().replace('sub-', ''), 10) || null)
+        : null;
+
     const payload = {
         shopId: 1,
         customerId,
         guestCustomerInfo,
         orderDetails,
+        createSubscriptions,
         couponCode: formData.couponCode?.trim() || null,
         paymentMethod: formData.paymentMethod || "Cash",
-        paymentToken: formData.paymentToken ?? null,
+        paymentToken: extraPaymentData?.paymentToken || formData.paymentToken || null,
         grossAmount: totals.total,
         totalNetAmount: totals.subtotal,
         discountAmount: r(totals.discountAmount || 0),
         totalVatAmount: totals.vatAmount,
         vatPercentage,
-        shippingChargesAmount: totals.shipping,
+        shippingChargesAmount: totals.shipping || 0,
         shippingChargesPercentage: 0,
         servicesChargesAmount: 0,
         servicesChargesPercentage: 0,
@@ -77,18 +107,11 @@ export function buildGuestOrderPayload(formData, cartItems, currency = "EURO", t
         deliveryCountryId: parseInt(formData.countryId) || 1,
         addMoreAddress: formData.apartment || "",
         affiliateCustomerCode: formData.affiliateCustomerCode || "",
-        CustomerAffiliatedAmount: r(totals.walletAmount),
+        CustomerAffiliatedAmount: r(totals.walletAmount || 0),
+        isSubscription: hasSub,
+        subscriptionPlanId,
+        subscriptionInterval: hasSub ? "monthly" : null,
     };
-
-    // ── Subscription-specific fields ────────────────────────────────────────
-    if (isSubscription) {
-        payload.isSubscription = true;
-        const subItem = cartItems[0];
-        if (subItem) {
-            payload.subscriptionPlanId = subItem.variantId || null;
-            payload.subscriptionInterval = "monthly";
-        }
-    }
 
     return payload;
 }
@@ -161,73 +184,38 @@ export default function CheckoutWizard({ localization }) {
     }, [selectedMethod]);
 
     // ---------------------------------------------------------------------------
-    // SEQUENTIAL ORDER SUBMISSION
-    // Submits one-time order first (if present), then subscription order (if present).
-    // On any failure, stops and reports which order failed — cart is NOT cleared.
+    // UNIFIED ORDER SUBMISSION
+    // Submits all cart items together in a single /Checkout/create-order request.
     // ---------------------------------------------------------------------------
     const handleOrderSubmit = useCallback(async (overrideFormData) => {
         const fd = overrideFormData || formData;
         setIsSubmitting(true);
-        const results = [];
 
         try {
-            // ── 1. One-time order ────────────────────────────────────────────
-            if (hasOneTime && oneTimeItems.length > 0) {
-                const payload = buildGuestOrderPayload(
-                    fd,
-                    oneTimeItems,
-                    currency,
-                    oneTimeTotals,
-                    user,
-                    false // not a subscription
-                );
+            const payload = buildGuestOrderPayload(
+                fd,
+                checkoutItems,
+                currency,
+                totals,
+                user,
+                hasSubscription
+            );
 
-                const response = await apiService.post("/Checkout/create-order", payload);
+            const response = await apiService.post("/Checkout/create-order", payload);
 
-                if (!response.success) {
-                    alert(response.message || localization?.checkout_error_create_order || "Failed to place one-time order.");
-                    return;
-                }
-                results.push({ type: "one-time", data: response.data });
+            if (!response.success) {
+                alert(response.message || localization?.checkout_error_create_order || "Failed to place order.");
+                return;
             }
 
-            // ── 2. Subscription order ────────────────────────────────────────
-            if (hasSubscription && subscriptionItems.length > 0) {
-                const payload = buildGuestOrderPayload(
-                    fd,
-                    subscriptionItems,
-                    currency,
-                    subscriptionTotals,
-                    user,
-                    true // is a subscription
-                );
-
-                const response = await apiService.post("/Checkout/create-order", payload);
-
-                if (!response.success) {
-                    // One-time order already placed — note this in the error
-                    const prefix = results.length > 0
-                        ? "Your one-time order was placed, but the "
-                        : "";
-                    alert(`${prefix}${response.message || localization?.checkout_error_create_order || "Failed to place subscription order."}`);
-                    // Partial success: clear only if one-time succeeded
-                    if (results.length > 0) {
-                        clearCart();
-                        setOrderCompleted(true);
-                    }
-                    return;
-                }
-                results.push({ type: "subscription", data: response.data });
-            }
-
-            // ── 3. All orders succeeded ──────────────────────────────────────
+            const results = [{ type: hasSubscription ? "subscription" : "one-time", data: response.data }];
             setAllOrderResults(results);
-            setOrderData(results[0]?.data || null);
+            setOrderData(response.data || null);
             setOrderCompleted(true);
             clearCart();
 
-            // Navigate to order detail for the first invoice
-            const firstInvoice = results[0]?.data?.invoiceNumber || results[0]?.data?.orderId || results[0]?.data?.id;
+            // Navigate to order detail for the invoice
+            const firstInvoice = response.data?.invoiceNumber || response.data?.orderId || response.data?.id;
             if (firstInvoice) {
                 router.push(`/order-detail?invoiceNumber=${firstInvoice}`);
             } else {
@@ -239,7 +227,7 @@ export default function CheckoutWizard({ localization }) {
         } finally {
             setIsSubmitting(false);
         }
-    }, [formData, hasOneTime, hasSubscription, oneTimeItems, subscriptionItems, currency, oneTimeTotals, subscriptionTotals, user, clearCart, setOrderCompleted, router, localization]);
+    }, [formData, checkoutItems, currency, totals, user, hasSubscription, clearCart, setOrderCompleted, router, localization]);
 
     // Zero-total shortcut (wallet covers everything) — still uses sequential logic
     const handleDirectComplete = useCallback(async () => {
@@ -265,7 +253,7 @@ export default function CheckoutWizard({ localization }) {
         currentStep,
         formData,
         updateFormData,
-        buildGuestOrderPayload: (fd, ci, c) => buildGuestOrderPayload(fd, ci, c, totals, user, isSubscription),
+        buildGuestOrderPayload: (fd, ci, c, extra) => buildGuestOrderPayload(fd, ci, c, totals, user, isSubscription, extra),
         cartItems: checkoutItems,
         user,
         isAuthenticated,
