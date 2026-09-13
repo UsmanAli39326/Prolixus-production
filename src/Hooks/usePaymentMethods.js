@@ -67,13 +67,8 @@ export default function usePaymentMethods(options = {}) {
                 let sanitized = sanitizePaymentMethods(rawMethods)
                     .filter((m) => getAdapter(m.name).name !== "Unsupported");
 
-                // =========================================================================
-                // TEMPORARY FIX: HIDE PAYPAL FOR SUBSCRIPTIONS
-                // To re-enable PayPal for subscription checkouts in the future (once fixed):
-                // Simply remove or comment out the `if (isSubscription)` block below.
-                // =========================================================================
                 if (isSubscription) {
-                    sanitized = sanitized.filter((m) => m.name?.toLowerCase() !== "paypal");
+                    sanitized = sanitized.filter((m) => m.name?.toLowerCase() === "stripe");
                 }
 
                 if (sanitized.length === 0) {

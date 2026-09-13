@@ -136,12 +136,11 @@ export default function CheckoutWizard({ localization }) {
     const [allOrderResults, setAllOrderResults] = useState([]); // all completed orders
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Fetch payment methods — use subscription flag based on cart composition
     const {
         paymentMethods,
         loading: methodsLoading,
         error: methodsError,
-    } = usePaymentMethods({ isSubscription });
+    } = usePaymentMethods({ isSubscription: hasSubscription });
 
     const [selectedMethod, setSelectedMethod] = useState(null);
     const hasAutoSelected = useRef(false);
