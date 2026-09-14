@@ -1,7 +1,7 @@
 "use client";
 
 import Badge from "@/components/ui/Badge";
-import { stripHtmlTags } from "@/utitlis/formatters";
+import { stripHtmlTags, getItemDisplayName } from "@/utitlis/formatters";
 import { useCurrency } from "@/context/CurrencyContext";
 import { useLanguage } from "@/context/LanguageContext";
 import Image from "next/image";
@@ -9,9 +9,11 @@ import { getImageUrl } from "@/lib/ImageService";
 
 export default function OrderItem({ item }) {
     const { formatPrice } = useCurrency();
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const bundleQty = item.bundleQuantity || 1;
     const totalUnits = (item.quantity || 1) * bundleQty;
+    const displayName = getItemDisplayName(item, t, language);
+
     return (
         <div className="flex gap-3 py-1">
             {/* Thumbnail */}
@@ -19,7 +21,7 @@ export default function OrderItem({ item }) {
                 {item.image ? (
                     <Image
                         src={getImageUrl(item.image)}
-                        alt={item.name || item.title || "Product image"}
+                        alt={displayName || "Product image"}
                         width={48}
                         height={48}
                         unoptimized={true}
@@ -40,7 +42,7 @@ export default function OrderItem({ item }) {
 
             {/* Details */}
             <div className="flex-1 min-w-0 flex flex-col justify-center gap-0.5">
-                <h4 className="font-semibold text-primary text-base leading-snug font-accent truncate">{item.name || item.title || item.variantLabel}</h4>
+                <h4 className="font-semibold text-primary text-base leading-snug font-accent truncate">{displayName}</h4>
                 <div className="flex items-center gap-2 flex-wrap text-sm text-text/50 font-default">
                     <span className="truncate max-w-[120px]">
                         {item.variant || stripHtmlTags(item.description) || t('checkout.order_item.product', 'Product')}

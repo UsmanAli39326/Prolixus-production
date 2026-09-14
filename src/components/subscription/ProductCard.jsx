@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useCurrency } from "@/context/CurrencyContext";
 import useCart from "@/Hooks/useCart";
 import { useLanguage } from "@/context/LanguageContext";
+import { localizePackageTitle } from "@/utitlis/formatters";
 
 export default function ProductCard({
   packageData,
@@ -44,7 +45,7 @@ export default function ProductCard({
     const cartProduct = {
       ...productRaw,
       productId: productRaw?.id || id,
-      title: `${title} (${bottleCount} ${bottleCount === 1 ? t("product_bottle_singular", "Bottle") : t("product_bottle_plural", "Bottles")})`,
+      title: title,
       name: productRaw?.name || productRaw?.title || title,
       image: backendImageUrl || productRaw?.image || productRaw?.itemImages?.[0] || null,
       price: price,
@@ -97,7 +98,7 @@ export default function ProductCard({
         {/* Package Header */}
         <div className="text-center mb-4">
           <h3 className="text-xl sm:text-2xl font-bold font-accent text-(--primary-color) mb-1">
-            {title}
+            {localizePackageTitle(title, t)}
           </h3>
           <p className="text-xs sm:text-sm text-(--text-color)/70 font-default font-medium">
             {bottleCount} {bottleCount === 1 ? t("product_bottle_singular", "Bottle") : t("product_bottle_plural", "Bottles")}
@@ -109,7 +110,7 @@ export default function ProductCard({
           {backendImageUrl ? (
             <Image
               src={backendImageUrl}
-              alt={title}
+              alt={localizePackageTitle(title, t)}
               fill
               className="object-contain hover:scale-105 transition-transform duration-300"
               sizes="(max-width: 768px) 100vw, 300px"
@@ -118,7 +119,7 @@ export default function ProductCard({
             <div className="w-full h-full rounded-2xl bg-(--secondary-color) flex flex-col items-center justify-center p-4 border border-(--divider-color)">
               <i className="fa-solid fa-box-open text-4xl text-(--accent-color) mb-2" />
               <span className="text-xs font-bold text-(--primary-color) text-center">
-                {title}
+                {localizePackageTitle(title, t)}
               </span>
             </div>
           )}

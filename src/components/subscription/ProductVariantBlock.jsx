@@ -9,6 +9,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { ProductImageGallery, ProductAccordion } from "@/components/layout/Ecommerce/ProductPage";
 import { motion, AnimatePresence } from "framer-motion";
 import { getImageUrl } from "@/lib/ImageService";
+import { localizePackageTitle } from "@/utitlis/formatters";
 
 export default function ProductVariantBlock({ product, isGrid = false }) {
   const { t } = useLanguage();
@@ -248,7 +249,7 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
                           }`}>
                           {selectedVariantId === opt.id && <div className="w-2.5 h-2.5 rounded-full bg-(--accent-color)" />}
                         </div>
-                        <span className="font-semibold text-(--primary-color)">{opt.label}</span>
+                        <span className="font-semibold text-(--primary-color)">{localizePackageTitle(opt.label, t)}</span>
                       </div>
                       <div className="flex flex-col items-end">
                         <span className="font-bold text-(--primary-color)">{formatPrice(opt.price)}</span>
@@ -275,7 +276,7 @@ export default function ProductVariantBlock({ product, isGrid = false }) {
             <div className="p-5 rounded-2xl bg-(--secondary-color) border border-(--divider-color)">
             <div className="flex justify-between items-center mb-4">
               <h4 className="text-lg font-bold text-(--primary-color)">
-                {primarySubscription?.label || t("product_subscription_plan", "Subscription Plan")}
+                {localizePackageTitle(primarySubscription?.label, t) || t("product_subscription_plan", "Subscription Plan")}
               </h4>
               <span className="text-2xl font-bold text-(--accent-color)">
                 {formatPrice(primarySubscription?.price)}<span className="text-sm font-normal text-(--primary-color)/70">/{t("product_per_month", "mo")}</span>

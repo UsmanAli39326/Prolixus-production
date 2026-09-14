@@ -4,7 +4,7 @@ import Link from "next/link";
 import FaderInAnimation from "@/Hooks/FaderInAnimation";
 import Button from "@/components/ui/Button";
 import useCart from "@/Hooks/useCart";
-import { stripHtmlTags } from "@/utitlis/formatters";
+import { stripHtmlTags, getItemDisplayName } from "@/utitlis/formatters";
 import { calcCartTotals } from "@/lib/cart";
 import { FiMinus, FiPlus, FiTrash2, FiArrowLeft, FiArrowRight, FiCheck, FiShield, FiTruck, FiPackage, FiLock, FiRefreshCw } from "react-icons/fi";
 import { useCurrency } from "@/context/CurrencyContext";
@@ -13,7 +13,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { getImageUrl } from "@/lib/ImageService";
 
 export default function CartClient({ localization }) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { cartItems, updateQuantity, removeFromCart } = useCart();
   const { formatPrice } = useCurrency();
   const { isLoggedIn } = useAuth();
@@ -96,41 +96,45 @@ export default function CartClient({ localization }) {
 
                 {/* Cart Items */}
                 <div className="space-y-4 mt-4">
-                  {cartItems.map((item, index) => (
-                    <FaderInAnimation key={item.id} direction="left" delay={0.2 + index * 0.1}>
-                      <div className="group bg-white rounded-2xl p-4 md:p-6 shadow-sm border border-divider hover:shadow-md transition-shadow duration-300">
-                        {/* Desktop layout: 12-col grid */}
-                        <div className="hidden md:grid md:grid-cols-12 gap-6 items-center">
-                          {/* Product Info */}
-                          <div className="col-span-6 flex gap-4 items-center">
-                            <div className="relative w-24 h-24 rounded-xl overflow-hidden bg-surface-2 shrink-0">
-                              <div
-                                className="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                                style={{
-                                  backgroundImage: `url('${getImageUrl(item.image)}')`,
-                                  backgroundColor: "var(--surface-2-color)",
-                                }}
-                              />
-                            </div>
-                            <div className="flex flex-col gap-1">
-                              <div className="flex items-center gap-2 flex-wrap">
-                                <h3 className="font-accent text-lg font-medium text-primary leading-tight">
-                                  {item.name || item.title || item.variantLabel}
-                                </h3>
-                                {/* Purchase type badge */}
-                                <PurchaseTypeBadge purchaseType={item.purchaseType} />
-                              </div>
-                              <p className="text-sm text-text line-clamp-1">{stripHtmlTags(item.description)}</p>
-                            </div>
-                          </div>
+                  {cartItems.map((item, index) => {
+                    const bundleQty = item.bundleQuantity || 1;
+                    const totalUnits = (item.quantity || 1) * bundleQty;
 
-                          {/* Quantity Controls */}
-                          <div className="col-span-2 flex justify-center">
-                            {item.bundleQuantity ? (
-                              <span className="text-sm font-medium text-text bg-surface-2 px-4 py-2 rounded-full border border-divider">
-                                {t("cart_qty_label", "Qty")}: {item.bundleQuantity}
-                              </span>
-                            ) : (
+                    return (
+                      <FaderInAnimation key={item.id} direction="left" delay={0.2 + index * 0.1}>
+                        <div className="group bg-white rounded-2xl p-4 md:p-6 shadow-sm border border-divider hover:shadow-md transition-shadow duration-300">
+                          {/* Desktop layout: 12-col grid */}
+                          <div className="hidden md:grid md:grid-cols-12 gap-6 items-center">
+                            {/* Product Info */}
+                            <div className="col-span-6 flex gap-4 items-center">
+                              <div className="relative w-24 h-24 rounded-xl overflow-hidden bg-surface-2 shrink-0">
+                                <div
+                                  className="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                                  style={{
+                                    backgroundImage: `url('${getImageUrl(item.image)}')`,
+                                    backgroundColor: "var(--surface-2-color)",
+                                  }}
+                                />
+                                {totalUnits > 1 && (
+                                  <span className="absolute top-1.5 right-1.5 bg-primary/90 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-sm">
+                                    {totalUnits}
+                                  </span>
+                                )}
+                              </div>
+                              <div className="flex flex-col gap-1">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <h3 className="font-accent text-lg font-medium text-primary leading-tight">
+                                    {getItemDisplayName(item, t, language)}
+                                  </h3>
+                                  {/* Purchase type badge */}
+                                  <PurchaseTypeBadge purchaseType={item.purchaseType} />
+                                </div>
+                                <p className="text-sm text-text line-clamp-1">{stripHtmlTags(item.description)}</p>
+                              </div>
+                            </div>
+
+                            {/* Quantity Controls */}
+                            <div className="col-span-2 flex flex-col items-center justify-center gap-1.5">
                               <div className="flex items-center gap-1 bg-secondary rounded-full p-1 border border-divider">
                                 <button
                                   onClick={() => updateQuantity(item.id, item.quantity - 1)}
@@ -149,101 +153,118 @@ export default function CartClient({ localization }) {
                                   <FiPlus className="w-4 h-4" />
                                 </button>
                               </div>
-                            )}
-                          </div>
-
-                          {/* Unit Price */}
-                          <div className="col-span-2 text-center font-medium text-text">
-                            {formatPrice(item.price)}
-                          </div>
-
-                          {/* Line Total & Delete */}
-                          <div className="col-span-2 flex items-center justify-end gap-4">
-                            <span className="font-semibold text-primary text-lg">
-                              {formatPrice(item.price * item.quantity)}
-                            </span>
-                            <button
-                              onClick={() => removeFromCart(item.id)}
-                              className="p-2 rounded-full text-text hover:text-error hover:bg-error/10 transition-all duration-200"
-                              title={localization?.cart_remove_item || t("cart_remove_item", "Remove item")}
-                            >
-                              <FiTrash2 className="w-5 h-5" />
-                            </button>
-                          </div>
-                        </div>
-
-                        {/* Mobile layout: stacked */}
-                        <div className="flex flex-col gap-3 md:hidden">
-                          {/* Top row: image + product details */}
-                          <div className="flex gap-3 items-center">
-                            <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-surface-2 shrink-0">
-                              <div
-                                className="w-full h-full bg-cover bg-center"
-                                style={{
-                                  backgroundImage: `url('${getImageUrl(item.image)}')`,
-                                  backgroundColor: "var(--surface-2-color)",
-                                }}
-                              />
-                            </div>
-                            <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-                              <div className="flex items-center gap-1.5 flex-wrap">
-                                <h3 className="font-accent text-sm font-medium text-primary leading-tight line-clamp-2">
-                                  {item.name || item.title || item.variantLabel}
-                                </h3>
-                                <PurchaseTypeBadge purchaseType={item.purchaseType} small />
-                              </div>
-                              <p className="text-accent font-semibold text-sm">
-                                {formatPrice(item.price)}
-                              </p>
-                            </div>
-                          </div>
-
-                          {/* Bottom row: quantity | total | delete */}
-                          <div className="flex items-center justify-between pt-2 border-t border-divider/50">
-                            {/* Quantity Controls */}
-                            {item.bundleQuantity ? (
-                              <span className="text-xs font-medium text-text bg-surface-2 px-3 py-1.5 rounded-full border border-divider">
-                                {t("cart_qty_label", "Qty")}: {item.bundleQuantity}
+                              <span className="text-xs text-text/60 font-medium whitespace-nowrap">
+                                {t("cart_qty_label", "Qty")}: {totalUnits}
+                                {bundleQty > 1 && (
+                                  <span className="ml-1 text-[11px] text-text/40 font-normal">
+                                    ({item.quantity}&times;{bundleQty})
+                                  </span>
+                                )}
                               </span>
-                            ) : (
-                              <div className="flex items-center gap-1 bg-secondary rounded-full p-0.5 border border-divider">
-                                <button
-                                  onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                  disabled={item.quantity <= 1}
-                                  className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-white text-primary transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                  <FiMinus className="w-3.5 h-3.5" />
-                                </button>
-                                <span className="w-6 text-center text-sm font-medium text-primary">
-                                  {item.quantity}
-                                </span>
-                                <button
-                                  onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                  className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-white text-primary transition-colors duration-200"
-                                >
-                                  <FiPlus className="w-3.5 h-3.5" />
-                                </button>
-                              </div>
-                            )}
+                            </div>
 
-                            {/* Line Total + Delete */}
-                            <div className="flex items-center gap-3">
-                              <span className="font-semibold text-primary text-base">
+                            {/* Unit Price */}
+                            <div className="col-span-2 text-center font-medium text-text">
+                              {formatPrice(item.price)}
+                            </div>
+
+                            {/* Line Total & Delete */}
+                            <div className="col-span-2 flex items-center justify-end gap-4">
+                              <span className="font-semibold text-primary text-lg">
                                 {formatPrice(item.price * item.quantity)}
                               </span>
                               <button
                                 onClick={() => removeFromCart(item.id)}
-                                className="p-1.5 rounded-full text-text/60 hover:text-error hover:bg-error/10 transition-all duration-200"
+                                className="p-2 rounded-full text-text hover:text-error hover:bg-error/10 transition-all duration-200"
                                 title={localization?.cart_remove_item || t("cart_remove_item", "Remove item")}
                               >
-                                <FiTrash2 className="w-4 h-4" />
+                                <FiTrash2 className="w-5 h-5" />
                               </button>
                             </div>
                           </div>
+
+                          {/* Mobile layout: stacked */}
+                          <div className="flex flex-col gap-3 md:hidden">
+                            {/* Top row: image + product details */}
+                            <div className="flex gap-3 items-center">
+                              <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-surface-2 shrink-0">
+                                <div
+                                  className="w-full h-full bg-cover bg-center"
+                                  style={{
+                                    backgroundImage: `url('${getImageUrl(item.image)}')`,
+                                    backgroundColor: "var(--surface-2-color)",
+                                  }}
+                                />
+                                {totalUnits > 1 && (
+                                  <span className="absolute top-1 right-1 bg-primary/90 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full shadow-sm">
+                                    {totalUnits}
+                                  </span>
+                                )}
+                              </div>
+                              <div className="flex flex-col gap-0.5 min-w-0 flex-1">
+                                <div className="flex items-center gap-1.5 flex-wrap">
+                                  <h3 className="font-accent text-sm font-medium text-primary leading-tight line-clamp-2">
+                                    {getItemDisplayName(item, t, language)}
+                                  </h3>
+                                  <PurchaseTypeBadge purchaseType={item.purchaseType} small />
+                                </div>
+                                <p className="text-accent font-semibold text-sm">
+                                  {formatPrice(item.price)}
+                                </p>
+                              </div>
+                            </div>
+
+                            {/* Bottom row: quantity | total | delete */}
+                            <div className="flex items-center justify-between pt-2 border-t border-divider/50">
+                              {/* Quantity Controls */}
+                              <div className="flex flex-col items-start gap-1">
+                                <div className="flex items-center gap-1 bg-secondary rounded-full p-0.5 border border-divider">
+                                  <button
+                                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                    disabled={item.quantity <= 1}
+                                    className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-white text-primary transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                  >
+                                    <FiMinus className="w-3.5 h-3.5" />
+                                  </button>
+                                  <span className="w-6 text-center text-sm font-medium text-primary">
+                                    {item.quantity}
+                                  </span>
+                                  <button
+                                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                    className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-white text-primary transition-colors duration-200"
+                                  >
+                                    <FiPlus className="w-3.5 h-3.5" />
+                                  </button>
+                                </div>
+                                <span className="text-xs text-text/60 font-medium whitespace-nowrap">
+                                  {t("cart_qty_label", "Qty")}: {totalUnits}
+                                  {bundleQty > 1 && (
+                                    <span className="ml-1 text-[10px] text-text/40 font-normal">
+                                      ({item.quantity}&times;{bundleQty})
+                                    </span>
+                                  )}
+                                </span>
+                              </div>
+
+                              {/* Line Total + Delete */}
+                              <div className="flex items-center gap-3">
+                                <span className="font-semibold text-primary text-base">
+                                  {formatPrice(item.price * item.quantity)}
+                                </span>
+                                <button
+                                  onClick={() => removeFromCart(item.id)}
+                                  className="p-1.5 rounded-full text-text/60 hover:text-error hover:bg-error/10 transition-all duration-200"
+                                  title={localization?.cart_remove_item || t("cart_remove_item", "Remove item")}
+                                >
+                                  <FiTrash2 className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </FaderInAnimation>
-                  ))}
+                      </FaderInAnimation>
+                    );
+                  })}
                 </div>
 
                 {/* Trust Badges - Mobile */}
@@ -396,18 +417,24 @@ export default function CartClient({ localization }) {
 
 // Purchase type pill badge
 function PurchaseTypeBadge({ purchaseType, small }) {
+  const { t, language } = useLanguage();
   const isSubscription = purchaseType === "subscribe";
+  const isDe = language === "de" || language?.startsWith("de");
   const base = small
     ? "inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full border"
     : "inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border";
   const style = isSubscription
     ? "bg-accent/10 text-accent border-accent/20"
     : "bg-surface-2 text-text/60 border-divider";
+
+  const subText = isDe ? "Abo" : t("cart_badge_sub", "Sub");
+  const oneTimeText = isDe ? "Einmalig" : t("cart_badge_onetime_short", "One-Time");
+
   return (
     <span className={`${base} ${style}`}>
       {isSubscription
-        ? <><FiRefreshCw className={small ? "w-2 h-2" : "w-2.5 h-2.5"} /> Sub</>
-        : <><FiPackage className={small ? "w-2 h-2" : "w-2.5 h-2.5"} /> One-Time</>
+        ? <><FiRefreshCw className={small ? "w-2 h-2" : "w-2.5 h-2.5"} /> {subText}</>
+        : <><FiPackage className={small ? "w-2 h-2" : "w-2.5 h-2.5"} /> {oneTimeText}</>
       }
     </span>
   );
